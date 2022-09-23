@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/PalabraIngles"
+        android:id="@+id/PalabraEspanol"
         android:layout_width="168dp"
         android:layout_height="34dp"
         android:layout_marginTop="20dp"
@@ -28,10 +28,10 @@
         android:text="Comprobar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PalabraEspanol" />
+        app:layout_constraintTop_toBottomOf="@+id/PalabraIngles" />
 
     <EditText
-        android:id="@+id/PalabraEspanol"
+        android:id="@+id/PalabraIngles"
         android:layout_width="178dp"
         android:layout_height="0dp"
         android:layout_marginTop="11dp"
@@ -39,6 +39,7 @@
         android:gravity="center"
         android:inputType="textPersonName"
         android:textColor="#3461BF"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -49,7 +50,7 @@
         android:layout_height="37dp"
         android:layout_marginTop="32dp"
         android:gravity="center"
-        android:text="La palabra en ingles es..."
+        android:text="La palabra en Español es..."
         android:textColor="#070707"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,13 +63,13 @@
         android:layout_height="33dp"
         android:layout_marginTop="48dp"
         android:gravity="center"
-        android:text="¿Cual es su significado en español?"
+        android:text="¿Cual es su significado en Ingles?"
         android:textColor="#020202"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PalabraIngles" />
+        app:layout_constraintTop_toBottomOf="@+id/PalabraEspanol" />
 
     <Button
         android:id="@+id/BotonPasaPalabra"
@@ -77,7 +78,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="48dp"
         android:onClick="PasarPalabra"
-        android:text="SiguientePalabra"
+        android:text="Siguiente Palabra"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -87,6 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="36dp"
         android:layout_marginBottom="48dp"
+        android:onClick="Salir"
         android:text="Salir"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -96,6 +98,8 @@
         android:layout_width="273dp"
         android:layout_height="41dp"
         android:layout_marginTop="36dp"
+        android:gravity="center"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/BotonComprobar" />
