@@ -6,6 +6,7 @@ import android.app.Application;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     EditText textoPalabraIngles;
     TextView textoPalabraEspanol;
     TextView textoCuadroAcierto;
+    Boolean siguientePalabra;
+    ImageView checkAcierto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         textoPalabraEspanol = (TextView) findViewById(R.id.PalabraEspanol);
         textoPalabraIngles = (EditText) findViewById(R.id.PalabraIngles);
         textoCuadroAcierto = (TextView) findViewById(R.id.mensajeAcierto);
+        checkAcierto = (ImageView) findViewById(R.id.checkAcierto);
 
         listaIng = new ArrayList<>();
         listaEsp = new ArrayList<>();
@@ -40,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         listaEsp.add("Hablar");
         listaIng.add("Play");
         listaEsp.add("Jugar");
+
+        PasarPalabra(new View(this));
+        siguientePalabra = false;
     }
 
     public void PasarPalabra(View view) {
@@ -53,22 +60,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ComprobarPalabra(View view){
-        String palabraEspanol = textoPalabraEspanol.getText().toString();
-        String palabraIngles = textoPalabraIngles.getText().toString();
 
-        if (palabraEspanol.equalsIgnoreCase("")) {
-            textoCuadroAcierto.setText("Debes pulsar el boton Siguiente Palabra para jugar");
-            return;
-        } else if (palabraIngles.equalsIgnoreCase("")){
-             textoCuadroAcierto.setText("Debes introducir una palabra en Ingles para poder comprobarla");
-            return;
-        }
+        if (siguientePalabra){
+            PasarPalabra(view);
+            siguientePalabra = false;
 
-        if(listaIng.get(indice).equalsIgnoreCase(palabraIngles)){
-            textoCuadroAcierto.setText("¡Has acertado!");
         }else{
-            textoCuadroAcierto.setText("¡Has fallado!, la respuesta correcta era: " + listaIng.get(indice));
+
+            String palabraEspanol = textoPalabraEspanol.getText().toString();
+            String palabraIngles = textoPalabraIngles.getText().toString();
+
+            if (palabraEspanol.equalsIgnoreCase("")) {
+                textoCuadroAcierto.setText("Debes pulsar el boton Siguiente Palabra para jugar");
+                return;
+            } else if (palabraIngles.equalsIgnoreCase("")){
+                textoCuadroAcierto.setText("Debes introducir una palabra en Ingles para poder comprobarla");
+                return;
+            }
+
+            if(listaIng.get(indice).equalsIgnoreCase(palabraIngles)){
+                textoCuadroAcierto.setText("¡Has acertado!");
+                checkAcierto.setImageResource(R.drawable.check_ok);
+                siguientePalabra = true;
+            }else{
+                checkAcierto.setImageResource(android.R.drawable.ic_delete);
+                textoCuadroAcierto.setText("¡Has fallado!, la respuesta correcta era: " + listaIng.get(indice));
+
+            }
+
         }
+
+
 
     }
 
