@@ -2,10 +2,15 @@ package com.eldarkness.vocabularioingles;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
+import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -27,15 +32,14 @@ public class Excel_DAO extends AppCompatActivity {
     TextView primerTextView;
     HSSFWorkbook workbook;
     InputStream inputStream;
-    FileInputStream fileInputStream;
-    String rutaAlmacenamiento;
+    BBDD_Controller bbdd_controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_excel_dao);
-
-        primerTextView = (TextView) findViewById(R.id.MostrarNombreExcel);
+        bbdd_controller = new BBDD_Controller(this);
+        SQLiteDatabase sqLiteDatabase = bbdd_controller.getWritableDatabase();
 
         AssetManager am = this.getAssets();
         try {
@@ -47,56 +51,41 @@ public class Excel_DAO extends AppCompatActivity {
         }
 
         // muestra la hoja en un textview en el layout
-        primerTextView.setText(workbook.getSheetName(0));
+        // primerTextView = (TextView) findViewById(R.id.MostrarNombreExcel);
+        // primerTextView.setText(workbook.getSheetName(0));
 
         HSSFSheet sheet = workbook.getSheetAt(0);
         Iterator<Row> rowIterator = sheet.iterator();
         Row row;
+
         // Se recorren las filas
         while (rowIterator.hasNext()) {
             row = rowIterator.next();
             Iterator<Cell> cellIterator = row.cellIterator();
             Cell celda;
+            ContentValues values = new ContentValues();
             // Se recorren las columnas (o celdas)
-            while (cellIterator.hasNext()){
-                celda = cellIterator.next();
-                System.out.println(celda.getStringCellValue());
-                /*switch (celda.getCellType()) {
-                    case Cell.CELL_TYPE_NUMERIC:
-                        if (HSSFDateUtil.isCellDateFormatted(celda)) {
-                            fecha2= celda.getDateCellValue();
-                            SimpleDateFormat fmt = new SimpleDateFormat("dd-yyyy");
-                            fechaSTR = fmt.format(fecha2);
+            celda = cellIterator.next();
+            values.put(Estructura_BBDD.NOMBRE_COLUMNA2, celda.getStringCellValue());
+            celda = cellIterator.next();
+            values.put(Estructura_BBDD.NOMBRE_COLUMNA3, celda.getStringCellValue());
+            long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME, null, values );
+            /*
+            while(cellIterator.hasNext()){
+                if(celda.getColumnIndex() == 0){
+                    System.out.println(celda.getStringCellValue());
 
-                        } else if (cont == 5) {
-                            precioVenta= (int)celda.getNumericCellValue();
-                        }
-                        break;
-
-                    case Cell.CELL_TYPE_STRING:
-                        if (cont == 1) {
-                            nombre=celda.getStringCellValue();
-                        }else if(cont == 3) {
-                            tipoOperacion=celda.getStringCellValue();
-                        }else {
-                            tipoInmueble=celda.getStringCellValue();
-                        }
-                        break;
-                    case Cell.CELL_TYPE_BOOLEAN:
-                        System.out.print(celda.getBooleanCellValue()+" ");
-                        break;
-                    case Cell.CELL_TYPE_FORMULA:
-                        System.out.printf("La formula es: %s", celda.getCellFormula()+"a "+celda.getNumericCellValue());
-                        break;
+                }else if(celda.getColumnIndex() == 1){
+                    System.out.println(celda.getStringCellValue());
+                    values.put(Estructura_BBDD.NOMBRE_COLUMNA3, celda.getStringCellValue());
                 }
-                cont++;*/
+            }*/
 
-            }
 
             System.out.println("*************************************");
-        }// fin segunda pagina */
+        }
 
-        // cerramos el libro excel*/
+
         try {
             workbook.close();
         } catch (IOException e) {
