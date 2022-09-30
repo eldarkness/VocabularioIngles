@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -63,9 +64,13 @@ public class Excel_DAO extends AppCompatActivity {
             row = rowIterator.next();
             Iterator<Cell> cellIterator = row.cellIterator();
             Cell celda;
-            ContentValues values = new ContentValues();
+
             // Se recorren las columnas (o celdas)
             celda = cellIterator.next();
+            if(comprobarPalabra(celda.getStringCellValue(),bbdd_controller)){
+                continue;
+            }
+            ContentValues values = new ContentValues();
             values.put(Estructura_BBDD.NOMBRE_COLUMNA2, celda.getStringCellValue());
             celda = cellIterator.next();
             values.put(Estructura_BBDD.NOMBRE_COLUMNA3, celda.getStringCellValue());
@@ -80,11 +85,8 @@ public class Excel_DAO extends AppCompatActivity {
                     values.put(Estructura_BBDD.NOMBRE_COLUMNA3, celda.getStringCellValue());
                 }
             }*/
-
-
             System.out.println("*************************************");
         }
-
 
         try {
             workbook.close();
@@ -95,6 +97,36 @@ public class Excel_DAO extends AppCompatActivity {
 
     }
 
+    private Boolean comprobarPalabra(String palabraIngles, BBDD_Controller bbdd_controller){
+        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
+        String[] projection = {
+                Estructura_BBDD.NOMBRE_COLUMNA2
+        };
+
+        String selection = Estructura_BBDD.NOMBRE_COLUMNA2 + " = ?";
+        String[] selectionArgs = { palabraIngles };
+
+        Cursor c = sqLiteDatabase.query(
+                Estructura_BBDD.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+        if (c.getCount()>0){
+            return true;
+        }else{
+            return false;
+        }
+
+
+
+    }
+
+
+    // no se usa
     private void copiaExcel(Context contexto){
 
         try{
