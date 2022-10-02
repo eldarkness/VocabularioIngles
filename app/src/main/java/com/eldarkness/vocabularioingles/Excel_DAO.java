@@ -26,14 +26,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Excel_DAO extends AppCompatActivity {
 
-    TextView primerTextView;
+    TextView MostrarPalabras;
     HSSFWorkbook workbook;
     InputStream inputStream;
     BBDD_Controller bbdd_controller;
+    private ArrayList<String> listaPalabrasEsp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class Excel_DAO extends AppCompatActivity {
         setContentView(R.layout.activity_excel_dao);
         bbdd_controller = new BBDD_Controller(this);
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getWritableDatabase();
+        listaPalabrasEsp = new ArrayList<>();
+        MostrarPalabras = (TextView) findViewById(R.id.MostrarPalabras);
 
         AssetManager am = this.getAssets();
         try {
@@ -71,10 +75,13 @@ public class Excel_DAO extends AppCompatActivity {
                 continue;
             }
             ContentValues values = new ContentValues();
-            values.put(Estructura_BBDD.NOMBRE_COLUMNA2, celda.getStringCellValue());
-            celda = cellIterator.next();
             values.put(Estructura_BBDD.NOMBRE_COLUMNA3, celda.getStringCellValue());
+            System.out.println(celda.getStringCellValue());
+            listaPalabrasEsp.add(celda.getStringCellValue());
+            celda = cellIterator.next();
+            values.put(Estructura_BBDD.NOMBRE_COLUMNA2, celda.getStringCellValue());
             long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME, null, values );
+
             /*
             while(cellIterator.hasNext()){
                 if(celda.getColumnIndex() == 0){
@@ -84,8 +91,8 @@ public class Excel_DAO extends AppCompatActivity {
                     System.out.println(celda.getStringCellValue());
                     values.put(Estructura_BBDD.NOMBRE_COLUMNA3, celda.getStringCellValue());
                 }
-            }*/
-            System.out.println("*************************************");
+            }
+            System.out.println("*************************************");*/
         }
 
         try {
@@ -94,17 +101,19 @@ public class Excel_DAO extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        MostrarPalabras.setText(listaPalabrasEsp.toString());
+
 
     }
 
-    private Boolean comprobarPalabra(String palabraIngles, BBDD_Controller bbdd_controller){
+    private Boolean comprobarPalabra(String palabraEsp, BBDD_Controller bbdd_controller){
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
         String[] projection = {
-                Estructura_BBDD.NOMBRE_COLUMNA2
+                Estructura_BBDD.NOMBRE_COLUMNA3
         };
 
-        String selection = Estructura_BBDD.NOMBRE_COLUMNA2 + " = ?";
-        String[] selectionArgs = { palabraIngles };
+        String selection = Estructura_BBDD.NOMBRE_COLUMNA3 + " = ?";
+        String[] selectionArgs = { palabraEsp };
 
         Cursor c = sqLiteDatabase.query(
                 Estructura_BBDD.TABLE_NAME,

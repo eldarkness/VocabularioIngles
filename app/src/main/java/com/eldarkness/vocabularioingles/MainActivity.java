@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textoCuadroAcierto;
     Boolean siguientePalabra;
     ImageView checkAcierto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,28 +40,67 @@ public class MainActivity extends AppCompatActivity {
         checkAcierto = (ImageView) findViewById(R.id.checkAcierto);
         bbdd_controller = new BBDD_Controller(this);
 
-
         listaIng = new ArrayList<>();
         listaEsp = new ArrayList<>();
-        /*
-        listaIng.add("Blue");
-        listaEsp.add("Azul");
-        listaIng.add("Orange");
-        listaEsp.add("Naranja");
-        listaIng.add("Cut");
-        listaEsp.add("Cortar");
-        listaIng.add("Speak");
-        listaEsp.add("Hablar");
-        listaIng.add("Play");
-        listaEsp.add("Jugar");*/
 
-        anadirPalabras(listaIng, listaEsp, bbdd_controller );
+        anadirPalabras(bbdd_controller );
+        System.out.println(listaIng.toString());
+        System.out.println(listaEsp.toString());
 
-        //PasarPalabra(new View(this));
+        SiguientePalabra(new View(this));
         siguientePalabra = false;
     }
 
-    public void PasarPalabra(View view) {
+    /**
+     *
+     * @param bbdd_controller
+     *      *
+     * Es el primer metodo que se ejecuta, lo que hace es conectar con la base de datos sqlite y hacer un select-*
+     * para extraer todas las palabras de la base de datos y con el metodo comprobarPalabraLista se va comprobando
+     * si esa polabra esta o no en la lista de palabras que usuara la app que son dos arraylist de string uno para
+     * cada idioma, sino esta esa palabra se añadira tanto en español como en ingles.
+     */
+    public void anadirPalabras(BBDD_Controller bbdd_controller){
+        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
+        c.moveToFirst();
+        System.out.println(c.getCount());
+        while(!c.isAfterLast()){
+            /*if(!comprobarPalabraLista(c.getString(1))){
+                listaIng.add(c.getString(1));
+                listaEsp.add(c.getString(2));
+            }*/
+            listaIng.add(c.getString(1));
+            listaEsp.add(c.getString(2));
+            System.out.println(c.getString(1));
+            c.moveToNext();
+        }
+
+
+        c.close();
+
+    }
+
+
+    /*
+    public Boolean comprobarPalabraLista(String palabra){
+
+        for (int i = 0; i < listaIng.size(); i++){
+            System.out.println("Comprobando la palabra de la base de datos: " + palabra +
+                    " si coincide con alguna de la lista " + listaIng.get(i));
+
+            if(palabra.equalsIgnoreCase(listaIng.get(i))){
+                return true;
+            }
+
+        }
+        return false;
+
+    }*/
+
+
+    public void SiguientePalabra(View view) {
         indice = (int) (Math.random() * listaEsp.size());
         textoPalabraEspanol.setText("");
         textoPalabraIngles.setText("");
@@ -73,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     public void ComprobarPalabra(View view){
         System.out.println("comprobar palabra " +listaIng.size());
         if (siguientePalabra){
-            PasarPalabra(view);
+            SiguientePalabra(view);
             siguientePalabra = false;
 
         }else{
@@ -98,48 +138,11 @@ public class MainActivity extends AppCompatActivity {
                 textoCuadroAcierto.setText("¡Has fallado!, la respuesta correcta era: " + listaIng.get(indice));
 
             }
-
         }
-
 
 
     }
 
-    public void anadirPalabras(ArrayList<String> listaIng, ArrayList<String> listaEsp,  BBDD_Controller bbdd_controller){
-        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
-
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
-        c.moveToFirst();
-        System.out.println(c.getCount());
-        while(!c.isAfterLast()){
-            if(!comprobarPalabraLista(listaIng, c.getString(1))){
-                listaIng.add(c.getString(1));
-                listaEsp.add(c.getString(2));
-            }
-            System.out.println(c.getString(1));
-            c.moveToNext();
-        }
-        System.out.println(listaIng.size());
-
-
-        c.close();
-
-    }
-
-    public Boolean comprobarPalabraLista(ArrayList<String> listaIng, String palabra){
-
-        for (int i = 0; i < listaIng.size(); i++){
-            System.out.println("Comprobando la palabra de la base de datos: " + palabra +
-                    "si coincide con alguna de la lista " + listaIng.get(i));
-
-            if(palabra.equalsIgnoreCase(listaIng.get(i))){
-                return true;
-            }
-
-        }
-        return false;
-
-    }
 
     public void Salir(View view){
         System.exit(0);

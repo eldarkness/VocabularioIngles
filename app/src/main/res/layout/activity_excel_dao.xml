@@ -7,11 +7,13 @@
     tools:context=".Excel_DAO">
 
     <TextView
-        android:id="@+id/MostrarNombreExcel"
-        android:layout_width="259dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="56dp"
+        android:id="@+id/MostrarPalabras"
+        android:layout_width="324dp"
+        android:layout_height="611dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.505" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
