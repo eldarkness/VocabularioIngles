@@ -43,12 +43,13 @@ public class MainActivity extends AppCompatActivity {
         listaIng = new ArrayList<>();
         listaEsp = new ArrayList<>();
 
-        anadirPalabras(bbdd_controller );
-        System.out.println(listaIng.toString());
-        System.out.println(listaEsp.toString());
+        anadirPalabras(bbdd_controller);
 
-        SiguientePalabra(new View(this));
-        siguientePalabra = false;
+        if(listaEsp.size() > 0 ){
+            SiguientePalabra(new View(this));
+            siguientePalabra = false;
+        }
+
     }
 
     /**
@@ -76,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(c.getString(1));
             c.moveToNext();
         }
-
-
         c.close();
 
     }
@@ -106,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         textoPalabraIngles.setText("");
         textoCuadroAcierto.setText("");
         textoPalabraEspanol.setText("" + listaEsp.get(indice));
+        textoPalabraIngles.requestFocus();
 
 
     }
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void Salir(View view){
-        System.exit(0);
+        finish();
     }
 
     public void cargarActividadExcelDAO(View view){

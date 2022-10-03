@@ -54,6 +54,17 @@ public class Excel_DAO extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Golaaa");
+        try {
+            InputStream prueba2 = new FileInputStream("/storage/emulated/0/Download/PruebaVocabularioIngles.xls");
+
+
+            prueba2.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // muestra la hoja en un textview en el layout
         // primerTextView = (TextView) findViewById(R.id.MostrarNombreExcel);
@@ -97,6 +108,8 @@ public class Excel_DAO extends AppCompatActivity {
 
         try {
             workbook.close();
+            inputStream.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
