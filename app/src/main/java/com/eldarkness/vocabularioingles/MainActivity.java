@@ -25,12 +25,10 @@ public class MainActivity extends AppCompatActivity {
     BBDD_Controller bbdd_controller;
     int indice;
     EditText textoPalabraIngles;
-    EditText EditPalabraEsp;
     TextView textoPalabraEspanol;
     TextView textoCuadroAcierto;
     Boolean siguientePalabra;
     ImageView checkAcierto;
-    TextView mostrarTituloActividad;
     Button botonComprobar;
 
     @Override
@@ -42,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
         textoPalabraIngles = (EditText) findViewById(R.id.PalabraIngles);
         textoCuadroAcierto = (TextView) findViewById(R.id.mensajeAcierto);
         checkAcierto = (ImageView) findViewById(R.id.checkAcierto);
-        EditPalabraEsp = (EditText) findViewById(R.id.EditTextEsp);
-        EditPalabraEsp.setVisibility(View.INVISIBLE);
-        mostrarTituloActividad = (TextView) findViewById(R.id.MostrarTituloActividad);
+
         botonComprobar = (Button) findViewById(R.id.BotonComprobar);
         bbdd_controller = new BBDD_Controller(this);
 
@@ -148,19 +144,6 @@ public class MainActivity extends AppCompatActivity {
         textoPalabraIngles.requestFocus();
     }
 
-    public void IntroducirPalabrasDiccionario(View view){
-        textoPalabraEspanol.setVisibility(View.INVISIBLE);
-        EditPalabraEsp.setVisibility(View.VISIBLE);
-        EditPalabraEsp.setHint("Palabra en Español");
-        textoPalabraEspanol.setHint("Palabra en Inglés");
-        EditPalabraEsp.requestFocus();
-        mostrarTituloActividad.setText("Escribe una palabra en español y su traduccion al inglés para introducirla al Diccionario");
-        // esto hay que cambiarlo porque no permite cambiar por codigo el metodo onclick que se le dio desde el front asi que
-        // habra que crear otro boton y dejarlo oculto para que aparezca cuando se invoque a este metodo como con el edittext
-        botonComprobar.setText("Añadir Palabra");
-        reiniciarCuadros();
-
-    }
 
 
     // utilidades, metodos pequeños pero muy usados, actividad poco compleja

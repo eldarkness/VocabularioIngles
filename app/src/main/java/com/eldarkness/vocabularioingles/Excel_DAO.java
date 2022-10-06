@@ -82,7 +82,7 @@ public class Excel_DAO extends AppCompatActivity {
 
             // Se recorren las columnas (o celdas)
             celda = cellIterator.next();
-            if(comprobarPalabra(celda.getStringCellValue(),bbdd_controller)){
+            if(comprobarPalabra(celda.getStringCellValue())){
                 continue;
             }
             ContentValues values = new ContentValues();
@@ -119,7 +119,7 @@ public class Excel_DAO extends AppCompatActivity {
 
     }
 
-    private Boolean comprobarPalabra(String palabraEsp, BBDD_Controller bbdd_controller){
+    private Boolean comprobarPalabra(String palabraEsp){
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
         String[] projection = {
                 Estructura_BBDD.NOMBRE_COLUMNA3
