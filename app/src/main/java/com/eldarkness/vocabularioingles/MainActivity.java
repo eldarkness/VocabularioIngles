@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,10 +25,13 @@ public class MainActivity extends AppCompatActivity {
     BBDD_Controller bbdd_controller;
     int indice;
     EditText textoPalabraIngles;
+    EditText EditPalabraEsp;
     TextView textoPalabraEspanol;
     TextView textoCuadroAcierto;
     Boolean siguientePalabra;
     ImageView checkAcierto;
+    TextView mostrarTituloActividad;
+    Button botonComprobar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
         textoPalabraIngles = (EditText) findViewById(R.id.PalabraIngles);
         textoCuadroAcierto = (TextView) findViewById(R.id.mensajeAcierto);
         checkAcierto = (ImageView) findViewById(R.id.checkAcierto);
+        EditPalabraEsp = (EditText) findViewById(R.id.EditTextEsp);
+        EditPalabraEsp.setVisibility(View.INVISIBLE);
+        mostrarTituloActividad = (TextView) findViewById(R.id.MostrarTituloActividad);
+        botonComprobar = (Button) findViewById(R.id.BotonComprobar);
         bbdd_controller = new BBDD_Controller(this);
 
         listaIng = new ArrayList<>();
@@ -55,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      *
      * @param bbdd_controller
-     *      *
+     *
      * Es el primer metodo que se ejecuta, lo que hace es conectar con la base de datos sqlite y hacer un select-*
      * para extraer todas las palabras de la base de datos y con el metodo comprobarPalabraLista se va comprobando
      * si esa polabra esta o no en la lista de palabras que usuara la app que son dos arraylist de string uno para
@@ -98,20 +106,10 @@ public class MainActivity extends AppCompatActivity {
 
     }*/
 
-
-    public void SiguientePalabra(View view) {
-        indice = (int) (Math.random() * listaEsp.size());
-        textoPalabraEspanol.setText("");
-        textoPalabraIngles.setText("");
-        textoCuadroAcierto.setText("");
-        textoPalabraEspanol.setText("" + listaEsp.get(indice));
-        textoPalabraIngles.requestFocus();
-
-
-    }
-
+    // si se le da un click comprueba que la palabra introducida sea correcta si es asi pone a true una variable que
+    // al volver al invocar el metodo hara una llamada a la siguiente palabra y se saldra sin hacer nada mas
     public void ComprobarPalabra(View view){
-        System.out.println("comprobar palabra " +listaIng.size());
+        checkAcierto.setImageResource(0);
         if (siguientePalabra){
             SiguientePalabra(view);
             siguientePalabra = false;
@@ -135,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
                 siguientePalabra = true;
             }else{
                 checkAcierto.setImageResource(android.R.drawable.ic_delete);
-                textoCuadroAcierto.setText("¡Has fallado!, la respuesta correcta era: " + listaIng.get(indice));
 
             }
         }
@@ -143,10 +140,49 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // se le llama desde el metodo anterior si la variable booleana siguientePalabra esta a true
+    public void SiguientePalabra(View view) {
+        indice = (int) (Math.random() * listaEsp.size());
+        reiniciarCuadros();
+        textoPalabraEspanol.setText("" + listaEsp.get(indice));
+        textoPalabraIngles.requestFocus();
+    }
+
+    public void IntroducirPalabrasDiccionario(View view){
+        textoPalabraEspanol.setVisibility(View.INVISIBLE);
+        EditPalabraEsp.setVisibility(View.VISIBLE);
+        EditPalabraEsp.setHint("Palabra en Español");
+        textoPalabraEspanol.setHint("Palabra en Inglés");
+        EditPalabraEsp.requestFocus();
+        mostrarTituloActividad.setText("Escribe una palabra en español y su traduccion al inglés para introducirla al Diccionario");
+        // esto hay que cambiarlo porque no permite cambiar por codigo el metodo onclick que se le dio desde el front asi que
+        // habra que crear otro boton y dejarlo oculto para que aparezca cuando se invoque a este metodo como con el edittext
+        botonComprobar.setText("Añadir Palabra");
+        reiniciarCuadros();
+
+    }
+
+
+    // utilidades, metodos pequeños pero muy usados, actividad poco compleja
+    private void reiniciarCuadros(){
+        textoPalabraEspanol.setText("");
+        textoPalabraIngles.setText("");
+        textoCuadroAcierto.setText("");
+        // 0 equivale a nulo
+        checkAcierto.setImageResource(0);
+
+    }
 
     public void Salir(View view){
         finish();
     }
+
+    public void cargarActividadAnadirPalabras(View view){
+        Intent i = new Intent(this, ActivityAnadirPalabras.class);
+        startActivity(i);
+
+    }
+
 
     public void cargarActividadExcelDAO(View view){
         Intent i = new Intent(this, Excel_DAO.class);

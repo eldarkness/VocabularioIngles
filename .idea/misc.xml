@@ -4,15 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/el_ar/AndroidProyects/VocabularioIngles/app/src/main/res/drawable/border.xml" value="0.25" />
+        <entry key="..\:/Users/el_ar/AndroidProyects/VocabularioIngles/app/src/main/res/layout/activity_anadir_palabras.xml" value="0.25" />
         <entry key="..\:/Users/el_ar/AndroidProyects/VocabularioIngles/app/src/main/res/layout/activity_excel_dao.xml" value="0.1596153846153846" />
-        <entry key="..\:/Users/el_ar/AndroidProyects/VocabularioIngles/app/src/main/res/layout/activity_main.xml" value="0.16" />
+        <entry key="..\:/Users/el_ar/AndroidProyects/VocabularioIngles/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/el_ar/AndroidProyects/VocabularioIngles/app/src/main/res/layout/backup_activitymain.xml" value="0.19970703125" />
         <entry key="..\:/Users/eldarkness/AndroidStudioProjects/VocabularioIngles/app/src/main/res/layout/activity_excel_dao.xml" value="0.1" />
         <entry key="..\:/Users/eldarkness/AndroidStudioProjects/VocabularioIngles/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

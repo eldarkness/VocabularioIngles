@@ -12,7 +12,7 @@
         android:layout_width="128dp"
         android:layout_height="44dp"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="120dp"
         android:background="@drawable/border"
         android:gravity="center"
@@ -21,14 +21,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.395"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/MostrarTituloActividad" />
 
     <Button
         android:id="@+id/BotonComprobar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="120dp"
         android:onClick="ComprobarPalabra"
         android:text="Comprobar"
@@ -45,7 +45,6 @@
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
-
         android:textColor="#3461BF"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/PalabraEspanol"
@@ -56,22 +55,21 @@
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="24dp"
         android:onClick="cargarActividadExcelDAO"
         android:text="Pasar a Excel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.464"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/mensajeAcierto"
         android:layout_width="340dp"
         android:layout_height="78dp"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="56dp"
         android:gravity="center"
         android:textSize="24sp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,4 +85,47 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/PalabraIngles"
         app:layout_constraintTop_toTopOf="@+id/PalabraIngles" />
+
+    <TextView
+        android:id="@+id/MostrarTituloActividad"
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:text="Escribe una traduccion para la palabra:"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/IntroducirPalabras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:onClick="cargarActividadAnadirPalabras"
+        android:text="Introducir Palabras"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/EditTextEsp"
+        android:layout_width="127dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        android:textColor="#3461BF"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MostrarTituloActividad" />
 </androidx.constraintlayout.widget.ConstraintLayout>
