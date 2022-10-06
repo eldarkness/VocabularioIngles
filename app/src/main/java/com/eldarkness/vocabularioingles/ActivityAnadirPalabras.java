@@ -35,26 +35,10 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         SQLiteDatabase sqLiteDatabase = bbdd.getWritableDatabase();
         String palabraEsp = palabraEspanol.getText().toString();
         String palabraIng = palabraIngles.getText().toString();
-        String[] projection = {
-                Estructura_BBDD.NOMBRE_COLUMNA3
-        };
 
-        String selection = Estructura_BBDD.NOMBRE_COLUMNA3 + " = ?";
-        String[] selectionArgs = { palabraEsp };
 
-        Cursor c = sqLiteDatabase.query(
-            Estructura_BBDD.TABLE_NAME2,
-            projection,
-            selection,
-            selectionArgs,
-            null,
-                null,
-                null
-
-        );
-
-        if(c.getCount() > 0 ){
-            System.out.println("La palabra " + c.getString(1));
+        if(buscarPalabra(palabraEsp)){
+            System.out.println("La palabra " + palabraEsp + " ya esta en la base de datos");
         }else{
             ContentValues values = new ContentValues();
             values.put(Estructura_BBDD.NOMBRE_COLUMNA3,palabraEsp);
@@ -64,6 +48,32 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
 
     }
 
+    public Boolean buscarPalabra(String palabraEsp){
+        SQLiteDatabase sqLiteDatabase = bbdd.getReadableDatabase();
+        String[] projection = {
+                Estructura_BBDD.NOMBRE_COLUMNA3
+        };
+        String selection = Estructura_BBDD.NOMBRE_COLUMNA3 + " = ?";
+        String[] selectionArgs = { palabraEsp };
+
+        Cursor c = sqLiteDatabase.query(
+                Estructura_BBDD.TABLE_NAME2,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+
+        );
+
+        if (c.getCount()>0){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
     public void volverAtras(View view){
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);

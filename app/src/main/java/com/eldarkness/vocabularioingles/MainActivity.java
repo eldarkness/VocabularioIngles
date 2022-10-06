@@ -49,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
         anadirPalabras(bbdd_controller);
 
-        if(listaEsp.size() > 0 ){
+
+        /*if(listaEsp.size() > 0 ){
             SiguientePalabra(new View(this));
             siguientePalabra = false;
-        }
+        }*/
 
     }
 
@@ -68,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
     public void anadirPalabras(BBDD_Controller bbdd_controller){
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
 
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME2, null);
         c.moveToFirst();
-        System.out.println(c.getCount());
+        System.out.println("Se ejecuta el metodo añadir palabras");
         while(!c.isAfterLast()){
             /*if(!comprobarPalabraLista(c.getString(1))){
                 listaIng.add(c.getString(1));
@@ -84,23 +85,6 @@ public class MainActivity extends AppCompatActivity {
         c.close();
 
     }
-
-
-    /*
-    public Boolean comprobarPalabraLista(String palabra){
-
-        for (int i = 0; i < listaIng.size(); i++){
-            System.out.println("Comprobando la palabra de la base de datos: " + palabra +
-                    " si coincide con alguna de la lista " + listaIng.get(i));
-
-            if(palabra.equalsIgnoreCase(listaIng.get(i))){
-                return true;
-            }
-
-        }
-        return false;
-
-    }*/
 
     // si se le da un click comprueba que la palabra introducida sea correcta si es asi pone a true una variable que
     // al volver al invocar el metodo hara una llamada a la siguiente palabra y se saldra sin hacer nada mas
@@ -167,10 +151,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void cargarActividadExcelDAO(View view){
-        Intent i = new Intent(this, Excel_DAO.class);
-        startActivity(i);
-
-
-    }
 }
