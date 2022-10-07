@@ -13,6 +13,8 @@ import android.widget.EditText;
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 
+import java.util.Locale;
+
 public class ActivityAnadirPalabras extends AppCompatActivity {
 
     private BBDD_Controller bbdd;
@@ -28,6 +30,7 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         palabraEspanol.setHint("Palabra en Español");
         palabraIngles.setHint("Palabra en Inglés");
         palabraEspanol.requestFocus();
+
     }
 
     public void IntroducirPalabrasDiccionario(View view){
@@ -41,11 +44,24 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
             System.out.println("La palabra " + palabraEsp + " ya esta en la base de datos");
         }else{
             ContentValues values = new ContentValues();
-            values.put(Estructura_BBDD.NOMBRE_COLUMNA3,palabraEsp);
-            values.put(Estructura_BBDD.NOMBRE_COLUMNA2,palabraIng);
+            values.put(Estructura_BBDD.NOMBRE_COLUMNA3,capitalizar(palabraEsp));
+            values.put(Estructura_BBDD.NOMBRE_COLUMNA2,capitalizar(palabraIng));
             long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME2, null, values);
+            if (newRowId > 0){
+                System.out.println("La palabra " + palabraEsp + " se ha insertado en la base de datos");
+            }
         }
 
+        reiniciarCuadros();
+
+
+
+    }
+
+    private String capitalizar(String palabra){
+        String str = (palabra.substring(0, 1)).toUpperCase(Locale.ROOT) + (palabra.substring(1)).toLowerCase(Locale.ROOT);
+
+        return str;
     }
 
     public Boolean buscarPalabra(String palabraEsp){
@@ -78,5 +94,13 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
     }
+
+    private void reiniciarCuadros(){
+        palabraEspanol.setText("");
+        palabraIngles.setText("");
+        palabraEspanol.requestFocus();
+
+    }
+
 
 }

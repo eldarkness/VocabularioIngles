@@ -49,12 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
         anadirPalabras(bbdd_controller);
 
-
-        /*if(listaEsp.size() > 0 ){
-            SiguientePalabra(new View(this));
-            siguientePalabra = false;
-        }*/
-
     }
 
     /**
@@ -77,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 listaIng.add(c.getString(1));
                 listaEsp.add(c.getString(2));
             }*/
-            listaIng.add(c.getString(1));
-            listaEsp.add(c.getString(2));
+            listaIng.add(c.getString(2));
+            listaEsp.add(c.getString(1));
             System.out.println(c.getString(1));
             c.moveToNext();
         }
@@ -129,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     // utilidades, metodos pequeños pero muy usados, actividad poco compleja
     private void reiniciarCuadros(){
         textoPalabraEspanol.setText("");
@@ -138,6 +131,14 @@ public class MainActivity extends AppCompatActivity {
         // 0 equivale a nulo
         checkAcierto.setImageResource(0);
 
+    }
+
+    public void mostrarPalabra(View view){
+        System.out.println(textoPalabraEspanol.getText().toString());
+        if(textoPalabraEspanol.getText().toString().equals("")){
+            siguientePalabra = false;
+            SiguientePalabra(view);
+        }
     }
 
     public void Salir(View view){
