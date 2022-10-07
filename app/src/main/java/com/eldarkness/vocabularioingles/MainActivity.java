@@ -44,12 +44,114 @@ public class MainActivity extends AppCompatActivity {
         botonComprobar = (Button) findViewById(R.id.BotonComprobar);
         bbdd_controller = new BBDD_Controller(this);
 
+        SiguientePalabra2();
+
         listaIng = new ArrayList<>();
         listaEsp = new ArrayList<>();
 
         anadirPalabras(bbdd_controller);
 
     }
+
+    // invoca la primera palabra llamando al metodo siguientepalabra en el caso de que el textview
+    // de la palabra en español este vacio
+    public void mostrarPalabra2(View view){
+
+        if(textoPalabraEspanol.getText().toString().equals("")){
+            siguientePalabra = false;
+            SiguientePalabra2();
+        }
+    }
+
+    // se le llama desde el metodo anterior si la variable booleana siguientePalabra esta a true
+    // se debe extraer una palabra al hacer desde la base de datos en este metodo
+    public void SiguientePalabra2() {
+        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME2, null);
+
+        System.out.println(c.getCount() + "holaa");
+
+        indice = (int) (Math.random() * c.getCount());
+        System.out.println(indice);
+        c.moveToFirst();
+        int cont = 1;
+        while(cont < indice){
+            c.moveToNext();
+            cont++;
+        }
+
+        System.out.println("Español: " + c.getString(1) + " Ingles: " + c.getString(2));
+        c.close();
+    }
+
+
+
+
+
+    // ultimo metodo a rellenar
+    public void ComprobarPalabra2(View view){
+        checkAcierto.setImageResource(0);
+        if (siguientePalabra){
+            SiguientePalabra(view);
+            siguientePalabra = false;
+
+        }else{
+
+            String palabraEspanol = textoPalabraEspanol.getText().toString();
+            String palabraIngles = textoPalabraIngles.getText().toString();
+
+            if (palabraEspanol.equalsIgnoreCase("")) {
+                textoCuadroAcierto.setText("Debes pulsar el boton Siguiente Palabra para jugar");
+                return;
+            } else if (palabraIngles.equalsIgnoreCase("")){
+                textoCuadroAcierto.setText("Debes introducir una palabra en Ingles para poder comprobarla");
+                return;
+            }
+
+
+
+            if(listaIng.get(indice).equalsIgnoreCase(palabraIngles)){
+                textoCuadroAcierto.setText("¡Has acertado!");
+                checkAcierto.setImageResource(R.drawable.check_ok);
+                siguientePalabra = true;
+            }else{
+                checkAcierto.setImageResource(android.R.drawable.ic_delete);
+
+            }
+        }
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      *
@@ -80,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     // si se le da un click comprueba que la palabra introducida sea correcta si es asi pone a true una variable que
     // al volver al invocar el metodo hara una llamada a la siguiente palabra y se saldra sin hacer nada mas
     public void ComprobarPalabra(View view){
@@ -100,6 +203,8 @@ public class MainActivity extends AppCompatActivity {
                 textoCuadroAcierto.setText("Debes introducir una palabra en Ingles para poder comprobarla");
                 return;
             }
+
+
 
             if(listaIng.get(indice).equalsIgnoreCase(palabraIngles)){
                 textoCuadroAcierto.setText("¡Has acertado!");
@@ -123,7 +228,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // utilidades, metodos pequeños pero muy usados, actividad poco compleja
+
+
+    // Utilidades, metodos pequeños pero muy usados, metodos poco complejos
+
     private void reiniciarCuadros(){
         textoPalabraEspanol.setText("");
         textoPalabraIngles.setText("");
