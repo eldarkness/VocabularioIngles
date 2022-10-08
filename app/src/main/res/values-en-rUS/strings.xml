@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">English Dictionary</string>
+    <string name="boton_anadir_palabra">Add Words</string>
+    <string name="boton_volver">Back</string>
+    <string name="titulo_anadir_palabras">Write a word in Spanish and its meaning in English to add to the Dictionary</string>
+    <string name="boton_comprobar">Check</string>
+    <string name="titulo_mainactivity">Write a traduction for the word:</string>
+    <string name="boton_mostrar_palabra">Show Word</string>
+    <string name="boton_introducir_palabras">Add Words</string>
+    <string name="descripcion_imageCheck">It will show a check if the answer is correct or a X if its wrong</string>
+</resources>

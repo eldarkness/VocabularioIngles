@@ -8,6 +8,7 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
@@ -167,4 +168,5 @@ public class Excel_DAO extends AppCompatActivity {
         }
 
     }
+
 }

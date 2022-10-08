@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Diccionario Inglés</string>
+    <string name="boton_anadir_palabra">Añadir Palabra</string>
+    <string name="boton_volver">Volver</string>
+    <string name="titulo_anadir_palabras">Escribe una palabra en español y su traduccion al inglés para introducirla al Diccionario</string>
+    <string name="boton_comprobar">Comprobar</string>
+    <string name="titulo_mainactivity">Escribe una traduccion para la palabra:</string>
+    <string name="boton_mostrar_palabra">Mostrar Palabra</string>
+    <string name="boton_introducir_palabras">Introducir Palabras</string>
+    <string name="descripcion_imageCheck">Mostrara una imagen check si se acierta o una cruz si es erronea la respuesta</string>
 </resources>

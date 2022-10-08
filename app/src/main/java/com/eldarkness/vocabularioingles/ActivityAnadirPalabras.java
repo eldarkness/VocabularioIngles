@@ -39,16 +39,18 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         String palabraEsp = palabraEspanol.getText().toString();
         String palabraIng = palabraIngles.getText().toString();
 
-
-        if(buscarPalabra(palabraEsp)){
-            System.out.println("La palabra " + palabraEsp + " ya esta en la base de datos");
-        }else{
-            ContentValues values = new ContentValues();
-            values.put(Estructura_BBDD.NOMBRE_COLUMNA3,capitalizar(palabraEsp));
-            values.put(Estructura_BBDD.NOMBRE_COLUMNA2,capitalizar(palabraIng));
-            long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME2, null, values);
-            if (newRowId > 0){
-                System.out.println("La palabra " + palabraEsp + " se ha insertado en la base de datos");
+        if(!palabraEsp.equalsIgnoreCase("") && !palabraIng.equalsIgnoreCase("")){
+            System.out.println("Has escrito algo en cada linea");
+            if(buscarPalabra(palabraEsp)){
+                System.out.println("La palabra " + palabraEsp + " ya esta en la base de datos");
+            }else{
+                ContentValues values = new ContentValues();
+                values.put(Estructura_BBDD.NOMBRE_COLUMNA3,capitalizar(palabraEsp));
+                values.put(Estructura_BBDD.NOMBRE_COLUMNA2,capitalizar(palabraIng));
+                long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME2, null, values);
+                if (newRowId > 0){
+                    System.out.println("La palabra " + palabraEsp + " se ha insertado en la base de datos");
+                }
             }
         }
 
