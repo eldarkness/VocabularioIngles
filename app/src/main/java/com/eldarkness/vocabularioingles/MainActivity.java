@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<String> listaEsp;
     BBDD_Controller bbdd_controller;
     int indice;
+    int error = 0;
     EditText textoPalabraIngles;
     TextView textoPalabraEspanol;
     TextView textoCuadroAcierto;
@@ -31,12 +32,13 @@ public class MainActivity extends AppCompatActivity {
     ImageView checkAcierto;
     Button botonComprobar;
     String palabraIngles;
+    private ControladorPalabras controladorPalabras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        controladorPalabras = new ControladorPalabras();
         textoPalabraEspanol = (TextView) findViewById(R.id.PalabraEspanol);
         textoPalabraIngles = (EditText) findViewById(R.id.PalabraIngles);
         textoCuadroAcierto = (TextView) findViewById(R.id.mensajeAcierto);
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     // se le llama desde el metodo anterior si la variable booleana siguientePalabra esta a true
     // se debe extraer una palabra al hacer desde la base de datos en este metodo
     public void SiguientePalabra() {
+        controladorPalabras.contador++;
         reiniciarCuadros();
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
 
@@ -101,8 +104,6 @@ public class MainActivity extends AppCompatActivity {
             siguientePalabra = false;
 
         }else{
-
-
             if (textoPalabraEspanol.getText().toString().equalsIgnoreCase("")) {
                 textoCuadroAcierto.setText("Debes pulsar el boton Siguiente Palabra para jugar");
                 return;
@@ -114,20 +115,34 @@ public class MainActivity extends AppCompatActivity {
             if(textoPalabraIngles.getText().toString().equalsIgnoreCase(palabraIngles)){
                 textoCuadroAcierto.setText("¡Has acertado!");
                 checkAcierto.setImageResource(R.drawable.check_ok);
+                error = 0;
                 siguientePalabra = true;
                 palabraIngles = "";
             }else{
-                checkAcierto.setImageResource(android.R.drawable.ic_delete);
-                textoPalabraIngles.requestFocus();
+                switch (error){
+                    case 0:
+                        textoCuadroAcierto.setText("¡Has Fallado, prueba otra vez!");
+                        checkAcierto.setImageResource(android.R.drawable.ic_delete);
+                        error++;
+                        textoPalabraIngles.requestFocus();
+                        break;
+                    case 1:
+                        textoCuadroAcierto.setText("¡Has Fallado, tendrás otra oportunidad mas adelante");
+                        error = 0;
+                        checkAcierto.setImageResource(android.R.drawable.ic_delete);
+                        controladorPalabras.anadirPalabras(textoPalabraEspanol.getText().toString(),palabraIngles);
+                        if(controladorPalabras.contador == 0){
+
+                        }
+                        break;
+                }
+
 
             }
 
-
         }
 
-
-
-    }
+    } // metodo comprobarPalabra
 
 
 

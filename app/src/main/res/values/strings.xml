@@ -8,4 +8,7 @@
     <string name="boton_mostrar_palabra">Mostrar Palabra</string>
     <string name="boton_introducir_palabras">Introducir Palabras</string>
     <string name="descripcion_imageCheck">Mostrara una imagen check si se acierta o una cruz si es erronea la respuesta</string>
+    <string name="pista_palabra_esp">Palabra en Español</string>
+    <string name="pista_palabra_eng">Palabra en Inglés</string>
+
 </resources>

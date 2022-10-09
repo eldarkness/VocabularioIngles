@@ -24,6 +24,7 @@
 
     <EditText
         android:id="@+id/editTextEsp"
+        android:hint="@string/pista_palabra_esp"
         android:layout_width="189dp"
         android:layout_height="40dp"
         android:layout_marginTop="16dp"
@@ -38,6 +39,7 @@
 
     <EditText
         android:id="@+id/editTextIngles"
+        android:hint="@string/pista_palabra_eng"
         android:layout_width="181dp"
         android:layout_height="42dp"
         android:layout_marginTop="24dp"

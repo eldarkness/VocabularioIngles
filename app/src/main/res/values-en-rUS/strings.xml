@@ -8,4 +8,6 @@
     <string name="boton_mostrar_palabra">Show Word</string>
     <string name="boton_introducir_palabras">Add Words</string>
     <string name="descripcion_imageCheck">It will show a check if the answer is correct or a X if its wrong</string>
+    <string name="pista_palabra_esp">Word in Spanish</string>
+    <string name="pista_palabra_eng">Word in English</string>
 </resources>

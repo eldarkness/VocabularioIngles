@@ -27,8 +27,6 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         bbdd = new BBDD_Controller(this);
         palabraEspanol = (EditText) findViewById(R.id.editTextEsp);
         palabraIngles = (EditText) findViewById(R.id.editTextIngles);
-        palabraEspanol.setHint("Palabra en Español");
-        palabraIngles.setHint("Palabra en Inglés");
         palabraEspanol.requestFocus();
 
     }
