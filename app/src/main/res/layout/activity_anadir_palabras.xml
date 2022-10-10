@@ -14,7 +14,7 @@
         android:gravity="center"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
-        android:text="@string/app_name"
+        android:text="@string/titulo_anadir_palabras"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,12 +24,12 @@
 
     <EditText
         android:id="@+id/editTextEsp"
-        android:hint="@string/pista_palabra_esp"
         android:layout_width="189dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:gravity="center"
+        android:hint="@string/pista_palabra_esp"
         android:inputType="textPersonName"
         android:textColor="#3461BF"
         android:textSize="20sp"
@@ -39,12 +39,12 @@
 
     <EditText
         android:id="@+id/editTextIngles"
-        android:hint="@string/pista_palabra_eng"
         android:layout_width="181dp"
-        android:layout_height="42dp"
+        android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:ems="10"
         android:gravity="center"
+        android:hint="@string/pista_palabra_eng"
         android:inputType="textPersonName"
         android:textColor="#3461BF"
         android:textSize="20sp"

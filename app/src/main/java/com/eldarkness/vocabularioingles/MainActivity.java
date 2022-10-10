@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         botonComprobar = (Button) findViewById(R.id.BotonComprobar);
         bbdd_controller = new BBDD_Controller(this);
 
-        mostrarPalabra(new View(this));
+        mostrarPalabra(null);
 
 
     }
@@ -63,11 +63,30 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     // se le llama desde el metodo anterior si la variable booleana siguientePalabra esta a true
     // se debe extraer una palabra al hacer desde la base de datos en este metodo
     public void SiguientePalabra() {
-        controladorPalabras.contador++;
+
+        // continuar por aqui hay que implementar que cuando llegue aqui compruebe si el contador esta a 0
+        // y si hay palabras en la lista del controladorPalabras y si es asi que no cargue una palabra de la bbdd
+
         reiniciarCuadros();
+
+        if(controladorPalabras.contador == 0 && controladorPalabras.getPalabrasEquivocadas().size() > 0){
+            // cargar la palabra equivocada y borrarla de la lista y llamar al metodo generarcontador
+            textoPalabraEspanol.setText(controladorPalabras.getPalabrasEquivocadas().get(0).getPalabraEsp());
+            palabraIngles = controladorPalabras.getPalabrasEquivocadas().get(0).getPalabraEng();
+            controladorPalabras.mostrarLista();
+            controladorPalabras.getPalabrasEquivocadas().remove(0);
+            controladorPalabras.mostrarLista();
+            System.out.println("Oportunidad extra, se vuelve a cargar la palabra: "+  textoPalabraEspanol.getText().toString());
+            controladorPalabras.generarContador();
+
+            return;
+
+        }
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
 
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME2, null);
@@ -94,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     // ultimo metodo a rellenar
     public void ComprobarPalabra(View view){
         checkAcierto.setImageResource(0);
@@ -109,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             } else if (textoPalabraIngles.getText().toString().equalsIgnoreCase("")){
                 textoCuadroAcierto.setText("Debes introducir una palabra en Ingles para poder comprobarla");
+
                 return;
             }
 
@@ -132,13 +150,19 @@ public class MainActivity extends AppCompatActivity {
                         checkAcierto.setImageResource(android.R.drawable.ic_delete);
                         controladorPalabras.anadirPalabras(textoPalabraEspanol.getText().toString(),palabraIngles);
                         if(controladorPalabras.contador == 0){
-
+                            controladorPalabras.generarContador();
                         }
+                        SiguientePalabra();
                         break;
+
                 }
 
 
             }
+            if(controladorPalabras.contador > 0){
+                controladorPalabras.contador--;
+            }
+
 
         }
 
