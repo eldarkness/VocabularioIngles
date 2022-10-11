@@ -52,12 +52,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // invoca la primera palabra llamando al metodo siguientepalabra en el caso de que el textview
-    // de la palabra en español este vacio
+    // Muestra la traduccion de la palabra en ingles al usuario, este metodo se puede llamar siempre desde
+    // el front cuando el usuario desconozca la palabra a traducir.
     public void mostrarPalabra(View view){
 
-        if(textoPalabraEspanol.getText().toString().equals("")){
-            siguientePalabra = false;
+        if(!textoPalabraEspanol.getText().toString().isEmpty()){
+            textoPalabraIngles.setText(palabraIngles);
+            siguientePalabra = true;
+            if(controladorPalabras.contador > 0){
+                controladorPalabras.contador--;
+            }
+
+        }else{
             SiguientePalabra();
         }
 
@@ -116,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
     // ultimo metodo a rellenar
     public void ComprobarPalabra(View view){
         checkAcierto.setImageResource(0);
+
+        // este primer if debe desaparecer si quiero que cuando se pulse el metodo comprobar y la palabra
+        // este acertada no haya que volver a pulsar el boton para que cargue la siguiente palabra
         if (siguientePalabra){
             SiguientePalabra();
             siguientePalabra = false;
