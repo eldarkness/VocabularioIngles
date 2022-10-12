@@ -36,8 +36,13 @@ public class ControladorPalabras {
     }
 
     public void generarContador(){
-        contador = (int) (Math.random() * (15 - 10 + 1) + 10);
-        System.out.println("contador generado " + contador);
+
+        contador = numeroAleatorio(5, 8);
+
+    }
+
+    private int numeroAleatorio(int nMinimo, int nMaximo){
+        return (int) (Math.random() * (nMaximo - nMinimo + 1) + nMinimo);
     }
 
     public void mostrarLista(){

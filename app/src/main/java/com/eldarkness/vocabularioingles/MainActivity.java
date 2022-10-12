@@ -69,14 +69,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // ultimas mejoras, hay que ver porque no se cargan las palabras en la base de datos cuando se pasa de la actividad
+    // añadirpalabras a la mainactivity (hay que hacerlo dos veces para que se carge las penultimas palabras añadidas)
+    // Hecho era porque no estaba cerrando los objetos sqlLiteDatabase por lo que me estaba retornando una busqueda a una
+    // base de datos que todavia no estaba actualizada con las ultimas palabras
+
+    // Implementar que cuando se vayan añadiendo palabras solo haya que darle al boton siguiente del teclado virtual
+    // del dispositivo para no tener que estar tocando la pantalla y poder introducir palabras rapidamente
+    // que no se cierre el teclado porque o sino no servira de nada esto ultimo
+    // Hacer lo mismo para la actividad principal, ver como se puede hacer para que no se cierre el teclado y no haya que
+    // tocar la pantalla mientras se van comprobando palabras
+
 
 
     // se le llama desde el metodo anterior si la variable booleana siguientePalabra esta a true
     // se debe extraer una palabra al hacer desde la base de datos en este metodo
     public void SiguientePalabra() {
-
-        // continuar por aqui hay que implementar que cuando llegue aqui compruebe si el contador esta a 0
-        // y si hay palabras en la lista del controladorPalabras y si es asi que no cargue una palabra de la bbdd
 
         reiniciarCuadros();
 
@@ -107,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         indice = (int) (Math.random() * c.getCount());
         System.out.println(indice);
         c.moveToFirst();
-        int cont = 1;
+        int cont = 0;
         while(cont < indice){
             c.moveToNext();
             cont++;
@@ -121,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ultimo metodo a rellenar
     public void ComprobarPalabra(View view){
+
         checkAcierto.setImageResource(0);
 
         // este primer if debe desaparecer si quiero que cuando se pulse el metodo comprobar y la palabra
@@ -190,6 +199,8 @@ public class MainActivity extends AppCompatActivity {
         checkAcierto.setImageResource(0);
 
     }
+
+
 
 
 

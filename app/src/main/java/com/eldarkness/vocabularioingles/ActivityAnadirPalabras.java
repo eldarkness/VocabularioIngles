@@ -51,9 +51,8 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
                 }
             }
         }
-
+        sqLiteDatabase.close();
         reiniciarCuadros();
-
 
 
     }
@@ -65,6 +64,7 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     }
 
     public Boolean buscarPalabra(String palabraEsp){
+
         SQLiteDatabase sqLiteDatabase = bbdd.getReadableDatabase();
         String[] projection = {
                 Estructura_BBDD.NOMBRE_COLUMNA3
@@ -82,8 +82,11 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
                 null
 
         );
+        int cantidad = c.getCount();
+        c.close();
+        // parece que no se puede cerrar el objeto sqlitedatabase ANTES de llamar al metodo del cursor getCount()
 
-        if (c.getCount()>0){
+        if (cantidad>0){
             return true;
         }else{
             return false;
