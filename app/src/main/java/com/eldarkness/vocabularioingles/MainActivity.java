@@ -96,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
             controladorPalabras.getPalabrasEquivocadas().remove(0);
             controladorPalabras.mostrarLista();
             System.out.println("Oportunidad extra, se vuelve a cargar la palabra: "+  textoPalabraEspanol.getText().toString());
-            controladorPalabras.generarContador();
+            if(controladorPalabras.getPalabrasEquivocadas().size() > 0){
+                controladorPalabras.generarContador();
+            }
 
             return;
 
@@ -167,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
                         error = 0;
                         checkAcierto.setImageResource(android.R.drawable.ic_delete);
                         controladorPalabras.anadirPalabras(textoPalabraEspanol.getText().toString(),palabraIngles);
+                        // generara un contador la primera vez que el usuario se equivoque en una palabra y cada vez
+                        // que se añada la primera palabra a la lista de palabras equivocadas
                         if(controladorPalabras.contador == 0){
                             controladorPalabras.generarContador();
                         }

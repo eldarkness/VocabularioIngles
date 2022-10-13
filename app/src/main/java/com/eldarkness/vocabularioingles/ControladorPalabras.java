@@ -38,7 +38,7 @@ public class ControladorPalabras {
     public void generarContador(){
 
         contador = numeroAleatorio(5, 8);
-
+        System.out.println("Se genero el contador " + contador);
     }
 
     private int numeroAleatorio(int nMinimo, int nMaximo){
