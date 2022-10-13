@@ -1,5 +1,6 @@
 package com.eldarkness.vocabularioingles;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Application;
@@ -52,16 +53,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // Muestra la traduccion de la palabra en ingles al usuario, este metodo se puede llamar siempre desde
-    // el front cuando el usuario desconozca la palabra a traducir.
+    /**
+     *
+     * @param view
+     *
+     * Metodo que es llamado automaticamente en el onCreate para cargar la primera palabra sin que el
+     * usuario tenga que hacer nada. Se puede llamar tambien desde el front para mostrar la traduccion
+     * de la palabra en español
+     */
     public void mostrarPalabra(View view){
 
         if(!textoPalabraEspanol.getText().toString().isEmpty()){
             textoPalabraIngles.setText(palabraIngles);
-            siguientePalabra = true;
-            if(controladorPalabras.contador > 0){
-                controladorPalabras.contador--;
-            }
 
         }else{
             SiguientePalabra();
@@ -69,10 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // ultimas mejoras, hay que ver porque no se cargan las palabras en la base de datos cuando se pasa de la actividad
-    // añadirpalabras a la mainactivity (hay que hacerlo dos veces para que se carge las penultimas palabras añadidas)
-    // Hecho era porque no estaba cerrando los objetos sqlLiteDatabase por lo que me estaba retornando una busqueda a una
-    // base de datos que todavia no estaba actualizada con las ultimas palabras
 
     // Implementar que cuando se vayan añadiendo palabras solo haya que darle al boton siguiente del teclado virtual
     // del dispositivo para no tener que estar tocando la pantalla y poder introducir palabras rapidamente
@@ -81,12 +80,17 @@ public class MainActivity extends AppCompatActivity {
     // tocar la pantalla mientras se van comprobando palabras
 
 
-
-    // se le llama desde el metodo anterior si la variable booleana siguientePalabra esta a true
-    // se debe extraer una palabra al hacer desde la base de datos en este metodo
+    /**
+     * Se llama siempre desde el metodo comprobarPalabra tanto si el usuario ha acertado la palabra como sino.
+     * Primero se reinician los cuadros de texto y se comprueba si el contador esta a cero. Si es asi se carga una palabra
+     * de la lista de palabras equivocadas sino se hace un select de todas la palabras de la bbdd y se carga una al azar
+      */
     public void SiguientePalabra() {
 
         reiniciarCuadros();
+        if(controladorPalabras.contador > 0){
+            controladorPalabras.contador--;
+        }
 
         if(controladorPalabras.contador == 0 && controladorPalabras.getPalabrasEquivocadas().size() > 0){
             // cargar la palabra equivocada y borrarla de la lista y llamar al metodo generarcontador
@@ -128,65 +132,58 @@ public class MainActivity extends AppCompatActivity {
         c.close();
     }
 
-
-    // ultimo metodo a rellenar
+    /**
+     *
+     * @param view
+     */
     public void ComprobarPalabra(View view){
 
         checkAcierto.setImageResource(0);
 
-        // este primer if debe desaparecer si quiero que cuando se pulse el metodo comprobar y la palabra
-        // este acertada no haya que volver a pulsar el boton para que cargue la siguiente palabra
-        if (siguientePalabra){
+        // Primero se comprueba que ninguno de los dos cuadros de texto este vacio, si es asi se sale del metodo
+        if (textoPalabraEspanol.getText().toString().equalsIgnoreCase("")) {
+            textoCuadroAcierto.setText("Debes pulsar el boton Mostrar Palabra para jugar");
+            return;
+        } else if (textoPalabraIngles.getText().toString().equalsIgnoreCase("")){
+            textoCuadroAcierto.setText("Debes introducir una palabra en Ingles para poder comprobarla");
+            return;
+        }
+
+        // se comprueba la palabra, si es acertada se muestra icono se pone el contador de error a 0 y la palabraingles a cadena vacia
+        // si es erronea se le da una oportunidad mas, si se vuelve a equivocar se añade esa palabra a la lista del controladorPalabras y
+        // si el contador estaba a 0 genera lo llama para generar un numero aleatorio.
+        if(textoPalabraIngles.getText().toString().equalsIgnoreCase(palabraIngles)){
+            textoCuadroAcierto.setText("¡Has acertado!");
+            checkAcierto.setImageResource(R.drawable.check_ok);
+            error = 0;
+            palabraIngles = "";
             SiguientePalabra();
-            siguientePalabra = false;
-
         }else{
-            if (textoPalabraEspanol.getText().toString().equalsIgnoreCase("")) {
-                textoCuadroAcierto.setText("Debes pulsar el boton Siguiente Palabra para jugar");
-                return;
-            } else if (textoPalabraIngles.getText().toString().equalsIgnoreCase("")){
-                textoCuadroAcierto.setText("Debes introducir una palabra en Ingles para poder comprobarla");
+            switch (error){
+                case 0:
+                    textoCuadroAcierto.setText("¡Has Fallado, prueba otra vez!");
+                    checkAcierto.setImageResource(android.R.drawable.ic_delete);
+                    error++;
+                    textoPalabraIngles.requestFocus();
+                    break;
+                case 1:
+                    textoCuadroAcierto.setText("¡Has Fallado, tendrás otra oportunidad mas adelante");
+                    error = 0;
+                    checkAcierto.setImageResource(android.R.drawable.ic_delete);
+                    controladorPalabras.anadirPalabras(textoPalabraEspanol.getText().toString(),palabraIngles);
+                    // generara un contador la primera vez que el usuario se equivoque en una palabra y cada vez
+                    // que se añada la primera palabra a la lista de palabras equivocadas
+                    if(controladorPalabras.contador == 0){
+                        controladorPalabras.generarContador();
+                    }
+                    SiguientePalabra();
+                    break;
 
-                return;
-            }
-
-            if(textoPalabraIngles.getText().toString().equalsIgnoreCase(palabraIngles)){
-                textoCuadroAcierto.setText("¡Has acertado!");
-                checkAcierto.setImageResource(R.drawable.check_ok);
-                error = 0;
-                siguientePalabra = true;
-                palabraIngles = "";
-            }else{
-                switch (error){
-                    case 0:
-                        textoCuadroAcierto.setText("¡Has Fallado, prueba otra vez!");
-                        checkAcierto.setImageResource(android.R.drawable.ic_delete);
-                        error++;
-                        textoPalabraIngles.requestFocus();
-                        break;
-                    case 1:
-                        textoCuadroAcierto.setText("¡Has Fallado, tendrás otra oportunidad mas adelante");
-                        error = 0;
-                        checkAcierto.setImageResource(android.R.drawable.ic_delete);
-                        controladorPalabras.anadirPalabras(textoPalabraEspanol.getText().toString(),palabraIngles);
-                        // generara un contador la primera vez que el usuario se equivoque en una palabra y cada vez
-                        // que se añada la primera palabra a la lista de palabras equivocadas
-                        if(controladorPalabras.contador == 0){
-                            controladorPalabras.generarContador();
-                        }
-                        SiguientePalabra();
-                        break;
-
-                }
-
-
-            }
-            if(controladorPalabras.contador > 0){
-                controladorPalabras.contador--;
             }
 
 
         }
+
 
     } // metodo comprobarPalabra
 
@@ -203,9 +200,6 @@ public class MainActivity extends AppCompatActivity {
         checkAcierto.setImageResource(0);
 
     }
-
-
-
 
 
     public void Salir(View view){
