@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     Button botonComprobar;
     String palabraIngles;
     private ControladorPalabras controladorPalabras;
+    EventoTeclado eventoTeclado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +49,27 @@ public class MainActivity extends AppCompatActivity {
         checkAcierto = (ImageView) findViewById(R.id.checkAcierto);
         siguientePalabra = false;
         botonComprobar = (Button) findViewById(R.id.BotonComprobar);
+        eventoTeclado = new EventoTeclado();
+        textoPalabraIngles.setOnEditorActionListener(eventoTeclado);
         bbdd_controller = new BBDD_Controller(this);
+
 
         mostrarPalabra(null);
 
 
     }
+
+    /*
+    Falta por implementar:
+    -Que no se cierre el teclado cuando se llame al metodo comprobarPalabra desde el evento de teclado dandole al next
+    -Tema de persistencia de datos con el tema de las listas etc
+    -Crear una lista para poder ver si se acertaron las ultimas 3 o 5 palabras.
+
+
+     */
+
+
+
 
     /**
      *
@@ -72,6 +90,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onResume(){
+        super.onResume();
+        if (controladorPalabras.getPalabrasEquivocadas().size() > 0){
+            controladorPalabras.mostrarLista();
+        }else{
+            System.out.println("upps parece que la lista esta vacia, valor: " + controladorPalabras.getPalabrasEquivocadas().size());
+        }
+
+    }
 
     // Implementar que cuando se vayan añadiendo palabras solo haya que darle al boton siguiente del teclado virtual
     // del dispositivo para no tener que estar tocando la pantalla y poder introducir palabras rapidamente
@@ -201,12 +228,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    class EventoTeclado implements TextView.OnEditorActionListener{
+
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                // metodo al que queremos llamar
+                ComprobarPalabra(null);
+            }
+
+            return false;
+        }
+    }
 
     public void Salir(View view){
         finish();
     }
 
     public void cargarActividadAnadirPalabras(View view){
+        if (controladorPalabras.getPalabrasEquivocadas().size() > 0){
+            controladorPalabras.mostrarLista();
+        }else{
+            System.out.println("upps parece que la lista esta vacia, valor: " + controladorPalabras.getPalabrasEquivocadas().size());
+        }
         Intent i = new Intent(this, ActivityAnadirPalabras.class);
         startActivity(i);
 
