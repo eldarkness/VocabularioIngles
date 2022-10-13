@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -53,9 +54,7 @@ public class MainActivity extends AppCompatActivity {
         textoPalabraIngles.setOnEditorActionListener(eventoTeclado);
         bbdd_controller = new BBDD_Controller(this);
 
-
         mostrarPalabra(null);
-
 
     }
 
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     Falta por implementar:
     -Que no se cierre el teclado cuando se llame al metodo comprobarPalabra desde el evento de teclado dandole al next
     -Tema de persistencia de datos con el tema de las listas etc
-    -Crear una lista para poder ver si se acertaron las ultimas 3 o 5 palabras.
+    -Crear una lista para poder ver el resultado de las 3-5 ultimas palabras.
 
 
      */
@@ -210,6 +209,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+
+        InputMethodManager miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        miteclado.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(), 0);
+        //miteclado.hideSoftInputFromWindow(textoPalabraIngles.getWindowToken(),0);
+
+
 
 
     } // metodo comprobarPalabra
