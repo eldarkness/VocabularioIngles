@@ -3,11 +3,12 @@ package com.eldarkness.vocabularioingles;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Application;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     String palabraIngles;
     private ControladorPalabras controladorPalabras;
     EventoTeclado eventoTeclado;
+    InputMethodManager miteclado;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         textoPalabraIngles.setOnEditorActionListener(eventoTeclado);
         bbdd_controller = new BBDD_Controller(this);
 
+        miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        //miteclado.toggleSoftInput (InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
         mostrarPalabra(null);
 
     }
@@ -118,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
             controladorPalabras.contador--;
         }
 
+
+
         if(controladorPalabras.contador == 0 && controladorPalabras.getPalabrasEquivocadas().size() > 0){
             // cargar la palabra equivocada y borrarla de la lista y llamar al metodo generarcontador
             textoPalabraEspanol.setText(controladorPalabras.getPalabrasEquivocadas().get(0).getPalabraEsp());
@@ -156,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         palabraIngles = c.getString(2);
         System.out.println("Español: " + c.getString(1) + " Ingles: " + c.getString(2));
         c.close();
+
     }
 
     /**
@@ -210,8 +220,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        InputMethodManager miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        miteclado.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(), 0);
+
+
         //miteclado.hideSoftInputFromWindow(textoPalabraIngles.getWindowToken(),0);
 
 
@@ -237,8 +247,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            miteclado.showSoftInput(textoPalabraIngles, 0);
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 // metodo al que queremos llamar
+                /*InputMethodManager miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                miteclado.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(), 0);*/
                 ComprobarPalabra(null);
             }
 
