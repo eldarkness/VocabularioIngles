@@ -2,6 +2,7 @@ package com.eldarkness.vocabularioingles;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class ActivityAnadirPalabras extends AppCompatActivity {
@@ -20,9 +22,23 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     private BBDD_Controller bbdd;
     EditText palabraEspanol;
     EditText palabraIngles;
+    private ArrayList<String> listaEsp;
+    private ArrayList<String> listaEng;
+    private int contador;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try{
+            listaEsp = getIntent().getExtras().getStringArrayList("listaEsp");
+            listaEng = getIntent().getExtras().getStringArrayList("listaEng");
+            contador = getIntent().getExtras().getInt("contador",0);
+            System.out.println("La palabra " + listaEsp.get(0) + " viajo hasta aqui desde la actividad anterior");
+            System.out.println("La palabra " + listaEng.get(0) + " viajo hasta aqui desde la actividad anterior");
+        }catch (Exception e){
+
+        }
+
         setContentView(R.layout.activity_anadir_palabras);
         bbdd = new BBDD_Controller(this);
         palabraEspanol = (EditText) findViewById(R.id.editTextEsp);
@@ -38,7 +54,7 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         String palabraIng = palabraIngles.getText().toString();
 
         if(!palabraEsp.equalsIgnoreCase("") && !palabraIng.equalsIgnoreCase("")){
-            System.out.println("Has escrito algo en cada linea");
+
             if(buscarPalabra(palabraEsp)){
                 System.out.println("La palabra " + palabraEsp + " ya esta en la base de datos");
             }else{
@@ -53,7 +69,6 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         }
         sqLiteDatabase.close();
         reiniciarCuadros();
-
 
     }
 
@@ -94,8 +109,14 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
 
     }
     public void volverAtras(View view){
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+
+        /*Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("contador",contador);
+        i.putExtra("listaEsp",listaEsp);
+        i.putExtra("listaEng",listaEng);
+        startActivity(i);*/
+        finish();
+
     }
 
     private void reiniciarCuadros(){

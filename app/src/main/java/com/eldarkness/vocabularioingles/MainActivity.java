@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -25,8 +27,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public ArrayList<String> listaIng;
-    public ArrayList<String> listaEsp;
     BBDD_Controller bbdd_controller;
     int indice;
     int error = 0;
@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private ControladorPalabras controladorPalabras;
     EventoTeclado eventoTeclado;
     InputMethodManager miteclado;
-
+    ArrayList<String> listaEsp = new ArrayList<>();
+    ArrayList<String> listaEng = new ArrayList<>();
 
 
     @Override
@@ -57,11 +58,23 @@ public class MainActivity extends AppCompatActivity {
         eventoTeclado = new EventoTeclado();
         textoPalabraIngles.setOnEditorActionListener(eventoTeclado);
         bbdd_controller = new BBDD_Controller(this);
-
         miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        //miteclado.toggleSoftInput (InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
+        //miteclado.hideSoftInputFromWindow(textoPalabraIngles.getWindowToken(),InputMethodManager.HIDE_IMPLICIT_ONLY);
         mostrarPalabra(null);
+        /*try{
+            if(getIntent().getExtras().getStringArrayList("listaEsp") != null
+                && getIntent().getExtras().getStringArrayList("listaEng") != null){
+
+                rellenarArrayList();
+                controladorPalabras.mostrarLista();
+                System.out.println(controladorPalabras.contador);
+                }
+
+        }catch(Exception e){
+
+        }*/
+        //miteclado.showSoftInput(textoPalabraIngles,InputMethodManager.SHOW_IMPLICIT);
+        //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
 
     }
 
@@ -71,10 +84,7 @@ public class MainActivity extends AppCompatActivity {
     -Tema de persistencia de datos con el tema de las listas etc
     -Crear una lista para poder ver el resultado de las 3-5 ultimas palabras.
 
-
      */
-
-
 
 
     /**
@@ -96,21 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void onResume(){
-        super.onResume();
-        if (controladorPalabras.getPalabrasEquivocadas().size() > 0){
-            controladorPalabras.mostrarLista();
-        }else{
-            System.out.println("upps parece que la lista esta vacia, valor: " + controladorPalabras.getPalabrasEquivocadas().size());
-        }
-
-    }
-
-    // Implementar que cuando se vayan añadiendo palabras solo haya que darle al boton siguiente del teclado virtual
-    // del dispositivo para no tener que estar tocando la pantalla y poder introducir palabras rapidamente
-    // que no se cierre el teclado porque o sino no servira de nada esto ultimo
-    // Hacer lo mismo para la actividad principal, ver como se puede hacer para que no se cierre el teclado y no haya que
-    // tocar la pantalla mientras se van comprobando palabras
 
 
     /**
@@ -124,8 +119,6 @@ public class MainActivity extends AppCompatActivity {
         if(controladorPalabras.contador > 0){
             controladorPalabras.contador--;
         }
-
-
 
         if(controladorPalabras.contador == 0 && controladorPalabras.getPalabrasEquivocadas().size() > 0){
             // cargar la palabra equivocada y borrarla de la lista y llamar al metodo generarcontador
@@ -214,21 +207,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                     SiguientePalabra();
                     break;
-
             }
 
-
         }
-
-
-
         //miteclado.hideSoftInputFromWindow(textoPalabraIngles.getWindowToken(),0);
 
-
-
-
     } // metodo comprobarPalabra
-
 
 
     // Utilidades, metodos pequeños pero muy usados, metodos poco complejos
@@ -243,11 +227,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void rellenarArrayList() {
+        controladorPalabras.contador = getIntent().getExtras().getInt("contador",0);
+        listaEsp = getIntent().getExtras().getStringArrayList("listaEsp");
+        listaEng = getIntent().getExtras().getStringArrayList("listaEng");
+        for (int i = 0; i < listaEsp.size(); i++) {
+            controladorPalabras.getPalabrasEquivocadas().add(new PalabraEquivocada(listaEsp.get(i),listaEng.get(i)));
+        }
+
+    }
+
     class EventoTeclado implements TextView.OnEditorActionListener{
 
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            miteclado.showSoftInput(textoPalabraIngles, 0);
+
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 // metodo al que queremos llamar
                 /*InputMethodManager miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -265,17 +259,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void cargarActividadAnadirPalabras(View view){
         if (controladorPalabras.getPalabrasEquivocadas().size() > 0){
-            controladorPalabras.mostrarLista();
+            for (int i = 0; i < controladorPalabras.getPalabrasEquivocadas().size(); i++){
+                listaEsp.add(controladorPalabras.getPalabrasEquivocadas().get(i).getPalabraEsp());
+                listaEng.add(controladorPalabras.getPalabrasEquivocadas().get(i).getPalabraEng());
+            }
         }else{
             System.out.println("upps parece que la lista esta vacia, valor: " + controladorPalabras.getPalabrasEquivocadas().size());
         }
+
         Intent i = new Intent(this, ActivityAnadirPalabras.class);
+
+        i.putExtra("contador",controladorPalabras.contador);
+        i.putExtra("listaEsp",listaEsp);
+        i.putExtra("listaEng",listaEng);
+
         startActivity(i);
 
     }
-
-
-
 
 
 }
