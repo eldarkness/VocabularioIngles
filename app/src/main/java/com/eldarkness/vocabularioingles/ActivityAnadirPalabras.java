@@ -22,22 +22,10 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     private BBDD_Controller bbdd;
     EditText palabraEspanol;
     EditText palabraIngles;
-    private ArrayList<String> listaEsp;
-    private ArrayList<String> listaEng;
-    private int contador;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        try{
-            listaEsp = getIntent().getExtras().getStringArrayList("listaEsp");
-            listaEng = getIntent().getExtras().getStringArrayList("listaEng");
-            contador = getIntent().getExtras().getInt("contador",0);
-            System.out.println("La palabra " + listaEsp.get(0) + " viajo hasta aqui desde la actividad anterior");
-            System.out.println("La palabra " + listaEng.get(0) + " viajo hasta aqui desde la actividad anterior");
-        }catch (Exception e){
-
-        }
 
         setContentView(R.layout.activity_anadir_palabras);
         bbdd = new BBDD_Controller(this);
@@ -109,12 +97,7 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
 
     }
     public void volverAtras(View view){
-
-        /*Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("contador",contador);
-        i.putExtra("listaEsp",listaEsp);
-        i.putExtra("listaEng",listaEng);
-        startActivity(i);*/
+        // se termina con la actividad para que la que llamo a esta (mainactivity) no pierda los datos al llamar al onCreate
         finish();
 
     }

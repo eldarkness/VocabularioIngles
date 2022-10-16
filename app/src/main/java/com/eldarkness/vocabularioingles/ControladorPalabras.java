@@ -42,6 +42,11 @@ public class ControladorPalabras {
         System.out.println("Se genero el contador " + contador);
     }
 
+    public void reducirContador(){
+        contador--;
+        System.out.println("Contador se redujo a: " + contador);
+    }
+
     private int numeroAleatorio(int nMinimo, int nMaximo){
         return (int) (Math.random() * (nMaximo - nMinimo + 1) + nMinimo);
     }

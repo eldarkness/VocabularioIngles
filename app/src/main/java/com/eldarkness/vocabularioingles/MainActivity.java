@@ -61,18 +61,7 @@ public class MainActivity extends AppCompatActivity {
         miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         //miteclado.hideSoftInputFromWindow(textoPalabraIngles.getWindowToken(),InputMethodManager.HIDE_IMPLICIT_ONLY);
         mostrarPalabra(null);
-        /*try{
-            if(getIntent().getExtras().getStringArrayList("listaEsp") != null
-                && getIntent().getExtras().getStringArrayList("listaEng") != null){
 
-                rellenarArrayList();
-                controladorPalabras.mostrarLista();
-                System.out.println(controladorPalabras.contador);
-                }
-
-        }catch(Exception e){
-
-        }*/
         //miteclado.showSoftInput(textoPalabraIngles,InputMethodManager.SHOW_IMPLICIT);
         //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
 
@@ -81,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
     /*
     Falta por implementar:
     -Que no se cierre el teclado cuando se llame al metodo comprobarPalabra desde el evento de teclado dandole al next
-    -Tema de persistencia de datos con el tema de las listas etc
     -Crear una lista para poder ver el resultado de las 3-5 ultimas palabras.
 
      */
@@ -107,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     /**
      * Se llama siempre desde el metodo comprobarPalabra tanto si el usuario ha acertado la palabra como sino.
      * Primero se reinician los cuadros de texto y se comprueba si el contador esta a cero. Si es asi se carga una palabra
@@ -117,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         reiniciarCuadros();
         if(controladorPalabras.contador > 0){
-            controladorPalabras.contador--;
+            controladorPalabras.reducirContador();
         }
 
         if(controladorPalabras.contador == 0 && controladorPalabras.getPalabrasEquivocadas().size() > 0){
@@ -210,13 +197,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-        //miteclado.hideSoftInputFromWindow(textoPalabraIngles.getWindowToken(),0);
+
 
     } // metodo comprobarPalabra
 
 
     // Utilidades, metodos pequeños pero muy usados, metodos poco complejos
-
     private void reiniciarCuadros(){
         textoPalabraEspanol.setText("");
         textoPalabraIngles.setText("");
@@ -227,16 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void rellenarArrayList() {
-        controladorPalabras.contador = getIntent().getExtras().getInt("contador",0);
-        listaEsp = getIntent().getExtras().getStringArrayList("listaEsp");
-        listaEng = getIntent().getExtras().getStringArrayList("listaEng");
-        for (int i = 0; i < listaEsp.size(); i++) {
-            controladorPalabras.getPalabrasEquivocadas().add(new PalabraEquivocada(listaEsp.get(i),listaEng.get(i)));
-        }
-
-    }
-
+    // clase interna, pone a la escucha el edittext que ingresa la palabra en ingles y llama al metodo comprobarPalabra
     class EventoTeclado implements TextView.OnEditorActionListener{
 
         @Override
@@ -275,6 +252,12 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(i);
 
+    }
+
+    public void onPause(){
+        super.onPause();
+        Bundle bundle = new Bundle();
+        bundle.putInt("contador", controladorPalabras.contador);
     }
 
 
