@@ -9,17 +9,16 @@
 
     <TextView
 
+        style="@style/textview"
         android:id="@+id/PalabraEspanol"
         android:layout_width="128dp"
         android:layout_height="44dp"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="120dp"
-        android:gravity="center"
-        android:textColor="#3461BF"
-        android:textSize="20sp"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.395"
+        app:layout_constraintHorizontal_bias="0.418"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/MostrarTituloActividad" />
 
@@ -28,12 +27,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="120dp"
         android:onClick="ComprobarPalabra"
         android:text="@string/boton_comprobar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PalabraIngles" />
 
@@ -41,7 +40,7 @@
         android:id="@+id/PalabraIngles"
         android:layout_width="136dp"
         android:layout_height="49dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
@@ -55,13 +54,13 @@
         android:id="@+id/mensajeAcierto"
         android:layout_width="340dp"
         android:layout_height="78dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/botonMostrarPal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/BotonComprobar" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/checkAcierto"
@@ -95,7 +94,7 @@
         android:id="@+id/IntroducirPalabras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="16dp"
         android:onClick="cargarActividadAnadirPalabras"
         android:text="@string/boton_introducir_palabras"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -107,11 +106,31 @@
         android:id="@+id/botonMostrarPal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
+        android:layout_marginBottom="28dp"
         android:onClick="mostrarPalabra"
         android:text="@string/boton_mostrar_palabra"
         app:layout_constraintBottom_toTopOf="@+id/IntroducirPalabras"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/UltimaPalabra"
+        style="@style/textview"
+        android:layout_width="132dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BotonComprobar" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="41dp"
+        android:layout_height="41dp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/UltimaPalabra"
+        app:layout_constraintStart_toEndOf="@+id/UltimaPalabra"
+        app:layout_constraintTop_toTopOf="@+id/UltimaPalabra" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
