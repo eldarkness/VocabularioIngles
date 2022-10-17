@@ -10,5 +10,11 @@
     <string name="descripcion_imageCheck">Mostrara una imagen check si se acierta o una cruz si es erronea la respuesta</string>
     <string name="pista_palabra_esp">Palabra en Español</string>
     <string name="pista_palabra_eng">Palabra en Inglés</string>
+    <string name="segundo_fallo">¡Has fallado otra vez, tendrás otra oportunidad mas adelante</string>
+    <string name="primer_fallo">¡Has Fallado, prueba otra vez!</string>
+    <string name="acierto">¡Has acertado!</string>
+    <string name="diccionario_vacio">Diccionario vacio, introduce alguna palabra dandole al boton Añadir Palabras</string>
+    <string name="pulsa_mostrarPalabra">Debes pulsar el boton Mostrar Palabra para jugar</string>
+    <string name="introduce_palabraIngles">Debes introducir primero una palabra en inglés para poder comprobarla</string>
 
 </resources>

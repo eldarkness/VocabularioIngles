@@ -125,12 +125,12 @@ public class MainActivity extends AppCompatActivity {
         }
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
 
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME2, null);
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
 
         System.out.println("Hay " + c.getCount() + " palabras en la base de datos");
 
         if(c.getCount() == 0){
-            textoCuadroAcierto.setText("Debes introducir alguna palabra en el diccionario primero");
+            textoCuadroAcierto.setText(R.string.diccionario_vacio);
             return;
 
         }
@@ -150,27 +150,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param view
+     *
+     * Este metodo comprueba la palabra, si es acertada se muestra icono, se pone el contador de error a 0 y la palabraingles a cadena vacia
+     * si es erronea se le da una oportunidad mas, si se vuelve a equivocar se añade esa palabra a la lista del controladorPalabras y
+     * si el contador estaba a 0 llama al metodo correspondiente para generar un numero aleatorio.
      */
+
     public void ComprobarPalabra(View view){
 
         checkAcierto.setImageResource(0);
 
         // Primero se comprueba que ninguno de los dos cuadros de texto este vacio, si es asi se sale del metodo
         if (textoPalabraEspanol.getText().toString().equalsIgnoreCase("")) {
-            textoCuadroAcierto.setText("Debes pulsar el boton Mostrar Palabra para jugar");
+            textoCuadroAcierto.setText(R.string.pulsa_mostrarPalabra);
             return;
         } else if (textoPalabraIngles.getText().toString().equalsIgnoreCase("")){
-            textoCuadroAcierto.setText("Debes introducir una palabra en Ingles para poder comprobarla");
+            textoCuadroAcierto.setText(R.string.introduce_palabraIngles);
             return;
         }
 
-        // se comprueba la palabra, si es acertada se muestra icono se pone el contador de error a 0 y la palabraingles a cadena vacia
-        // si es erronea se le da una oportunidad mas, si se vuelve a equivocar se añade esa palabra a la lista del controladorPalabras y
-        // si el contador estaba a 0 genera lo llama para generar un numero aleatorio.
         if(textoPalabraIngles.getText().toString().equalsIgnoreCase(palabraIngles)){
-            textoCuadroAcierto.setText("¡Has acertado!");
+            textoCuadroAcierto.setText(R.string.acierto);
             checkAcierto.setImageResource(R.drawable.check_ok);
             error = 0;
             palabraIngles = "";
@@ -181,13 +182,13 @@ public class MainActivity extends AppCompatActivity {
         }else{
             switch (error){
                 case 0:
-                    textoCuadroAcierto.setText("¡Has Fallado, prueba otra vez!");
+                    textoCuadroAcierto.setText(R.string.primer_fallo);
                     checkAcierto.setImageResource(android.R.drawable.ic_delete);
                     error++;
                     textoPalabraIngles.requestFocus();
                     break;
                 case 1:
-                    textoCuadroAcierto.setText("¡Has Fallado, tendrás otra oportunidad mas adelante");
+                    textoCuadroAcierto.setText(R.string.segundo_fallo);
                     error = 0;
                     checkAcierto.setImageResource(android.R.drawable.ic_delete);
                     controladorPalabras.anadirPalabras(textoPalabraEspanol.getText().toString(),palabraIngles);
@@ -227,18 +228,12 @@ public class MainActivity extends AppCompatActivity {
 
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 // metodo al que queremos llamar
-                /*InputMethodManager miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                miteclado.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(), 0);*/
                 ComprobarPalabra(null);
             }
-
             return false;
         }
     }
 
-    public void Salir(View view){
-        finish();
-    }
 
     public void cargarActividadAnadirPalabras(View view){
         if (controladorPalabras.getPalabrasEquivocadas().size() > 0){
@@ -253,11 +248,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void onPause(){
-        super.onPause();
-        Bundle bundle = new Bundle();
-        bundle.putInt("contador", controladorPalabras.contador);
-    }
 
 
 }

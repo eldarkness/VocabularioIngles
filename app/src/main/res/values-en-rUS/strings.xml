@@ -10,4 +10,10 @@
     <string name="descripcion_imageCheck">It will show a check if the answer is correct or a X if its wrong</string>
     <string name="pista_palabra_esp">Word in Spanish</string>
     <string name="pista_palabra_eng">Word in English</string>
+    <string name="segundo_fallo">You failed again!, you will have an extra oportunity soon!</string>
+    <string name="acierto">Right!</string>
+    <string name="primer_fallo">You failed! Try again</string>
+    <string name="diccionario_vacio">Dictionary is empty, you can introduce some words hitting the Add Words button</string>
+    <string name="pulsa_mostrarPalabra">You must click Show Word button to start playing</string>
+    <string name="introduce_palabraIngles">You must first introduce a word in English to check it</string>
 </resources>

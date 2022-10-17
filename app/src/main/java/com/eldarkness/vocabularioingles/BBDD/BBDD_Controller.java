@@ -18,7 +18,7 @@ public class BBDD_Controller extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(Estructura_BBDD.SQL_CREATE_ENTRIES);
-        sqLiteDatabase.execSQL(Estructura_BBDD.SQL_CREATE_ENTRIES2);
+
     }
 
     @Override
