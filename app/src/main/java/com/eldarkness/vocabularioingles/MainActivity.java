@@ -40,9 +40,14 @@ public class MainActivity extends AppCompatActivity {
     private ControladorPalabras controladorPalabras;
     EventoTeclado eventoTeclado;
     InputMethodManager miteclado;
-    ArrayList<String> listaEsp = new ArrayList<>();
-    ArrayList<String> listaEng = new ArrayList<>();
+    TextView textoUltimaPalabra;
+    ImageView checkUltimaPalabra;
 
+    /*
+    Falta por implementar:
+    -Que no se cierre el teclado cuando se llame al metodo comprobarPalabra desde el evento de teclado dandole al next
+    -Crear una lista para poder ver el resultado de la utima palabra.
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,21 +63,17 @@ public class MainActivity extends AppCompatActivity {
         eventoTeclado = new EventoTeclado();
         textoPalabraIngles.setOnEditorActionListener(eventoTeclado);
         bbdd_controller = new BBDD_Controller(this);
-        miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        //miteclado.hideSoftInputFromWindow(textoPalabraIngles.getWindowToken(),InputMethodManager.HIDE_IMPLICIT_ONLY);
+        textoUltimaPalabra = (TextView) findViewById(R.id.UltimaPalabra);
+        checkUltimaPalabra = (ImageView) findViewById(R.id.CheckUltimaPalabra);
+
         mostrarPalabra(null);
 
+        //miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        //miteclado.hideSoftInputFromWindow(textoPalabraIngles.getWindowToken(),InputMethodManager.HIDE_IMPLICIT_ONLY);
         //miteclado.showSoftInput(textoPalabraIngles,InputMethodManager.SHOW_IMPLICIT);
         //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
 
     }
-
-    /*
-    Falta por implementar:
-    -Que no se cierre el teclado cuando se llame al metodo comprobarPalabra desde el evento de teclado dandole al next
-    -Crear una lista para poder ver el resultado de las 3-5 ultimas palabras.
-
-     */
 
 
     /**
@@ -173,6 +174,9 @@ public class MainActivity extends AppCompatActivity {
             checkAcierto.setImageResource(R.drawable.check_ok);
             error = 0;
             palabraIngles = "";
+            textoUltimaPalabra.setText(textoPalabraEspanol.getText().toString());
+            checkUltimaPalabra.setImageResource(R.drawable.check_ok);
+
             SiguientePalabra();
         }else{
             switch (error){
@@ -192,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
                     if(controladorPalabras.contador == 0){
                         controladorPalabras.generarContador();
                     }
+                    textoUltimaPalabra.setText(textoPalabraEspanol.getText().toString());
+                    checkUltimaPalabra.setImageResource(android.R.drawable.ic_delete);
                     SiguientePalabra();
                     break;
             }
@@ -236,19 +242,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void cargarActividadAnadirPalabras(View view){
         if (controladorPalabras.getPalabrasEquivocadas().size() > 0){
-            for (int i = 0; i < controladorPalabras.getPalabrasEquivocadas().size(); i++){
-                listaEsp.add(controladorPalabras.getPalabrasEquivocadas().get(i).getPalabraEsp());
-                listaEng.add(controladorPalabras.getPalabrasEquivocadas().get(i).getPalabraEng());
-            }
+            System.out.println("La lista tiene: " + controladorPalabras.getPalabrasEquivocadas().size() + " palabras");
         }else{
             System.out.println("upps parece que la lista esta vacia, valor: " + controladorPalabras.getPalabrasEquivocadas().size());
         }
 
         Intent i = new Intent(this, ActivityAnadirPalabras.class);
-
-        i.putExtra("contador",controladorPalabras.contador);
-        i.putExtra("listaEsp",listaEsp);
-        i.putExtra("listaEng",listaEng);
 
         startActivity(i);
 
