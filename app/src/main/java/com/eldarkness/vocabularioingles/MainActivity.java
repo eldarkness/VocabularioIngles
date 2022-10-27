@@ -1,16 +1,10 @@
 package com.eldarkness.vocabularioingles;
 
 
-import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-
-import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
@@ -42,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     InputMethodManager miteclado;
     TextView textoUltimaPalabra;
     ImageView checkUltimaPalabra;
+    private ArrayList<PalabraEquivocada> listaPalabras;
 
     /*
     Falta por implementar:
@@ -65,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
         bbdd_controller = new BBDD_Controller(this);
         textoUltimaPalabra = (TextView) findViewById(R.id.UltimaPalabra);
         checkUltimaPalabra = (ImageView) findViewById(R.id.CheckUltimaPalabra);
-
+        listaPalabras = new ArrayList<>();
+        rellenarLista();
+        System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
         mostrarPalabra(null);
 
         //miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -75,6 +74,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void rellenarLista(){
+        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
+
+        if(c.getCount() == 0){
+            textoCuadroAcierto.setText(R.string.diccionario_vacio);
+            return;
+        }
+
+        c.moveToFirst();
+
+        while(!c.isAfterLast()){
+            listaPalabras.add(new PalabraEquivocada(c.getString(1),c.getString(2)));
+            c.moveToNext();
+
+        }
+        c.close();
+    }
 
     /**
      *
@@ -86,15 +104,30 @@ public class MainActivity extends AppCompatActivity {
      */
     public void mostrarPalabra(View view){
 
+        // sino esta vacio significa que hay una palabra en español y que el usuario quiere saber la respuesta
         if(!textoPalabraEspanol.getText().toString().isEmpty()){
             textoPalabraIngles.setText(palabraIngles);
 
+        }else if (listaPalabras.size() == 0){
+            rellenarLista();
         }else{
             SiguientePalabra();
         }
 
     }
 
+    // se debe implementar que cuando vuelva de la actividad anadirpalabras compruebe si hay alguna nueva y las añada al final de la lista
+    public void onResume(){
+        super.onResume();
+        System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
+        anadirUltimasPalabras();
+
+    }
+
+    private void anadirUltimasPalabras(){
+
+
+    }
 
     /**
      * Se llama siempre desde el metodo comprobarPalabra tanto si el usuario ha acertado la palabra como sino.
@@ -109,43 +142,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(controladorPalabras.contador == 0 && controladorPalabras.getPalabrasEquivocadas().size() > 0){
-            // cargar la palabra equivocada y borrarla de la lista y llamar al metodo generarcontador
+            // carga la palabra equivocada, la borrar de la lista y llama al metodo generarcontador si es necesario
             textoPalabraEspanol.setText(controladorPalabras.getPalabrasEquivocadas().get(0).getPalabraEsp());
             palabraIngles = controladorPalabras.getPalabrasEquivocadas().get(0).getPalabraEng();
-            controladorPalabras.mostrarLista();
             controladorPalabras.getPalabrasEquivocadas().remove(0);
-            controladorPalabras.mostrarLista();
-            System.out.println("Oportunidad extra, se vuelve a cargar la palabra: "+  textoPalabraEspanol.getText().toString());
+            textoCuadroAcierto.setText("Oportunidad extra, se vuelve a cargar la palabra: "+  textoPalabraEspanol.getText().toString());
             if(controladorPalabras.getPalabrasEquivocadas().size() > 0){
                 controladorPalabras.generarContador();
             }
-
             return;
-
         }
-        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
 
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
+        //numero aleatorio
+        int indice = (int) (Math.random() * listaPalabras.size());
+        System.out.println("Sacando numero aleatorio...");
+        System.out.println("Palabras en la listaPalabras: " + listaPalabras.size());
+        System.out.println("Numero aleatorio: " +indice);
+        textoPalabraEspanol.setText(listaPalabras.get(indice).getPalabraEsp());
+        palabraIngles = listaPalabras.get(indice).getPalabraEng();
+        System.out.println("Español: " + listaPalabras.get(0).getPalabraEsp() + " Ingles: " + listaPalabras.get(0).getPalabraEng());
+        listaPalabras.remove(indice);
 
-        System.out.println("Hay " + c.getCount() + " palabras en la base de datos");
 
-        if(c.getCount() == 0){
-            textoCuadroAcierto.setText(R.string.diccionario_vacio);
-            return;
-
-        }
-        indice = (int) (Math.random() * c.getCount());
-        System.out.println(indice);
-        c.moveToFirst();
-        int cont = 0;
-        while(cont < indice){
-            c.moveToNext();
-            cont++;
-        }
-        textoPalabraEspanol.setText(c.getString(1));
-        palabraIngles = c.getString(2);
-        System.out.println("Español: " + c.getString(1) + " Ingles: " + c.getString(2));
-        c.close();
 
     }
 
@@ -178,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
             textoUltimaPalabra.setText(textoPalabraEspanol.getText().toString());
             checkUltimaPalabra.setImageResource(R.drawable.check_ok);
 
-            SiguientePalabra();
         }else{
             switch (error){
                 case 0:
@@ -199,10 +216,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                     textoUltimaPalabra.setText(textoPalabraEspanol.getText().toString());
                     checkUltimaPalabra.setImageResource(android.R.drawable.ic_delete);
-                    SiguientePalabra();
                     break;
             }
 
+        }
+
+        if(error == 0 && listaPalabras.size() == 0){
+            rellenarLista();
+            SiguientePalabra();
+        }else if(error == 0){
+            SiguientePalabra();
         }
 
 
@@ -215,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
         textoPalabraIngles.setText("");
         textoCuadroAcierto.setText("");
         textoPalabraIngles.requestFocus();
+        palabraIngles = "";
         // 0 equivale a nulo
         checkAcierto.setImageResource(0);
 
@@ -234,10 +258,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     public void cargarActividadAnadirPalabras(View view){
         if (controladorPalabras.getPalabrasEquivocadas().size() > 0){
-            System.out.println("La lista tiene: " + controladorPalabras.getPalabrasEquivocadas().size() + " palabras");
+            System.out.println("La lista Palabras Equivocadas tiene: " + controladorPalabras.getPalabrasEquivocadas().size() + " palabras");
         }else{
             System.out.println("upps parece que la lista esta vacia, valor: " + controladorPalabras.getPalabrasEquivocadas().size());
         }

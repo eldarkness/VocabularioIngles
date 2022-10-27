@@ -10,10 +10,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 
+import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -22,6 +24,7 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     private BBDD_Controller bbdd;
     EditText palabraEspanol;
     EditText palabraIngles;
+    TextView textoPalabraAnadida;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         palabraEspanol = (EditText) findViewById(R.id.editTextEsp);
         palabraIngles = (EditText) findViewById(R.id.editTextIngles);
         palabraEspanol.requestFocus();
+        textoPalabraAnadida = (TextView) findViewById(R.id.mensajePalabraAnadida);
 
     }
 
@@ -40,20 +44,24 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         SQLiteDatabase sqLiteDatabase = bbdd.getWritableDatabase();
         String palabraEsp = palabraEspanol.getText().toString();
         String palabraIng = palabraIngles.getText().toString();
+        palabraEsp = capitalizar(palabraEsp);
+        palabraIng = capitalizar(palabraIng);
 
         if(!palabraEsp.equalsIgnoreCase("") && !palabraIng.equalsIgnoreCase("")){
 
             if(buscarPalabra(palabraEsp)){
-                System.out.println("La palabra " + palabraEsp + " ya esta en la base de datos");
+                textoPalabraAnadida.setText("La palabra " + palabraEsp + " ya esta en la base de datos");
             }else{
                 ContentValues values = new ContentValues();
-                values.put(Estructura_BBDD.NOMBRE_COLUMNA2,capitalizar(palabraEsp));
-                values.put(Estructura_BBDD.NOMBRE_COLUMNA3,capitalizar(palabraIng));
+                values.put(Estructura_BBDD.NOMBRE_COLUMNA2,palabraEsp);
+                values.put(Estructura_BBDD.NOMBRE_COLUMNA3,palabraIng);
                 long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME, null, values);
                 if (newRowId > 0){
-                    System.out.println("La palabra " + palabraEsp + " se ha insertado en la base de datos");
+                    textoPalabraAnadida.setText("La palabra " + palabraEsp + " se ha insertado en la base de datos");
                 }
             }
+        } else {
+            textoPalabraAnadida.setText(R.string.error_anadir_palabras);
         }
         sqLiteDatabase.close();
         reiniciarCuadros();
@@ -73,7 +81,7 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
                 Estructura_BBDD.NOMBRE_COLUMNA2
         };
         String selection = Estructura_BBDD.NOMBRE_COLUMNA2 + " = ?";
-        String[] selectionArgs = { palabraEsp };
+        String[] selectionArgs = { capitalizar(palabraEsp) };
 
         Cursor c = sqLiteDatabase.query(
                 Estructura_BBDD.TABLE_NAME,

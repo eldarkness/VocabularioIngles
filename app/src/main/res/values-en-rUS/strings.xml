@@ -16,4 +16,5 @@
     <string name="diccionario_vacio">Dictionary is empty, you can introduce some words hitting the Add Words button</string>
     <string name="pulsa_mostrarPalabra">You must click Show Word button to start playing</string>
     <string name="introduce_palabraIngles">You must first introduce a word in English to check it</string>
+    <string name="error_anadir_palabras">Debes introducir una palabra tanto en Inglés como en Español</string>
 </resources>

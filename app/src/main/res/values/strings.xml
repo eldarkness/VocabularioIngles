@@ -16,5 +16,6 @@
     <string name="diccionario_vacio">Diccionario vacio, introduce alguna palabra dandole al boton Añadir Palabras</string>
     <string name="pulsa_mostrarPalabra">Debes pulsar el boton Mostrar Palabra para jugar</string>
     <string name="introduce_palabraIngles">Debes introducir primero una palabra en inglés para poder comprobarla</string>
+    <string name="error_anadir_palabras">Debes introducir una palabra tanto en Inglés como en Español</string>
 
 </resources>
