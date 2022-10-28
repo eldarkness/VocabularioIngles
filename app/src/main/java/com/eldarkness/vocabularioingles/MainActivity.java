@@ -20,6 +20,7 @@ import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textoUltimaPalabra;
     ImageView checkUltimaPalabra;
     private ArrayList<PalabraEquivocada> listaPalabras;
+    private ArrayList<PalabraEquivocada> listaPalabrasBackUp;
 
     /*
     Falta por implementar:
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         textoUltimaPalabra = (TextView) findViewById(R.id.UltimaPalabra);
         checkUltimaPalabra = (ImageView) findViewById(R.id.CheckUltimaPalabra);
         listaPalabras = new ArrayList<>();
+        listaPalabrasBackUp = new ArrayList<>();
         rellenarLista();
         System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
         mostrarPalabra(null);
@@ -88,10 +91,12 @@ public class MainActivity extends AppCompatActivity {
 
         while(!c.isAfterLast()){
             listaPalabras.add(new PalabraEquivocada(c.getString(1),c.getString(2)));
+            listaPalabrasBackUp.add(new PalabraEquivocada(c.getString(1),c.getString(2)));
             c.moveToNext();
 
         }
         c.close();
+
     }
 
     /**
@@ -109,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             textoPalabraIngles.setText(palabraIngles);
 
         }else if (listaPalabras.size() == 0){
+            listaPalabrasBackUp.clear();
             rellenarLista();
         }else{
             SiguientePalabra();
@@ -119,14 +125,42 @@ public class MainActivity extends AppCompatActivity {
     // se debe implementar que cuando vuelva de la actividad anadirpalabras compruebe si hay alguna nueva y las añada al final de la lista
     public void onResume(){
         super.onResume();
-        System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
         anadirUltimasPalabras();
 
     }
 
     private void anadirUltimasPalabras(){
+        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
 
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
 
+        if(c.getCount() == 0){
+            return;
+        }
+        c.moveToFirst();
+
+        while(!c.isAfterLast()){
+            if(!estaEnLalista(c.getString(1))){
+                listaPalabras.add(new PalabraEquivocada(c.getString(1),c.getString(2)));
+                listaPalabrasBackUp.add(new PalabraEquivocada(c.getString(1),c.getString(2)));
+                System.out.println("Se añadio la palabra: " +listaPalabras.get(listaPalabras.size()-1).getPalabraEsp());
+            }
+
+            c.moveToNext();
+
+        }
+        System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
+        c.close();
+
+    }
+
+    private boolean estaEnLalista(String palabraEsp) {
+        for (int i = 0; i < listaPalabrasBackUp.size(); i++){
+            if (palabraEsp.equalsIgnoreCase(listaPalabrasBackUp.get(i).getPalabraEsp())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -162,8 +196,6 @@ public class MainActivity extends AppCompatActivity {
         palabraIngles = listaPalabras.get(indice).getPalabraEng();
         System.out.println("Español: " + listaPalabras.get(0).getPalabraEsp() + " Ingles: " + listaPalabras.get(0).getPalabraEng());
         listaPalabras.remove(indice);
-
-
 
     }
 
