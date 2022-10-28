@@ -20,7 +20,6 @@ import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
     InputMethodManager miteclado;
     TextView textoUltimaPalabra;
     ImageView checkUltimaPalabra;
-    private ArrayList<PalabraEquivocada> listaPalabras;
-    private ArrayList<PalabraEquivocada> listaPalabrasBackUp;
+    private ArrayList<PalabraDiccionario> listaPalabras;
+    private ArrayList<PalabraDiccionario> listaPalabrasBackUp;
 
     /*
     Falta por implementar:
@@ -90,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
         c.moveToFirst();
 
         while(!c.isAfterLast()){
-            listaPalabras.add(new PalabraEquivocada(c.getString(1),c.getString(2)));
-            listaPalabrasBackUp.add(new PalabraEquivocada(c.getString(1),c.getString(2)));
+            listaPalabras.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+            listaPalabrasBackUp.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
             c.moveToNext();
 
         }
@@ -141,8 +140,8 @@ public class MainActivity extends AppCompatActivity {
 
         while(!c.isAfterLast()){
             if(!estaEnLalista(c.getString(1))){
-                listaPalabras.add(new PalabraEquivocada(c.getString(1),c.getString(2)));
-                listaPalabrasBackUp.add(new PalabraEquivocada(c.getString(1),c.getString(2)));
+                listaPalabras.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+                listaPalabrasBackUp.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
                 System.out.println("Se añadio la palabra: " +listaPalabras.get(listaPalabras.size()-1).getPalabraEsp());
             }
 

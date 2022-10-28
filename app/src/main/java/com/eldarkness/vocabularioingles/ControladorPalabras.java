@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ControladorPalabras {
 
-    private ArrayList<PalabraEquivocada> palabrasEquivocadas = new ArrayList();
+    private ArrayList<PalabraDiccionario> palabrasEquivocadas = new ArrayList();
     int contador = 0;
 
 
@@ -12,13 +12,13 @@ public class ControladorPalabras {
         // en un futuro meteremos aqui las palabras que nos lleguen del bundle que hayamos guardado de la sesion anterior
     }
 
-    public ArrayList<PalabraEquivocada> getPalabrasEquivocadas() {
+    public ArrayList<PalabraDiccionario> getPalabrasEquivocadas() {
         return palabrasEquivocadas;
     }
 
     public void anadirPalabras(String palabraEsp, String palabraEng){
         if(!comprobarPalabra(palabraEsp)){
-            palabrasEquivocadas.add(new PalabraEquivocada(palabraEsp,palabraEng));
+            palabrasEquivocadas.add(new PalabraDiccionario(palabraEsp,palabraEng));
         }else{
             // si es true significa que la palabra ya esta en la lista de palabras equivocadas
             // se podria poner aqui una pista de que palabra para que pueda ser adivinada mas facilmenta

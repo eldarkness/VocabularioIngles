@@ -1,10 +1,10 @@
 package com.eldarkness.vocabularioingles;
 
-public class PalabraEquivocada {
+public class PalabraDiccionario {
     private String palabraEsp;
     private String palabraEng;
 
-    public PalabraEquivocada(String palabraEsp, String palabraEng){
+    public PalabraDiccionario(String palabraEsp, String palabraEng){
         this.palabraEsp = palabraEsp;
         this.palabraEng = palabraEng;
     }
