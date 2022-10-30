@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -76,6 +78,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_mainactivity, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem menuItem){
+        int id = menuItem.getItemId();
+
+        if(id == R.id.menu_configuracion){
+
+        }else if(id == R.id.menu_info){
+            cargarActividadInformacion(null);
+        }else if(id == R.id.menu_IntroducirPalabras){
+            cargarActividadAnadirPalabras(null);
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
     private void rellenarLista(){
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
 
@@ -121,46 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // se debe implementar que cuando vuelva de la actividad anadirpalabras compruebe si hay alguna nueva y las añada al final de la lista
-    public void onResume(){
-        super.onResume();
-        anadirUltimasPalabras();
 
-    }
-
-    private void anadirUltimasPalabras(){
-        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
-
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
-
-        if(c.getCount() == 0){
-            return;
-        }
-        c.moveToFirst();
-
-        while(!c.isAfterLast()){
-            if(!estaEnLalista(c.getString(1))){
-                listaPalabras.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
-                listaPalabrasBackUp.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
-                System.out.println("Se añadio la palabra: " +listaPalabras.get(listaPalabras.size()-1).getPalabraEsp());
-            }
-
-            c.moveToNext();
-
-        }
-        System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
-        c.close();
-
-    }
-
-    private boolean estaEnLalista(String palabraEsp) {
-        for (int i = 0; i < listaPalabrasBackUp.size(); i++){
-            if (palabraEsp.equalsIgnoreCase(listaPalabrasBackUp.get(i).getPalabraEsp())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * Se llama siempre desde el metodo comprobarPalabra tanto si el usuario ha acertado la palabra como sino.
@@ -263,7 +244,53 @@ public class MainActivity extends AppCompatActivity {
     } // metodo comprobarPalabra
 
 
-    // Utilidades, metodos pequeños pero muy usados, metodos poco complejos
+    // se debe implementar que cuando vuelva de la actividad anadirpalabras compruebe si hay alguna nueva y las añada al final de la lista
+    public void onResume(){
+        super.onResume();
+        anadirUltimasPalabras();
+
+    }
+
+    private void anadirUltimasPalabras(){
+        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
+
+        if(c.getCount() == 0){
+            return;
+        }
+        c.moveToFirst();
+
+        while(!c.isAfterLast()){
+            if(!estaEnLalista(c.getString(1))){
+                listaPalabras.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+                listaPalabrasBackUp.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+                System.out.println("Se añadio la palabra: " +listaPalabras.get(listaPalabras.size()-1).getPalabraEsp());
+            }
+
+            c.moveToNext();
+
+        }
+        System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
+        c.close();
+
+    }
+
+
+    /******
+     *
+     * Utilidades, metodos pequeños pero muy usados, metodos poco complejos, generalmente privates o classes internas
+     *                                                                        ******/
+
+    private boolean estaEnLalista(String palabraEsp) {
+        for (int i = 0; i < listaPalabrasBackUp.size(); i++){
+            if (palabraEsp.equalsIgnoreCase(listaPalabrasBackUp.get(i).getPalabraEsp())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void reiniciarCuadros(){
         textoPalabraEspanol.setText("");
         textoPalabraIngles.setText("");
@@ -297,6 +324,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent i = new Intent(this, ActivityAnadirPalabras.class);
+
+        startActivity(i);
+
+    }
+
+    public void cargarActividadInformacion(View view){
+
+        Intent i = new Intent(this, Informacion.class);
 
         startActivity(i);
 

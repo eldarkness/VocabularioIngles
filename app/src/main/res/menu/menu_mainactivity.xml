@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity">
+
+    <item android:id="@+id/menu_configuracion"
+        android:title="Configuración"
+        android:icon="@android:drawable/ic_menu_preferences"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/menu_info"
+        android:title="Ir a información"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:orderInCategory="10"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/menu_IntroducirPalabras"
+        android:title="Introducir Palabras"
+        android:icon="@android:drawable/ic_input_add"
+        android:orderInCategory="1"
+        app:showAsAction="always"/>
+
+</menu>

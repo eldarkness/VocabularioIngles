@@ -18,9 +18,13 @@
         android:theme="@style/Theme.VocabularioIngles"
         tools:targetApi="31">
         <activity
+            android:name=".Informacion"
+            android:exported="false"
+            />
+        <activity
             android:name=".ActivityAnadirPalabras"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
