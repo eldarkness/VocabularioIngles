@@ -17,5 +17,11 @@
     <string name="pulsa_mostrarPalabra">Debes pulsar el boton Mostrar Palabra para jugar</string>
     <string name="introduce_palabraIngles">Debes introducir primero una palabra en inglés para poder comprobarla</string>
     <string name="error_anadir_palabras">Debes introducir una palabra tanto en Inglés como en Español</string>
+    <array name="listaSpinner">
+        <item>Casa</item>
+        <item>Hobbies</item>
+        <item>Trabajo</item>
+
+    </array>
 
 </resources>

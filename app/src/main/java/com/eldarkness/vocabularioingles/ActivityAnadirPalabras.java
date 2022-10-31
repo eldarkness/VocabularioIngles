@@ -1,15 +1,22 @@
 package com.eldarkness.vocabularioingles;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.helper.widget.Carousel;
 
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
@@ -17,6 +24,7 @@ import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 
 import org.w3c.dom.Text;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class ActivityAnadirPalabras extends AppCompatActivity {
@@ -25,6 +33,9 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     EditText palabraEspanol;
     EditText palabraIngles;
     TextView textoPalabraAnadida;
+    Spinner spinnerCategorias;
+    String categoria;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +47,46 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         palabraIngles = (EditText) findViewById(R.id.editTextIngles);
         palabraEspanol.requestFocus();
         textoPalabraAnadida = (TextView) findViewById(R.id.mensajePalabraAnadida);
+        /*String[] arraySpinner = new String[] {
+               ""
+        };
+        Spinner s = (Spinner) findViewById(R.id.spinner2);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        s.setAdapter(adapter);
+        adapter.add("Casa");
+        adapter.notifyDataSetChanged();
+        s.setAdapter(adapter);*/
+        spinnerCategorias = (Spinner) findViewById(R.id.spinner2);
+        List<String> list = new ArrayList<String>();
+        // Aqui añadiria las categorias guardadas en el bundle
+        if(savedInstanceState == null){
+            list.add("Introduce categoria");
+            list.add("Escuela");
+        }else{
+           // cargar bundle
+        }
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategorias.setAdapter(spinnerArrayAdapter);
+        spinnerCategorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                categoria = parent.getItemAtPosition(position).toString();
+                textoPalabraAnadida.setText(parent.getItemAtPosition(position).toString());
+
+                //    campoMaquina.setText(parent.getItemAtPosition(position).toString());
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+
+        });
     }
 
     public void IntroducirPalabrasDiccionario(View view){
@@ -44,10 +94,10 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         SQLiteDatabase sqLiteDatabase = bbdd.getWritableDatabase();
         String palabraEsp = palabraEspanol.getText().toString();
         String palabraIng = palabraIngles.getText().toString();
-        palabraEsp = capitalizar(palabraEsp);
-        palabraIng = capitalizar(palabraIng);
 
-        if(!palabraEsp.equalsIgnoreCase("") && !palabraIng.equalsIgnoreCase("")){
+        if(!palabraEsp.equalsIgnoreCase("") && !palabraIng.equalsIgnoreCase("") ){
+            palabraEsp = capitalizar(palabraEsp);
+            palabraIng = capitalizar(palabraIng);
 
             if(buscarPalabra(palabraEsp)){
                 textoPalabraAnadida.setText("La palabra " + palabraEsp + " ya esta en la base de datos");
@@ -109,6 +159,12 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         finish();
 
     }
+
+    public void crearCategoria(View view){
+        Intent i = new Intent(this, crearCategoria.class);
+        startActivity(i);
+    }
+
 
     private void reiniciarCuadros(){
         palabraEspanol.setText("");

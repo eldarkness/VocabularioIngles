@@ -18,9 +18,12 @@
         android:theme="@style/Theme.VocabularioIngles"
         tools:targetApi="31">
         <activity
+            android:name=".crearCategoria"
+            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"
+            android:exported="false" />
+        <activity
             android:name=".Informacion"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".ActivityAnadirPalabras"
             android:exported="false"

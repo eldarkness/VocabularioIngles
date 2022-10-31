@@ -27,22 +27,26 @@
         android:id="@+id/editTextEsp"
         android:layout_width="189dp"
         android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="12dp"
         android:ems="10"
         android:gravity="center"
         android:hint="@string/pista_palabra_esp"
         android:inputType="textPersonName"
         android:textColor="#3461BF"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextIngles"
+        app:layout_constraintEnd_toStartOf="@+id/editTextIngles"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/MostrarTituloAnadirP" />
+        app:layout_constraintTop_toTopOf="@+id/editTextIngles"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/editTextIngles"
         android:layout_width="181dp"
         android:layout_height="48dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="184dp"
+        android:layout_marginEnd="28dp"
         android:ems="10"
         android:gravity="center"
         android:hint="@string/pista_palabra_eng"
@@ -50,18 +54,17 @@
         android:textColor="#3461BF"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEsp" />
+        app:layout_constraintTop_toTopOf="@+id/MostrarTituloAnadirP" />
 
     <Button
         android:id="@+id/botonAddPalabra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="48dp"
         android:onClick="IntroducirPalabrasDiccionario"
         android:text="@string/boton_anadir_palabra"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.453"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextIngles" />
 
@@ -79,12 +82,36 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        style="@style/textview"
         android:id="@+id/mensajePalabraAnadida"
+        style="@style/textview"
         android:layout_width="319dp"
         android:layout_height="111dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="44dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.347"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/botonAddPalabra" />
+
+    <Spinner
+        android:id="@+id/spinner2"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="40dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.583"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MostrarTituloAnadirP" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="46dp"
+        android:layout_height="47dp"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner2"
+        app:layout_constraintStart_toEndOf="@+id/spinner2"
+        app:layout_constraintTop_toTopOf="@+id/spinner2"
+        app:layout_constraintVertical_bias="0.0"
+        android:onClick="crearCategoria"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
