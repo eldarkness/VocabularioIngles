@@ -40,32 +40,22 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Bundle extras = getIntent().getExtras();
         setContentView(R.layout.activity_anadir_palabras);
         bbdd = new BBDD_Controller(this);
         palabraEspanol = (EditText) findViewById(R.id.editTextEsp);
         palabraIngles = (EditText) findViewById(R.id.editTextIngles);
         palabraEspanol.requestFocus();
         textoPalabraAnadida = (TextView) findViewById(R.id.mensajePalabraAnadida);
-        /*String[] arraySpinner = new String[] {
-               ""
-        };
-        Spinner s = (Spinner) findViewById(R.id.spinner2);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arraySpinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        s.setAdapter(adapter);
-        adapter.add("Casa");
-        adapter.notifyDataSetChanged();
-        s.setAdapter(adapter);*/
         spinnerCategorias = (Spinner) findViewById(R.id.spinner2);
         List<String> list = new ArrayList<String>();
         // Aqui añadiria las categorias guardadas en el bundle
-        if(savedInstanceState == null){
+        if(extras == null){
             list.add("Introduce categoria");
             list.add("Escuela");
         }else{
-           // cargar bundle
+           list.add(extras.getString("categoria"));
         }
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -77,14 +67,11 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
                 textoPalabraAnadida.setText(parent.getItemAtPosition(position).toString());
 
                 //    campoMaquina.setText(parent.getItemAtPosition(position).toString());
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-
 
         });
     }
@@ -160,11 +147,11 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
 
     }
 
-    public void crearCategoria(View view){
+    public void cargarActividadCrearCategoria(View view){
         Intent i = new Intent(this, crearCategoria.class);
         startActivity(i);
-    }
 
+    }
 
     private void reiniciarCuadros(){
         palabraEspanol.setText("");
@@ -175,3 +162,15 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
 
 
 }
+
+ /*String[] arraySpinner = new String[] {
+               ""
+        };
+        Spinner s = (Spinner) findViewById(R.id.spinner2);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        s.setAdapter(adapter);
+        adapter.add("Casa");
+        adapter.notifyDataSetChanged();
+        s.setAdapter(adapter);*/

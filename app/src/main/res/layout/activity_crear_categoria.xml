@@ -7,11 +7,12 @@
     tools:context=".crearCategoria">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/botonCrearCategoria"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:minWidth="48dp"
+        android:onClick="anadirCategoria"
         android:text="Crear Categoria"
         app:layout_constraintEnd_toEndOf="@+id/editTextCategoria"
         app:layout_constraintHorizontal_bias="0.493"
@@ -20,11 +21,11 @@
 
     <EditText
         android:id="@+id/editTextCategoria"
-        android:layout_width="173dp"
+        style="@style/textview"
+        android:layout_width="192dp"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:ems="10"
-        style="@style/textview"
         android:hint="Introduce Categoria"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
