@@ -53,9 +53,15 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         // Aqui añadiria las categorias guardadas en el bundle
         if(extras == null){
             list.add("Introduce categoria");
-            list.add("Escuela");
+
         }else{
-           list.add(extras.getString("categoria"));
+           //list.add(extras.getString("categorias"));
+            if(extras.getStringArrayList("categorias") != null){
+                System.out.println(extras.getStringArrayList("categorias").get(0));
+                list.add(extras.getStringArrayList("categorias").get(0));
+            }else{
+                list.add("Introduce categoria");
+            }
         }
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
