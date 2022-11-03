@@ -1,18 +1,13 @@
 package com.eldarkness.vocabularioingles;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.helper.widget.Carousel;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -22,9 +17,7 @@ import android.widget.TextView;
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 
-import org.w3c.dom.Text;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class ActivityAnadirPalabras extends AppCompatActivity {
@@ -34,12 +27,16 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     EditText palabraIngles;
     TextView textoPalabraAnadida;
     Spinner spinnerCategorias;
-    String categoria;
+    ArrayList<String> listaCategorias;
+    String palabraSpinner;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null){
+            System.out.println("Tiene algooo");
+        }
         Bundle extras = getIntent().getExtras();
         setContentView(R.layout.activity_anadir_palabras);
         bbdd = new BBDD_Controller(this);
@@ -47,32 +44,17 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         palabraIngles = (EditText) findViewById(R.id.editTextIngles);
         palabraEspanol.requestFocus();
         textoPalabraAnadida = (TextView) findViewById(R.id.mensajePalabraAnadida);
+        listaCategorias = cargarCategorias();
 
-        spinnerCategorias = (Spinner) findViewById(R.id.spinner2);
-        List<String> list = new ArrayList<String>();
-        // Aqui añadiria las categorias guardadas en el bundle
-        if(extras == null){
-            list.add("Introduce categoria");
-
-        }else{
-           //list.add(extras.getString("categorias"));
-            if(extras.getStringArrayList("categorias") != null){
-                System.out.println(extras.getStringArrayList("categorias").get(0));
-                list.add(extras.getStringArrayList("categorias").get(0));
-            }else{
-                list.add("Introduce categoria");
-            }
-        }
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
+        spinnerCategorias = (Spinner) findViewById(R.id.spinnerCategorias);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listaCategorias);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategorias.setAdapter(spinnerArrayAdapter);
+        // creo que al final no va a hacer falta el setOnItemSelectedListener pero de momento lo dejo ahsta que lo compruebe bien
         spinnerCategorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                categoria = parent.getItemAtPosition(position).toString();
-                textoPalabraAnadida.setText(parent.getItemAtPosition(position).toString());
-
-                //    campoMaquina.setText(parent.getItemAtPosition(position).toString());
+                palabraSpinner = parent.getItemAtPosition(position).toString();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -80,7 +62,11 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
             }
 
         });
+
+        //System.out.println();
+
     }
+
 
     public void IntroducirPalabrasDiccionario(View view){
         // tiene que añadir una palabra a la base de datos sino esta repetida, usar columna llamada Diccionario
@@ -88,24 +74,34 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         String palabraEsp = palabraEspanol.getText().toString();
         String palabraIng = palabraIngles.getText().toString();
 
-        if(!palabraEsp.equalsIgnoreCase("") && !palabraIng.equalsIgnoreCase("") ){
-            palabraEsp = capitalizar(palabraEsp);
-            palabraIng = capitalizar(palabraIng);
+        if(!palabraEsp.equalsIgnoreCase("") && !palabraIng.equalsIgnoreCase("")){
 
-            if(buscarPalabra(palabraEsp)){
-                textoPalabraAnadida.setText("La palabra " + palabraEsp + " ya esta en la base de datos");
-            }else{
-                ContentValues values = new ContentValues();
-                values.put(Estructura_BBDD.NOMBRE_COLUMNA2,palabraEsp);
-                values.put(Estructura_BBDD.NOMBRE_COLUMNA3,palabraIng);
-                long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME, null, values);
-                if (newRowId > 0){
-                    textoPalabraAnadida.setText("La palabra " + palabraEsp + " se ha insertado en la base de datos");
+            if(!spinnerCategorias.getSelectedItem().toString().equalsIgnoreCase("Crea una categoria") ){
+                palabraEsp = capitalizar(palabraEsp);
+                palabraIng = capitalizar(palabraIng);
+
+                // seguir implementando lo de la categoria aqui
+                if(buscarPalabra(palabraEsp)){
+                    textoPalabraAnadida.setText("La palabra " + palabraEsp + " ya esta en la base de datos");
+                }else{
+                    ContentValues values = new ContentValues();
+                    values.put(Estructura_BBDD.NOMBRE_COLUMNA2,palabraEsp);
+                    values.put(Estructura_BBDD.NOMBRE_COLUMNA3,palabraIng);
+                    values.put(Estructura_BBDD.NOMBRE_COLUMNA4,spinnerCategorias.getSelectedItem().toString());
+                    long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME, null, values);
+                    if (newRowId > 0){
+                        textoPalabraAnadida.setText("La palabra " + palabraEsp + " se ha insertado en la base de datos");
+                    }
                 }
+            }else{
+                // si llega aqui significa que el usuario todavia no creo ninguna categoria, implementar algo para que se pida al usuario
+                // que cree al menos una y darle algun acceso directo a la actividad crearCategorias
             }
+
         } else {
             textoPalabraAnadida.setText(R.string.error_anadir_palabras);
         }
+
         sqLiteDatabase.close();
         reiniciarCuadros();
 
@@ -154,8 +150,30 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     }
 
     public void cargarActividadCrearCategoria(View view){
+        System.out.println(palabraSpinner);
         Intent i = new Intent(this, crearCategoria.class);
         startActivity(i);
+
+
+    }
+
+    private ArrayList<String> cargarCategorias(){
+        ArrayList<String> listaCategorias = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = bbdd.getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE2_NAME, null);
+
+        if(c.getCount()>0){
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                listaCategorias.add(c.getString(1));
+                c.moveToNext();
+            }
+        }else{
+            listaCategorias.add("Crea una Categoria");
+        }
+        c.close();
+        return listaCategorias;
 
     }
 
