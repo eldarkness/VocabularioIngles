@@ -30,7 +30,6 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     ArrayList<String> listaCategorias;
     String palabraSpinner;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +146,11 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         // se termina con la actividad para que la que llamo a esta (mainactivity) no pierda los datos al llamar al onCreate
         finish();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     public void cargarActividadCrearCategoria(View view){

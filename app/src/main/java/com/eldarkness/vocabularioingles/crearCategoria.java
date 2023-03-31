@@ -81,10 +81,6 @@ public class crearCategoria extends AppCompatActivity {
     }
 
     public void volverAtras(View view){
-        Intent i = new Intent(this, ActivityAnadirPalabras.class);
-
-        i.putStringArrayListExtra("categorias",categorias);
-        startActivity(i);
         finish();
     }
 

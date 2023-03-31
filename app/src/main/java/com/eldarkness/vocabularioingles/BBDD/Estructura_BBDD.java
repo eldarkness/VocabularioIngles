@@ -3,7 +3,6 @@ package com.eldarkness.vocabularioingles.BBDD;
 public class Estructura_BBDD {
 
 
-
     // Constructor vacio
     private Estructura_BBDD() {}
 

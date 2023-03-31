@@ -15,10 +15,11 @@
         android:orderInCategory="10"
         app:showAsAction="ifRoom"/>
 
-    <item android:id="@+id/menu_IntroducirPalabras"
-        android:title="Introducir Palabras"
-        android:icon="@android:drawable/ic_input_add"
+    <item
+        android:id="@+id/menu_IntroducirPalabras"
+        android:icon="@drawable/add_icon_blue"
         android:orderInCategory="1"
-        app:showAsAction="always"/>
+        android:title="Introducir Palabras"
+        app:showAsAction="always" />
 
 </menu>

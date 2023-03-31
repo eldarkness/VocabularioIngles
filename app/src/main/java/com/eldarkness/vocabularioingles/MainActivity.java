@@ -11,9 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,12 +44,13 @@ public class MainActivity extends AppCompatActivity {
     ImageView checkUltimaPalabra;
     private ArrayList<PalabraDiccionario> listaPalabras;
     private ArrayList<PalabraDiccionario> listaPalabrasBackUp;
+    private ArrayList<String> listaCategorias;
+    Spinner spinnerCategorias;
 
     /*
     Falta por implementar:
     -Que no se cierre el teclado cuando se llame al metodo comprobarPalabra desde el evento de teclado dandole al next
-    -Crear una lista para poder ver el resultado de la utima palabra.
-     */
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,11 @@ public class MainActivity extends AppCompatActivity {
         checkUltimaPalabra = (ImageView) findViewById(R.id.CheckUltimaPalabra);
         listaPalabras = new ArrayList<>();
         listaPalabrasBackUp = new ArrayList<>();
+        listaCategorias = cargarCategorias();
+        spinnerCategorias = (Spinner) findViewById(R.id.spinnerCategorias2);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listaCategorias);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategorias.setAdapter(spinnerArrayAdapter);
         rellenarLista();
         System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
         mostrarPalabra(null);
@@ -97,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void rellenarLista(){
+        // Tiene que comprobar la categoria que tenga seleccionada el spinner y rellenar la lista solo con esas palabras
+        // por lo que hay que acceder a la columna 3 de esa tabla
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
 
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
@@ -108,9 +118,15 @@ public class MainActivity extends AppCompatActivity {
 
         c.moveToFirst();
 
+        String categoria = spinnerCategorias.getSelectedItem().toString();
         while(!c.isAfterLast()){
-            listaPalabras.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
-            listaPalabrasBackUp.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+            if(categoria.equalsIgnoreCase("Todas")){
+                listaPalabras.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+                listaPalabrasBackUp.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+            }else if(categoria.equalsIgnoreCase(c.getString(3))){
+                listaPalabras.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+                listaPalabrasBackUp.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+            }
             c.moveToNext();
 
         }
@@ -280,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
     /******
      *
      * Utilidades, metodos pequeños pero muy usados, metodos poco complejos, generalmente privates o classes internas
-     *                                                                        ******/
+     *                                                                                                          ******/
 
     private boolean estaEnLalista(String palabraEsp) {
         for (int i = 0; i < listaPalabrasBackUp.size(); i++){
@@ -289,6 +305,28 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private ArrayList<String> cargarCategorias(){
+        ArrayList<String> listaCategorias = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE2_NAME, null);
+
+        if(c.getCount()>0){
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                listaCategorias.add(c.getString(1));
+                c.moveToNext();
+            }
+            listaCategorias.add(0,"Todas");
+        }else{
+            listaCategorias.add("Crea una Categoria");
+        }
+        c.close();
+        return listaCategorias;
+
+
     }
 
     private void reiniciarCuadros(){
