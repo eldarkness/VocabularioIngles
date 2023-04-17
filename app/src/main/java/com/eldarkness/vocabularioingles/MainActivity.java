@@ -70,13 +70,12 @@ public class MainActivity extends AppCompatActivity {
         checkUltimaPalabra = (ImageView) findViewById(R.id.CheckUltimaPalabra);
         listaPalabras = new ArrayList<>();
         listaPalabrasBackUp = new ArrayList<>();
-        listaCategorias = cargarCategorias();
         spinnerCategorias = (Spinner) findViewById(R.id.spinnerCategorias2);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listaCategorias);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCategorias.setAdapter(spinnerArrayAdapter);
-        rellenarLista();
         System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
+        listaCategorias = cargarCategorias();
+        CargarSpinnerCategorias();
+        rellenarLista();
+
         mostrarPalabra(null);
 
         //miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -102,6 +101,13 @@ public class MainActivity extends AppCompatActivity {
             cargarActividadAnadirPalabras(null);
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    public void onResume(){
+        super.onResume();
+        anadirUltimasPalabras();
+        listaCategorias = cargarCategorias();
+        CargarSpinnerCategorias();
     }
 
     private void rellenarLista(){
@@ -261,11 +267,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // se debe implementar que cuando vuelva de la actividad anadirpalabras compruebe si hay alguna nueva y las añada al final de la lista
-    public void onResume(){
-        super.onResume();
-        anadirUltimasPalabras();
 
-    }
 
     private void anadirUltimasPalabras(){
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
@@ -329,6 +331,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void CargarSpinnerCategorias(){
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listaCategorias);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategorias.setAdapter(spinnerArrayAdapter);
+
+    }
+
+
     private void reiniciarCuadros(){
         textoPalabraEspanol.setText("");
         textoPalabraIngles.setText("");
@@ -339,6 +349,7 @@ public class MainActivity extends AppCompatActivity {
         checkAcierto.setImageResource(0);
 
     }
+
 
     // clase interna, pone a la escucha el edittext que ingresa la palabra en ingles y llama al metodo comprobarPalabra
     class EventoTeclado implements TextView.OnEditorActionListener{

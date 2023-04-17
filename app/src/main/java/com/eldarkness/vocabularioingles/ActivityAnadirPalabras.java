@@ -28,11 +28,12 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     TextView textoPalabraAnadida;
     Spinner spinnerCategorias;
     ArrayList<String> listaCategorias;
-    String palabraSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // hay que comprobar si esto servia para algo sino lo eliminaremos
         if(savedInstanceState != null){
             System.out.println("Tiene algooo");
         }
@@ -43,29 +44,47 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         palabraIngles = (EditText) findViewById(R.id.editTextIngles);
         palabraEspanol.requestFocus();
         textoPalabraAnadida = (TextView) findViewById(R.id.mensajePalabraAnadida);
-        listaCategorias = cargarCategorias();
 
         spinnerCategorias = (Spinner) findViewById(R.id.spinnerCategorias);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listaCategorias);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCategorias.setAdapter(spinnerArrayAdapter);
-        // creo que al final no va a hacer falta el setOnItemSelectedListener pero de momento lo dejo ahsta que lo compruebe bien
-        spinnerCategorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                palabraSpinner = parent.getItemAtPosition(position).toString();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-
-        });
-
-        //System.out.println();
 
     }
 
+    public void volverAtras(View view){
+        // se termina con la actividad para que la que llamo a esta (mainactivity) no pierda los datos al llamar al onCreate
+        finish();
+    }
+
+
+    public void onResume() {
+        super.onResume();
+        listaCategorias = cargarCategorias();
+        CargarSpinnerCategorias();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    private ArrayList<String> cargarCategorias(){
+        ArrayList<String> listaCategorias = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = bbdd.getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE2_NAME, null);
+
+        if(c.getCount()>0){
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                listaCategorias.add(c.getString(1));
+                c.moveToNext();
+            }
+        }else{
+            listaCategorias.add("Crea una Categoria");
+        }
+        c.close();
+        return listaCategorias;
+
+    }
 
     public void IntroducirPalabrasDiccionario(View view){
         // tiene que añadir una palabra a la base de datos sino esta repetida, usar columna llamada Diccionario
@@ -106,12 +125,6 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
 
     }
 
-    private String capitalizar(String palabra){
-        String str = (palabra.substring(0, 1)).toUpperCase(Locale.ROOT) + (palabra.substring(1)).toLowerCase(Locale.ROOT);
-
-        return str;
-    }
-
     public Boolean buscarPalabra(String palabraEsp){
 
         SQLiteDatabase sqLiteDatabase = bbdd.getReadableDatabase();
@@ -142,43 +155,24 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         }
 
     }
-    public void volverAtras(View view){
-        // se termina con la actividad para que la que llamo a esta (mainactivity) no pierda los datos al llamar al onCreate
-        finish();
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
 
     public void cargarActividadCrearCategoria(View view){
-        System.out.println(palabraSpinner);
         Intent i = new Intent(this, crearCategoria.class);
         startActivity(i);
 
+    }
+
+    private void CargarSpinnerCategorias(){
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listaCategorias);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategorias.setAdapter(spinnerArrayAdapter);
 
     }
 
-    private ArrayList<String> cargarCategorias(){
-        ArrayList<String> listaCategorias = new ArrayList<>();
-        SQLiteDatabase sqLiteDatabase = bbdd.getReadableDatabase();
+    private String capitalizar(String palabra){
+        String str = (palabra.substring(0, 1)).toUpperCase(Locale.ROOT) + (palabra.substring(1)).toLowerCase(Locale.ROOT);
 
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE2_NAME, null);
-
-        if(c.getCount()>0){
-            c.moveToFirst();
-            while(!c.isAfterLast()){
-                listaCategorias.add(c.getString(1));
-                c.moveToNext();
-            }
-        }else{
-            listaCategorias.add("Crea una Categoria");
-        }
-        c.close();
-        return listaCategorias;
-
+        return str;
     }
 
     private void reiniciarCuadros(){
@@ -187,8 +181,6 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         palabraEspanol.requestFocus();
 
     }
-
-
 }
 
  /*String[] arraySpinner = new String[] {
@@ -202,3 +194,18 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         adapter.add("Casa");
         adapter.notifyDataSetChanged();
         s.setAdapter(adapter);*/
+
+ /* creo que al final no va a hacer falta el setOnItemSelectedListener pero de momento lo dejo ahsta que lo compruebe bien
+        spinnerCategorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                palabraSpinner = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+        });
+
+        //System.out.println();*/
