@@ -32,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
     int error = 0;
     EditText textoPalabraIngles;
     TextView textoPalabraEspanol;
-    TextView textoCuadroAcierto;
+    TextView textoMensaje;
     Boolean siguientePalabra;
     ImageView checkAcierto;
     Button botonComprobar;
+    Button botonCargarPalabrasCategoria;
     String palabraIngles;
     private ControladorPalabras controladorPalabras;
     EventoTeclado eventoTeclado;
@@ -59,10 +60,11 @@ public class MainActivity extends AppCompatActivity {
         controladorPalabras = new ControladorPalabras();
         textoPalabraEspanol = (TextView) findViewById(R.id.PalabraEspanol);
         textoPalabraIngles = (EditText) findViewById(R.id.PalabraIngles);
-        textoCuadroAcierto = (TextView) findViewById(R.id.mensajeAcierto);
+        textoMensaje = (TextView) findViewById(R.id.mensajeAcierto);
         checkAcierto = (ImageView) findViewById(R.id.checkAcierto);
         siguientePalabra = false;
         botonComprobar = (Button) findViewById(R.id.BotonComprobar);
+        botonCargarPalabrasCategoria = (Button) findViewById(R.id.BotonCargarPalCat);
         eventoTeclado = new EventoTeclado();
         textoPalabraIngles.setOnEditorActionListener(eventoTeclado);
         bbdd_controller = new BBDD_Controller(this);
@@ -93,18 +95,21 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem menuItem){
         int id = menuItem.getItemId();
 
-        if(id == R.id.menu_configuracion){
-
-        }else if(id == R.id.menu_info){
-            cargarActividadInformacion(null);
-        }else if(id == R.id.menu_IntroducirPalabras){
+        if(id == R.id.menu_IntroducirPalabras){
             cargarActividadAnadirPalabras(null);
+
+        }else if(id == R.id.menu_CrearCategoria){
+            cargarActividadCrearCategoria(null);
         }
         return super.onOptionsItemSelected(menuItem);
     }
 
+
+
     public void onResume(){
         super.onResume();
+        // se llama a este metodo para que se cargen, en la lista ya iniciada, las palabas que se
+        // acaban de añadir en la actividad de la que se esta volviendo
         anadirUltimasPalabras();
         listaCategorias = cargarCategorias();
         CargarSpinnerCategorias();
@@ -114,16 +119,17 @@ public class MainActivity extends AppCompatActivity {
         // Tiene que comprobar la categoria que tenga seleccionada el spinner y rellenar la lista solo con esas palabras
         // por lo que hay que acceder a la columna 3 de esa tabla
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
-
         Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE_NAME, null);
 
         if(c.getCount() == 0){
-            textoCuadroAcierto.setText(R.string.diccionario_vacio);
+            textoMensaje.setText(R.string.diccionario_vacio);
+            botonCargarPalabrasCategoria.setEnabled(false);
             return;
         }
-
         c.moveToFirst();
 
+        listaPalabras.clear();
+        listaPalabrasBackUp.clear();
         String categoria = spinnerCategorias.getSelectedItem().toString();
         while(!c.isAfterLast()){
             if(categoria.equalsIgnoreCase("Todas")){
@@ -134,11 +140,12 @@ public class MainActivity extends AppCompatActivity {
                 listaPalabrasBackUp.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
             }
             c.moveToNext();
-
         }
         c.close();
 
+
     }
+
 
     /**
      *
@@ -163,6 +170,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void CargarPalabrasPorCategoria(View view){
+        reiniciarCuadros(false);
+        rellenarLista();
+        if(listaPalabras.size() == 0){
+            textoMensaje.setText(getString(R.string.no_palabras_categoria) + spinnerCategorias.getSelectedItem().toString());
+        }else{
+            textoMensaje.setText("Se han cargado las palabras de la categoria: " +spinnerCategorias.getSelectedItem().toString());
+        }
+        mostrarPalabra(null);
+
+    }
+
 
 
     /**
@@ -172,7 +191,9 @@ public class MainActivity extends AppCompatActivity {
       */
     public void SiguientePalabra() {
 
-        reiniciarCuadros();
+        System.out.println("Acabo de entrar a siguientepalabra \n");
+        mostrarLista(listaPalabras);
+        reiniciarCuadros(false);
         if(controladorPalabras.contador > 0){
             controladorPalabras.reducirContador();
         }
@@ -182,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             textoPalabraEspanol.setText(controladorPalabras.getPalabrasEquivocadas().get(0).getPalabraEsp());
             palabraIngles = controladorPalabras.getPalabrasEquivocadas().get(0).getPalabraEng();
             controladorPalabras.getPalabrasEquivocadas().remove(0);
-            textoCuadroAcierto.setText("Oportunidad extra, se vuelve a cargar la palabra: "+  textoPalabraEspanol.getText().toString());
+            textoMensaje.setText("Oportunidad extra, se vuelve a cargar la palabra: " + textoPalabraEspanol.getText().toString());
             if(controladorPalabras.getPalabrasEquivocadas().size() > 0){
                 controladorPalabras.generarContador();
             }
@@ -215,15 +236,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Primero se comprueba que ninguno de los dos cuadros de texto este vacio, si es asi se sale del metodo
         if (textoPalabraEspanol.getText().toString().equalsIgnoreCase("")) {
-            textoCuadroAcierto.setText(R.string.pulsa_mostrarPalabra);
+            textoMensaje.setText(R.string.pulsa_mostrarPalabra);
             return;
         } else if (textoPalabraIngles.getText().toString().equalsIgnoreCase("")){
-            textoCuadroAcierto.setText(R.string.introduce_palabraIngles);
+            textoMensaje.setText(R.string.introduce_palabraIngles);
             return;
         }
 
         if(textoPalabraIngles.getText().toString().equalsIgnoreCase(palabraIngles)){
-            textoCuadroAcierto.setText(R.string.acierto);
+            textoMensaje.setText(R.string.acierto);
             checkAcierto.setImageResource(R.drawable.check_ok);
             error = 0;
             palabraIngles = "";
@@ -233,13 +254,13 @@ public class MainActivity extends AppCompatActivity {
         }else{
             switch (error){
                 case 0:
-                    textoCuadroAcierto.setText(R.string.primer_fallo);
+                    textoMensaje.setText(R.string.primer_fallo);
                     checkAcierto.setImageResource(android.R.drawable.ic_delete);
                     error++;
                     textoPalabraIngles.requestFocus();
                     break;
                 case 1:
-                    textoCuadroAcierto.setText(R.string.segundo_fallo);
+                    textoMensaje.setText(R.string.segundo_fallo);
                     error = 0;
                     checkAcierto.setImageResource(android.R.drawable.ic_delete);
                     controladorPalabras.anadirPalabras(textoPalabraEspanol.getText().toString(),palabraIngles);
@@ -255,6 +276,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        // Una vez que se ha comprobado la palabra se comprueba si quedan palabras en la lista
+        // si hay palabras entonces se carga la siguiente sino se llama al metodo rellenarLista
         if(error == 0 && listaPalabras.size() == 0){
             rellenarLista();
             SiguientePalabra();
@@ -263,11 +286,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    } // metodo comprobarPalabra
+    } // fin del metodo comprobarPalabra
 
 
-    // se debe implementar que cuando vuelva de la actividad anadirpalabras compruebe si hay alguna nueva y las añada al final de la lista
-
+    // Se debe implementar que cuando vuelva de la actividad anadirpalabras compruebe si hay alguna nueva y las añada al final de la lista
 
     private void anadirUltimasPalabras(){
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
@@ -339,10 +361,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void reiniciarCuadros(){
+    private void reiniciarCuadros(boolean reiniciarMensaje){
         textoPalabraEspanol.setText("");
         textoPalabraIngles.setText("");
-        textoCuadroAcierto.setText("");
+        if(reiniciarMensaje){
+            textoMensaje.setText("");
+        }
         textoPalabraIngles.requestFocus();
         palabraIngles = "";
         // 0 equivale a nulo
@@ -365,6 +389,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void mostrarLista(ArrayList<PalabraDiccionario> listaPalabras){
+        if(listaPalabras.size() > 0){
+            for (PalabraDiccionario palabra : listaPalabras) {
+                System.out.print("Ingles: " + palabra.getPalabraEng() + " | Español: "  +palabra.getPalabraEsp() + "\n" );
+            }
+        }
+    }
+
+    // Carga de actividades
     public void cargarActividadAnadirPalabras(View view){
         if (controladorPalabras.getPalabrasEquivocadas().size() > 0){
             System.out.println("La lista Palabras Equivocadas tiene: " + controladorPalabras.getPalabrasEquivocadas().size() + " palabras");
@@ -378,13 +411,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void cargarActividadInformacion(View view){
-
-        Intent i = new Intent(this, Informacion.class);
-
+    private void cargarActividadCrearCategoria(Object o) {
+        Intent i = new Intent(this, crearCategoria.class);
         startActivity(i);
-
     }
+
 
 
 

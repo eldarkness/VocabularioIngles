@@ -4,16 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
-    <item android:id="@+id/menu_configuracion"
-        android:title="Configuración"
-        android:icon="@android:drawable/ic_menu_preferences"
-        app:showAsAction="never"/>
-
-    <item android:id="@+id/menu_info"
-        android:title="Ir a información"
-        android:icon="@android:drawable/ic_menu_info_details"
-        android:orderInCategory="10"
-        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_IntroducirPalabras"
@@ -21,5 +11,14 @@
         android:orderInCategory="1"
         android:title="Introducir Palabras"
         app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/menu_CrearCategoria"
+        android:icon="@drawable/icono_android_categoria"
+        android:orderInCategory="2"
+        android:title="Crear Categoria"
+        app:showAsAction="always" />
+
 
 </menu>

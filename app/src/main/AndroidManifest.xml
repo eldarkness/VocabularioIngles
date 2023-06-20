@@ -22,9 +22,6 @@
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"
             android:exported="false" />
         <activity
-            android:name=".Informacion"
-            android:exported="false" />
-        <activity
             android:name=".ActivityAnadirPalabras"
             android:exported="false"
             android:screenOrientation="portrait" />
