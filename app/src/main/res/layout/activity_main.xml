@@ -86,22 +86,24 @@
 
             android:layout_marginTop="4dp"
             android:textSize="28sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.248"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/MostrarTituloActividad" />
 
         <Button
             android:id="@+id/BotonComprobar"
-            android:layout_width="135dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="4dp"
+            android:layout_width="165dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="52dp"
             android:onClick="ComprobarPalabra"
             android:text="@string/boton_comprobar"
-            app:layout_constraintEnd_toEndOf="@+id/PalabraIngles"
-            app:layout_constraintHorizontal_bias="0.51"
-            app:layout_constraintStart_toStartOf="@+id/PalabraIngles"
-            app:layout_constraintTop_toBottomOf="@+id/PalabraIngles" />
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.591"
+            app:layout_constraintStart_toEndOf="@+id/PalabraIngles"
+            app:layout_constraintTop_toBottomOf="@+id/MostrarTituloActividad" />
 
         <EditText
             android:id="@+id/PalabraIngles"
@@ -113,7 +115,9 @@
             android:inputType="textPersonName"
             android:textColor="#3461BF"
             android:textSize="28sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/PalabraEspanol"
+            app:layout_constraintHorizontal_bias="0.613"
             app:layout_constraintStart_toStartOf="@+id/PalabraEspanol"
             app:layout_constraintTop_toBottomOf="@+id/PalabraEspanol" />
 
