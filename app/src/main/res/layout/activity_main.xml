@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/fondo_anadir_palabras"
+    android:background="@drawable/fondo_app"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:background="#90a3ed">
+        >
 
         <TextView
             android:id="@+id/textView"
@@ -21,19 +21,21 @@
             android:layout_height="30dp"
             android:layout_marginTop="4dp"
             android:text="Selecciona una categoria"
+            android:textColor="#44424C"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.404"
+            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/BotonCargarPalCat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="99dp"
+            android:layout_height="38dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:background="@drawable/bordes_redondos"
             android:onClick="CargarPalabrasPorCategoria"
             android:text="Cargar"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,9 +44,10 @@
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <Spinner
+
             android:id="@+id/spinnerCategorias2"
-            android:layout_width="156dp"
-            android:layout_height="46dp"
+            android:layout_width="149dp"
+            android:layout_height="38dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.45"
@@ -57,21 +60,21 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
+        android:layout_height="269dp"
         android:paddingTop="16dp"
-        >
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/MostrarTituloActividad"
-            android:layout_width="373dp"
+            android:layout_width="match_parent"
             android:layout_height="38dp"
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:text="@string/titulo_mainactivity"
-            android:textSize="20sp"
+            android:textColor="#44424C"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.421"
@@ -84,41 +87,44 @@
             android:layout_width="wrap_content"
             android:layout_height="44dp"
 
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.248"
+            app:layout_constraintHorizontal_bias="0.469"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/MostrarTituloActividad" />
 
         <Button
             android:id="@+id/BotonComprobar"
-            android:layout_width="165dp"
-            android:layout_height="47dp"
-            android:layout_marginTop="52dp"
+            android:layout_width="138dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bordes_redondos"
             android:onClick="ComprobarPalabra"
             android:text="@string/boton_comprobar"
-            android:textSize="18sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.591"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/PalabraIngles"
-            app:layout_constraintTop_toBottomOf="@+id/MostrarTituloActividad" />
+            app:layout_constraintTop_toBottomOf="@+id/PalabraEspanol" />
 
         <EditText
             android:id="@+id/PalabraIngles"
-            android:layout_width="150dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="4dp"
+            android:layout_width="168dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="16dp"
+
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bordes_redondos"
             android:ems="10"
             android:gravity="center"
             android:inputType="textPersonName"
             android:textColor="#3461BF"
-            android:textSize="28sp"
+            android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/PalabraEspanol"
-            app:layout_constraintHorizontal_bias="0.613"
-            app:layout_constraintStart_toStartOf="@+id/PalabraEspanol"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/PalabraEspanol" />
 
 
@@ -186,6 +192,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
