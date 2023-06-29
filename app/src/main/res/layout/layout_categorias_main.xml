@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="290dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:text="Selecciona una categoria"
+        android:textColor="#44424C"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/BotonCargarPalCat"
+        android:layout_width="99dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bordes_redondos"
+        android:onClick="CargarPalabrasPorCategoria"
+        android:text="Cargar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.408"
+        app:layout_constraintStart_toEndOf="@+id/spinnerCategorias2"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Spinner
+
+        android:id="@+id/spinnerCategorias2"
+        android:layout_width="149dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.435"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

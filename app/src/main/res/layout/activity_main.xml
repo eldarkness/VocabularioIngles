@@ -10,10 +10,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
+        android:layout_height="137dp"
         android:paddingTop="16dp"
-        >
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/textView"
@@ -82,11 +81,9 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-
             android:id="@+id/PalabraEspanol"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
-
             android:layout_marginTop="16dp"
             android:textSize="28sp"
             android:textStyle="bold"
@@ -115,12 +112,12 @@
             android:layout_width="168dp"
             android:layout_height="44dp"
             android:layout_marginStart="16dp"
-
             android:layout_marginTop="16dp"
             android:background="@drawable/bordes_redondos"
             android:ems="10"
             android:gravity="center"
-            android:inputType="textPersonName"
+            android:inputType="text|textNoSuggestions"
+            android:imeOptions="actionUnspecified"
             android:textColor="#3461BF"
             android:textSize="22sp"
             android:textStyle="bold"

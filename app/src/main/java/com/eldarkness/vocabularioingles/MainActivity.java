@@ -220,6 +220,9 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Español: " + listaPalabras.get(0).getPalabraEsp() + " Ingles: " + listaPalabras.get(0).getPalabraEng());
         listaPalabras.remove(indice);
 
+        // ocultar aqui el layout de las categorias para que to do se suba para arriba
+
+        //miteclado.showSoftInputFromInputMethod(null, null, null);
     }
 
     /**
