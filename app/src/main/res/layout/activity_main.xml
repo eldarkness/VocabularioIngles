@@ -10,7 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="137dp"
+        android:layout_height="wrap_content"
         android:paddingTop="16dp"
         android:paddingBottom="16dp">
 
@@ -18,13 +18,11 @@
             android:id="@+id/textView"
             android:layout_width="290dp"
             android:layout_height="30dp"
-            android:layout_marginTop="4dp"
             android:text="Selecciona una categoria"
             android:textColor="#44424C"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,12 +31,12 @@
             android:layout_width="99dp"
             android:layout_height="38dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/bordes_redondos"
             android:onClick="CargarPalabrasPorCategoria"
             android:text="Cargar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.054"
+            app:layout_constraintHorizontal_bias="0.222"
             app:layout_constraintStart_toEndOf="@+id/spinnerCategorias2"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -47,7 +45,7 @@
             android:id="@+id/spinnerCategorias2"
             android:layout_width="149dp"
             android:layout_height="38dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.45"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,6 +57,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:layout_gravity="center"
         android:layout_height="269dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp">
@@ -94,8 +93,8 @@
 
         <Button
             android:id="@+id/BotonComprobar"
-            android:layout_width="138dp"
-            android:layout_height="42dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/bordes_redondos"
@@ -103,95 +102,57 @@
             android:text="@string/boton_comprobar"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.222"
             app:layout_constraintStart_toEndOf="@+id/PalabraIngles"
             app:layout_constraintTop_toBottomOf="@+id/PalabraEspanol" />
 
         <EditText
             android:id="@+id/PalabraIngles"
-            android:layout_width="168dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="16dp"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="28dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/bordes_redondos"
             android:ems="10"
             android:gravity="center"
-            android:inputType="text|textNoSuggestions"
             android:imeOptions="actionUnspecified"
+            android:inputType="text|textNoSuggestions"
             android:textColor="#3461BF"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/PalabraEspanol" />
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp">
-
-        <TextView
-            android:id="@+id/UltimaPalabra"
-            android:layout_width="wrap_content"
-            android:layout_height="43dp"
-            android:layout_marginTop="16dp"
-            android:textSize="28sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.474"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/CheckUltimaPalabra"
-            android:layout_width="51dp"
-            android:layout_height="42dp"
-
-            android:layout_marginStart="28dp"
-            app:layout_constraintBottom_toBottomOf="@+id/UltimaPalabra"
-            app:layout_constraintStart_toEndOf="@+id/UltimaPalabra"
-            app:layout_constraintTop_toTopOf="@+id/UltimaPalabra"
-            app:layout_constraintVertical_bias="0.0" />
-
-
-        <ImageView
-            android:id="@+id/checkAcierto"
-            android:layout_width="59dp"
-            android:layout_height="46dp"
-            android:layout_marginTop="8dp"
-            android:contentDescription="@string/descripcion_imageCheck"
-            app:layout_constraintEnd_toEndOf="@+id/UltimaPalabra"
-            app:layout_constraintHorizontal_bias="0.525"
-            app:layout_constraintStart_toStartOf="@+id/UltimaPalabra"
-            app:layout_constraintTop_toBottomOf="@+id/UltimaPalabra" />
-
-        <TextView
-            android:id="@+id/mensajeAcierto"
-            android:layout_width="354dp"
-            android:layout_height="109dp"
-            android:layout_marginBottom="12dp"
-            android:gravity="center"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/botonMostrarPal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <Button
             android:id="@+id/botonMostrarPal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="183dp"
+            android:layout_height="42dp"
             android:layout_marginBottom="4dp"
+            android:background="@drawable/bordes_redondos"
             android:onClick="mostrarPalabra"
             android:text="@string/boton_mostrar_palabra"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent" />
-
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/PalabraIngles"
+            app:layout_constraintVertical_bias="0.692" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:id="@+id/layoutRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp" />
+    </ScrollView>
+
 
 </LinearLayout>
