@@ -1,6 +1,7 @@
 package com.eldarkness.vocabularioingles;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,10 +9,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -28,6 +31,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -70,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
         controladorPalabras = new ControladorPalabras();
         textoPalabraEspanol = (TextView) findViewById(R.id.PalabraEspanol);
         textoPalabraIngles = (EditText) findViewById(R.id.PalabraIngles);
-        //textoMensaje = (TextView) findViewById(R.id.mensajeAcierto);
-        //checkAcierto = (ImageView) findViewById(R.id.checkAcierto);
         layoutRegistro = findViewById(R.id.layoutRegistro);
         siguientePalabra = false;
         botonComprobar = (Button) findViewById(R.id.BotonComprobar);
@@ -79,31 +82,10 @@ public class MainActivity extends AppCompatActivity {
         eventoTeclado = new EventoTeclado();
         textoPalabraIngles.setOnEditorActionListener(eventoTeclado);
         bbdd_controller = new BBDD_Controller(this);
-        //textoUltimaPalabra = (TextView) findViewById(R.id.UltimaPalabra);
-        //checkUltimaPalabra = (ImageView) findViewById(R.id.CheckUltimaPalabra);
         listaPalabras = new ArrayList<>();
         listaPalabrasBackUp = new ArrayList<>();
         spinnerCategorias = (Spinner) findViewById(R.id.spinnerCategorias2);
         System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
-
-        /*ConstraintLayout layoutRegistro = findViewById(R.id.layoutRegistro);
-        ConstraintSet set = new ConstraintSet();
-
-        TextView view = new TextView(this);
-        view.setText("Hola");
-        view.setId(View.generateViewId());  // cannot set id after add
-        layoutRegistro.addView(view,0);
-        set.clone(layoutRegistro);
-        set.connect(view.getId(), ConstraintSet.TOP, layoutRegistro.getId(), ConstraintSet.TOP, 60);
-        set.applyTo(layoutRegistro); // apply to layout*/
-
-      ;
-
-
-        //layoutRegistro.addView(crearVista());
-
-
-
         listaCategorias = cargarCategorias();
         CargarSpinnerCategorias();
         rellenarLista();
@@ -115,6 +97,44 @@ public class MainActivity extends AppCompatActivity {
         //miteclado.showSoftInput(textoPalabraIngles,InputMethodManager.SHOW_IMPLICIT);
         //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
 
+    }
+
+    private LinearLayout crearLayout(String palabraIngles, String palabraEspanol, int estado){
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        ImageView imageView = new ImageView(this);
+        TextView textView = new TextView(this);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextSize(21);
+
+        if (estado == 0) {
+            textView.setTextColor(Color.BLACK);
+            textView.setTextColor(Color.parseColor("#229994" ));
+            textView.setText(palabraEspanol + "  |  " + palabraIngles);
+            imageView.setImageResource(R.drawable.check_ok);
+        }
+        else if (estado == 1) {
+            textView.setTextColor(Color.parseColor("#f62919" ));
+            textView.setText(R.string.primer_fallo);
+
+        }
+        else{
+            textView.setTextColor(Color.parseColor("#f62919" ));
+            textView.setText(palabraEspanol);
+            imageView.setImageResource(android.R.drawable.ic_delete);
+
+        }
+
+        linearLayout.addView(textView, 0);
+        linearLayout.addView(imageView,80, 80);
+
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        params.weight = 1.0f;
+        params.gravity = Gravity.CENTER;
+        linearLayout.setLayoutParams(params);
+
+        return linearLayout;
     }
 
     private TextView crearVista(String palabraIngles, String palabraEspanol, int estado){
@@ -224,23 +244,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // haciendo pruebas aqui con lo de la nueva funcionalidad
-
     public void CargarPalabrasPorCategoria(View view){
         reiniciarCuadros(false);
         rellenarLista();
-
-        /*layoutRegistro.removeView(vistaEjemplo);
-        System.out.println(layoutRegistro.getChildCount());
-
-        for(int i = 0; i < layoutRegistro.getChildCount() ; i++){
-            if(layoutRegistro.getChildAt(0).getClass() == TextView.class){
-                System.out.println( ((TextView)layoutRegistro.getChildAt(i)).getText() );
-            }
-
-        }*/
-
-
 
         if(listaPalabras.size() == 0){
             //textoMensaje.setText(getString(R.string.no_palabras_categoria) + spinnerCategorias.getSelectedItem().toString());
@@ -250,7 +256,6 @@ public class MainActivity extends AppCompatActivity {
         mostrarPalabra(null);
 
     }
-
 
 
     /**
@@ -317,40 +322,34 @@ public class MainActivity extends AppCompatActivity {
 
         //acierto
         if(textoPalabraIngles.getText().toString().equalsIgnoreCase(palabraIngles)){
-            //textoMensaje.setText(R.string.acierto);
-            //checkAcierto.setImageResource(R.drawable.check_ok);
-            //layoutRegistro.addView(crearVista(palabraIngles, textoPalabraEspanol.getText().toString(), true));
 
-            layoutRegistro.addView(crearVista(palabraIngles, textoPalabraEspanol.getText().toString(), 0), 0);
+            layoutRegistro.addView(crearLayout(palabraIngles, textoPalabraEspanol.getText().toString(), 0));
             error = 0;
             palabraIngles = "";
-            //textoUltimaPalabra.setText(textoPalabraEspanol.getText().toString());
-            //checkUltimaPalabra.setImageResource(R.drawable.check_ok);
+
 
         // fallo, si era el primer error entonces la variable error se setea a 1, si ha sido el segundo error
         // se pone la variable error a 0 y se añade la palabra a a lista de fallos
         }else{
             switch (error){
                 case 0:
-                    //textoMensaje.setText(R.string.primer_fallo);
-                    //checkAcierto.setImageResource(android.R.drawable.ic_delete);
-                    layoutRegistro.addView(crearVista(palabraIngles, textoPalabraEspanol.getText().toString(), 1), 0);;
+
+                    layoutRegistro.addView(crearLayout(palabraIngles, textoPalabraEspanol.getText().toString(), 1));
                     error++;
                     textoPalabraIngles.requestFocus();
                     break;
                 case 1:
-                    //textoMensaje.setText(R.string.segundo_fallo);
+
                     error = 0;
-                    //checkAcierto.setImageResource(android.R.drawable.ic_delete);
+
                     controladorPalabras.anadirPalabras(textoPalabraEspanol.getText().toString(),palabraIngles);
-                    layoutRegistro.addView(crearVista(palabraIngles, textoPalabraEspanol.getText().toString(), 2), 0);
+                    layoutRegistro.addView(crearLayout(palabraIngles, textoPalabraEspanol.getText().toString(), 2));
                     // generara un contador la primera vez que el usuario se equivoque en una palabra y cada vez
                     // que se añada la primera palabra a la lista de palabras equivocadas
                     if(controladorPalabras.contador == 0){
                         controladorPalabras.generarContador();
                     }
-                    //textoUltimaPalabra.setText(textoPalabraEspanol.getText().toString());
-                    //checkUltimaPalabra.setImageResource(android.R.drawable.ic_delete);
+
                     break;
             }
 
@@ -373,7 +372,11 @@ public class MainActivity extends AppCompatActivity {
     } // fin del metodo comprobarPalabra
 
 
-    // Se debe implementar que cuando vuelva de la actividad anadirpalabras compruebe si hay alguna nueva y las añada al final de la lista
+    /**
+     * Al volver desde la actividad añadirPalabras comprueba si hay alguna nueva ya las añade a la lista
+     * Habra que comprobar en un futuro que solo se añadan las palabras nuevas introducidas en la categoria
+     * que actualmente este cargada
+     */
 
     private void anadirUltimasPalabras(){
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
@@ -449,12 +452,12 @@ public class MainActivity extends AppCompatActivity {
         textoPalabraEspanol.setText("");
         textoPalabraIngles.setText("");
         if(reiniciarMensaje){
-            //textoMensaje.setText("");
+
         }
         textoPalabraIngles.requestFocus();
         palabraIngles = "";
         // 0 equivale a nulo
-        //checkAcierto.setImageResource(0);
+
 
     }
 
