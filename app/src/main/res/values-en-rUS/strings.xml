@@ -18,4 +18,6 @@
     <string name="introduce_palabraIngles">You must first introduce a word in English to check it</string>
     <string name="error_anadir_palabras">You must enter a word in English and in Spanish aswell</string>
     <string name="no_palabras_categoria">\"There are no words in the cathegory: \"</string>
+    <string name="fast_input_label" />
+    <string name="fast_input_settings">Configuracion IME</string>
 </resources>

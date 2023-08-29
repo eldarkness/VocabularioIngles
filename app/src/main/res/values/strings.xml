@@ -18,6 +18,9 @@
     <string name="introduce_palabraIngles">Debes introducir primero una palabra en inglés para poder comprobarla</string>
     <string name="error_anadir_palabras">Debes introducir una palabra tanto en Inglés como en Español</string>
     <string name="no_palabras_categoria">No hay ninguna palabra en la categoria: </string>
+    <string name="fast_input_label" />
+    <string name="IME_Settings" />
+    <string name="fast_input_settings">Configuracion IME</string>
 
 
 </resources>

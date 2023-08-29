@@ -1,20 +1,16 @@
 package com.eldarkness.vocabularioingles;
 
-
-import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -24,15 +20,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -52,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private ControladorPalabras controladorPalabras;
     EventoTeclado eventoTeclado;
 
-    InputMethodManager miteclado;
-    TextView textoUltimaPalabra;
-    ImageView checkUltimaPalabra;
+    InputMethodManager IMM;
+
+
     private ArrayList<PalabraDiccionario> listaPalabras;
     private ArrayList<PalabraDiccionario> listaPalabrasBackUp;
     private ArrayList<String> listaCategorias;
@@ -63,10 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
     private LinearLayout layoutRegistro;
 
-    /*
-    Falta por implementar:
-    -Que no se cierre el teclado cuando se llame al metodo comprobarPalabra desde el evento de teclado dandole al next
-    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +79,9 @@ public class MainActivity extends AppCompatActivity {
 
         mostrarPalabra(null);
 
-        //miteclado = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        //miteclado.hideSoftInputFromWindow(textoPalabraIngles.getWindowToken(),InputMethodManager.HIDE_IMPLICIT_ONLY);
+        IMM = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+
+
         //miteclado.showSoftInput(textoPalabraIngles,InputMethodManager.SHOW_IMPLICIT);
         //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
 
@@ -185,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
         anadirUltimasPalabras();
         listaCategorias = cargarCategorias();
         CargarSpinnerCategorias();
+        IMM.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(),InputMethodManager.SHOW_FORCED);
     }
 
     private void rellenarLista(){
@@ -308,8 +297,6 @@ public class MainActivity extends AppCompatActivity {
      */
 
     public void ComprobarPalabra(View view){
-
-        //checkAcierto.setImageResource(0);
 
         // Primero se comprueba que ninguno de los dos cuadros de texto este vacio, si es asi se sale del metodo
         if (textoPalabraEspanol.getText().toString().equalsIgnoreCase("")) {
@@ -468,9 +455,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-            if(actionId == EditorInfo.IME_ACTION_DONE){
+            if(actionId == EditorInfo.IME_ACTION_NEXT){
                 // metodo al que queremos llamar
                 ComprobarPalabra(null);
+                IMM.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(),InputMethodManager.SHOW_FORCED);
             }
             return false;
         }
