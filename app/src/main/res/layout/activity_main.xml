@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_app"
+    android:background="@drawable/wallpaper_app"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -59,6 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="269dp"
         android:layout_gravity="center"
+        android:foregroundTint="#F8F4F4"
         android:paddingTop="16dp"
         android:paddingBottom="16dp">
 

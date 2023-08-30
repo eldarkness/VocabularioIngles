@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
+import com.eldarkness.vocabularioingles.excelController.Controller;
 
 
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> listaCategorias;
     Spinner spinnerCategorias;
 
+    Controller controller;
 
     private LinearLayout layoutRegistro;
 
@@ -76,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
         listaCategorias = cargarCategorias();
         CargarSpinnerCategorias();
         rellenarLista();
+        controller = new Controller();
+        controller.createExcel(getApplicationContext(), "LibroExcel");
 
         mostrarPalabra(null);
 
@@ -160,10 +165,15 @@ public class MainActivity extends AppCompatActivity {
 
         }else if(id == R.id.menu_CrearCategoria){
             cargarActividadCrearCategoria(null);
+        }else if(id == R.id.menu_cargar_excel) {
+            cargarExcel();
         }
         return super.onOptionsItemSelected(menuItem);
     }
 
+    private void cargarExcel(){
+
+    }
 
 
     public void onResume(){

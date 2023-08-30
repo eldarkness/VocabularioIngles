@@ -20,5 +20,12 @@
         android:title="Crear Categoria"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_cargar_excel"
+        android:icon="@android:drawable/ic_menu_directions"
+        android:orderInCategory="0"
+        android:title="Crear Categoria"
+        app:showAsAction="ifRoom" />
+
 
 </menu>
