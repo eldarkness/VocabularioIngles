@@ -1,10 +1,15 @@
 package com.eldarkness.vocabularioingles;
 
+import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Gravity;
@@ -24,9 +29,19 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
-import com.eldarkness.vocabularioingles.excelController.Controller;
+import com.eldarkness.vocabularioingles.ExcelParser.ExcelController;
 
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,16 +62,16 @@ public class MainActivity extends AppCompatActivity {
 
     InputMethodManager IMM;
 
-
+    private final int REQUEST_CODE_EXCEL = 1;
     private ArrayList<PalabraDiccionario> listaPalabras;
     private ArrayList<PalabraDiccionario> listaPalabrasBackUp;
     private ArrayList<String> listaCategorias;
     Spinner spinnerCategorias;
 
-    Controller controller;
+    ExcelController excelController;
 
     private LinearLayout layoutRegistro;
-
+    final static int APP_STORAGE_ACCESS_REQUEST_CODE = 501;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,21 +91,113 @@ public class MainActivity extends AppCompatActivity {
         listaPalabrasBackUp = new ArrayList<>();
         spinnerCategorias = (Spinner) findViewById(R.id.spinnerCategorias2);
         System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
+        IMM = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         listaCategorias = cargarCategorias();
         CargarSpinnerCategorias();
         rellenarLista();
-        controller = new Controller();
-        controller.createExcel(getApplicationContext(), "LibroExcel");
-
         mostrarPalabra(null);
 
-        IMM = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        // Primero comprobamos si la APP tiene permiso para acceder al almacenamiento externo
+        // sino lo pedimos al inicio de la APP
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if(Environment.isExternalStorageManager()){
+                System.out.println("Se tiene acceso al almacenamiento externo");
+            }else{
+                permisoAcceso();
+            }
+        }
+
+        // Aqui empieza el codigo relacionado con el excel
+        excelController = new ExcelController();
+        excelController.createExcel(getApplicationContext(), "LibroExcel.xls");
+        excelController.leerExcel();
 
 
         //miteclado.showSoftInput(textoPalabraIngles,InputMethodManager.SHOW_IMPLICIT);
         //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
 
     }
+
+    private void permisoAcceso(){
+        Intent intent = new Intent(ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + BuildConfig.APPLICATION_ID));
+        startActivityForResult(intent, APP_STORAGE_ACCESS_REQUEST_CODE);
+    }
+
+    public void openFileChooser(View view){
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("application/vnd.ms-excel");
+        startActivityForResult(intent, REQUEST_CODE_EXCEL);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Comprobacion del permiso para poder acceder a las carpetas del dispositivo
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && requestCode == APP_STORAGE_ACCESS_REQUEST_CODE) {
+            if(Environment.isExternalStorageManager()){
+                System.out.println("El usuario ha autorizado el permiso");
+            }
+            System.out.println("El usuario no ha autorizado el permiso");
+
+        }else{
+            System.out.println("La version del SDK es inferior a la minima requerida");
+        }
+
+        // Comprobacion a la llamada de intent para seleccionar un libro excel en el dispositivo
+        if(requestCode == REQUEST_CODE_EXCEL && resultCode == Activity.RESULT_OK){
+            if(data == null){
+                return;
+            }
+            Uri uri = data.getData();
+
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(uri);
+                System.out.println(inputStream.toString());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
+                File file = new File(getCacheDir(), "cacheFileAppeal.srl");
+                try (OutputStream output = new FileOutputStream(file)) {
+                    byte[] buffer = new byte[4 * 1024]; // or other buffer size
+                    int read;
+
+                    while ((read = input.read(buffer)) != -1) {
+                        output.write(buffer, 0, read);
+                    }
+
+                    output.flush();
+                }
+            } finally {
+                input.close();
+            }
+
+
+            System.out.println("***** Comienzan los juegos del hambre *****");
+            System.out.println(uri.getPath());
+            System.out.println(uri.getHost());
+
+            System.out.println(uri.getScheme());
+            System.out.println(uri.normalizeScheme().getPath());
+            /*try {
+                FileInputStream fileInputStream = new FileInputStream(file);
+                Workbook workbook = new HSSFWorkbook(fileInputStream);
+                System.out.println("Estoy recuperando la info de tu excel" + workbook.getSheetAt(0).getRow(0).getCell(0));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }*/
+            //System.out.println("******* El URI ese es " +file.getName() + "  **********");
+
+        }
+    }
+
+
 
     private LinearLayout crearLayout(String palabraIngles, String palabraEspanol, int estado){
         LinearLayout linearLayout = new LinearLayout(this);
@@ -166,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
         }else if(id == R.id.menu_CrearCategoria){
             cargarActividadCrearCategoria(null);
         }else if(id == R.id.menu_cargar_excel) {
-            cargarExcel();
+            openFileChooser(null);
         }
         return super.onOptionsItemSelected(menuItem);
     }
@@ -500,6 +607,7 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, crearCategoria.class);
         startActivity(i);
     }
+
 
 
 

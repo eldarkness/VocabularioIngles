@@ -1,9 +1,8 @@
-package com.eldarkness.vocabularioingles.excelController;
+package com.eldarkness.vocabularioingles.ExcelParser;
 
 
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -16,10 +15,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class Controller {
+public class ExcelController {
 
     private static Cell cell;
     private static Sheet sheet;
@@ -59,6 +60,10 @@ public class Controller {
         cell.setCellValue("Mail ID");
         cell.setCellStyle(cellStyle);
 
+        Sheet sheet2 = workbook.getSheetAt(0);
+
+
+
         exportarExcel(context, name);
 
 
@@ -67,25 +72,10 @@ public class Controller {
 
     private void exportarExcel(Context context, String name){
 
-        if(Environment.MEDIA_MOUNTED_READ_ONLY.equals(Environment.getExternalStorageState())){
-            System.out.println("el sistema esta solo de modo lectura");
-        }
-        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
-            System.out.println("El almacenamiento externo no esta disponible");
-        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if(Environment.isExternalStorageManager()){
-                System.out.println("Se tiene acceso al almacenamiento externo");
-            }else{
-                System.out.println("no se tiene acceso al almacenamiento externo");
-            }
-        }
-        ;
-
-        File file = new File(context.getExternalFilesDir(null), name);
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
         FileOutputStream fileOutputStream = null;
-        System.out.println(context.getExternalFilesDir(null));
+        System.out.println();
         System.out.println(file);
 
         try {
@@ -109,6 +99,28 @@ public class Controller {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public void leerExcel(){
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "excelprueba.xls");
+
+        FileInputStream fileInputStream = null;
+        Workbook workbookCargado;
+
+
+        try {
+            fileInputStream = new FileInputStream(file);
+
+            workbookCargado = new HSSFWorkbook(fileInputStream);
+            System.out.println(workbookCargado.getSheetAt(0).getRow(0).getCell(0));
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
 
