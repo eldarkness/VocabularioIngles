@@ -24,56 +24,45 @@ import java.util.Iterator;
 
 public class ExcelController {
 
-    private static Cell cell;
+    private static Cell cellstatico;
     private static Sheet sheet;
+    private static String nombreExcel = "Excel Vocabulario Ingles.xls";
 
     Workbook workbook;
 
-    private static String EXCEL_SHEET_NAME = "Sheet 1";
+    private static String EXCEL_SHEET_NAME = "Palabras Diccionario";
 
-    public void createExcel(Context context, String name){
+    // En teoria le deberian de llegar aqui las palabras desde la clase mainactivity en un arraylist
+    public Boolean crearExcel(ArrayList<PalabraDiccionario> palabrasDiccionario){
+        if(palabrasDiccionario.size() < 1){
+            return false;
+        }
+
         workbook = new HSSFWorkbook();
-
-        cell = null;
-
-        CellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setFillForegroundColor(HSSFColor.AQUA.index);
-        cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-
-        sheet = null;
         sheet = workbook.createSheet(EXCEL_SHEET_NAME);
+        Cell cell = null;
 
-        Row row = sheet.createRow(0);
+        for (int i = 0; i< palabrasDiccionario.size();i++){
+            Row row = sheet.createRow(i);
+            cell = row.createCell(0);
+            cell.setCellValue(palabrasDiccionario.get(i).getPalabraEsp());
+            cell = row.createCell(1);
+            cell.setCellValue(palabrasDiccionario.get(i).getPalabraEng());
+        }
 
-        cell = row.createCell(0);
-        cell.setCellValue("First Name");
-        cell.setCellStyle(cellStyle);
+        exportarExcel(workbook);
 
-        cell = row.createCell(1);
-        cell.setCellValue("Last Name");
-        cell.setCellStyle(cellStyle);
-
-        cell = row.createCell(2);
-        cell.setCellValue("Phone Number");
-        cell.setCellStyle(cellStyle);
-
-        cell = row.createCell(3);
-        cell.setCellValue("Mail ID");
-        cell.setCellStyle(cellStyle);
-
-        Sheet sheet2 = workbook.getSheetAt(0);
-
-
-        exportarExcel(context, name);
-
-
-
+        return true;
     }
 
-    private void exportarExcel(Context context, String name){
+    private Boolean exportarExcel(Workbook workbook){
+        Boolean exito;
 
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
+        if(workbook == null){
+            return false;
+        }
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), nombreExcel);
         FileOutputStream fileOutputStream = null;
         System.out.println();
         System.out.println(file);
@@ -82,14 +71,17 @@ public class ExcelController {
             fileOutputStream = new FileOutputStream(file);
             workbook.write(fileOutputStream);
             System.out.println("He grabado el excel");
-
+            exito = true;
 
         } catch (IOException e) {
             System.out.println("Error writing Exception: " + e);
+            exito = false;
 
         } catch (Exception e) {
             System.out.println("Failed to save file due to Exception " + e);
+            exito = false;
 
+        // es solo para cerrar el fileoutputstream
         } finally {
             try {
                 if (null != fileOutputStream) {
@@ -99,8 +91,9 @@ public class ExcelController {
                 ex.printStackTrace();
             }
         }
-    }
 
+        return exito;
+    }
 
     public ArrayList<PalabraDiccionario> cargarPalabrasExcel(Workbook excelACargar){
         System.out.println("Metodo cargarPalabrasExcel");
@@ -138,12 +131,86 @@ public class ExcelController {
 
     }
 
+    // Es un metodo solo para depurar el programa, sirve para ver que palabras han sido extraidas del excel
     private void leerArrayList(ArrayList<PalabraDiccionario> listaALeer){
         for (PalabraDiccionario p:listaALeer) {
             System.out.println("Palabra en español: " + p.getPalabraEsp() + "\n" +
-                                  "Palabra en Ingles: " + p.getPalabraEng() + "\n");
+                    "Palabra en Ingles: " + p.getPalabraEng() + "\n");
         }
     }
+
+
+    // es solo una prueba, no se usa borrar mas adelante
+    public void createExcel(Context context, String name){
+        workbook = new HSSFWorkbook();
+
+        cellstatico = null;
+
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setFillForegroundColor(HSSFColor.AQUA.index);
+        cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+
+        sheet = null;
+        sheet = workbook.createSheet(EXCEL_SHEET_NAME);
+
+        Row row = sheet.createRow(0);
+
+        cellstatico = row.createCell(0);
+        cellstatico.setCellValue("First Name");
+        cellstatico.setCellStyle(cellStyle);
+
+        cellstatico = row.createCell(1);
+        cellstatico.setCellValue("Last Name");
+        cellstatico.setCellStyle(cellStyle);
+
+        cellstatico = row.createCell(2);
+        cellstatico.setCellValue("Phone Number");
+        cellstatico.setCellStyle(cellStyle);
+
+        cellstatico = row.createCell(3);
+        cellstatico.setCellValue("Mail ID");
+        cellstatico.setCellStyle(cellStyle);
+
+        Sheet sheet2 = workbook.getSheetAt(0);
+
+        exportarExcelPrueba(context, name);
+
+
+
+    }
+
+    // metodo privado para apoyo del anterior, tambien de prueba borrar mas adelante
+    private void exportarExcelPrueba(Context context, String name){
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
+        FileOutputStream fileOutputStream = null;
+        System.out.println();
+        System.out.println(file);
+
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            workbook.write(fileOutputStream);
+            System.out.println("He grabado el excel");
+
+
+        } catch (IOException e) {
+            System.out.println("Error writing Exception: " + e);
+
+        } catch (Exception e) {
+            System.out.println("Failed to save file due to Exception " + e);
+
+        } finally {
+            try {
+                if (null != fileOutputStream) {
+                    fileOutputStream.close();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
 
     // prueba borrar mas adelante
     public void leerExcel() {

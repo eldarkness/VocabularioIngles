@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
     ExcelController excelController;
 
-
     private LinearLayout layoutRegistro;
     final static int APP_STORAGE_ACCESS_REQUEST_CODE = 501;
 
@@ -96,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
         IMM = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         listaCategorias = cargarCategorias();
+        excelController = new ExcelController();
         CargarSpinnerCategorias();
         rellenarLista();
         mostrarPalabra(null);
@@ -110,10 +110,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // Aqui empieza el codigo relacionado con el excel
-        excelController = new ExcelController();
-        excelController.createExcel(getApplicationContext(), "LibroExcel.xls");
-        excelController.leerExcel();
+        // pruebas para ver si funciona la logica de crear el excel
+        ArrayList<PalabraDiccionario> pruebaLista = new ArrayList<>();
+        pruebaLista.add(new PalabraDiccionario("Hablar", "Speak"));
+        pruebaLista.add(new PalabraDiccionario("Comer", "Eat"));
+        pruebaLista.add(new PalabraDiccionario("Saltar", "Jump"));
+
+        excelController.crearExcel(pruebaLista);
+
 
         //miteclado.showSoftInput(textoPalabraIngles,InputMethodManager.SHOW_IMPLICIT);
         //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
