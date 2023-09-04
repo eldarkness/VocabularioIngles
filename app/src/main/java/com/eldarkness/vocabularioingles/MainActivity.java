@@ -3,6 +3,7 @@ package com.eldarkness.vocabularioingles;
 import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,6 +44,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinnerCategorias;
 
     ExcelController excelController;
+
 
     private LinearLayout layoutRegistro;
     final static int APP_STORAGE_ACCESS_REQUEST_CODE = 501;
@@ -112,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         excelController.createExcel(getApplicationContext(), "LibroExcel.xls");
         excelController.leerExcel();
 
-
         //miteclado.showSoftInput(textoPalabraIngles,InputMethodManager.SHOW_IMPLICIT);
         //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
 
@@ -142,8 +144,6 @@ public class MainActivity extends AppCompatActivity {
             }
             System.out.println("El usuario no ha autorizado el permiso");
 
-        }else{
-            System.out.println("La version del SDK es inferior a la minima requerida");
         }
 
         // Comprobacion a la llamada de intent para seleccionar un libro excel en el dispositivo
@@ -152,49 +152,88 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             Uri uri = data.getData();
+            Workbook workbook;
 
             try {
                 InputStream inputStream = getContentResolver().openInputStream(uri);
                 System.out.println(inputStream.toString());
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
 
-            try {
-                File file = new File(getCacheDir(), "cacheFileAppeal.srl");
-                try (OutputStream output = new FileOutputStream(file)) {
-                    byte[] buffer = new byte[4 * 1024]; // or other buffer size
-                    int read;
-
-                    while ((read = input.read(buffer)) != -1) {
-                        output.write(buffer, 0, read);
-                    }
-
-                    output.flush();
-                }
-            } finally {
-                input.close();
-            }
-
-
-            System.out.println("***** Comienzan los juegos del hambre *****");
-            System.out.println(uri.getPath());
-            System.out.println(uri.getHost());
-
-            System.out.println(uri.getScheme());
-            System.out.println(uri.normalizeScheme().getPath());
-            /*try {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                Workbook workbook = new HSSFWorkbook(fileInputStream);
-                System.out.println("Estoy recuperando la info de tu excel" + workbook.getSheetAt(0).getRow(0).getCell(0));
+                workbook = new HSSFWorkbook(inputStream);
+                System.out.println("Este es el excel del inputstream" + workbook.getSheetAt(0).getRow(0).getCell(0));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            }*/
-            //System.out.println("******* El URI ese es " +file.getName() + "  **********");
+            }
+            ArrayList<PalabraDiccionario> palabrasExcelCargado = excelController.cargarPalabrasExcel(workbook);
+            introducirPalabrasExcelEnBBDD(palabrasExcelCargado);
 
         }
+
+    }
+
+    private void introducirPalabrasExcelEnBBDD(ArrayList<PalabraDiccionario> palabrasExcelCargado){
+        SQLiteDatabase sqLiteDatabase = bbdd_controller.getWritableDatabase();
+        int cont = 0;
+        for (PalabraDiccionario p: palabrasExcelCargado) {
+            // Sino esta la palabra en español entonces hay que añadirla a la BBDD en caso contrario no hacemos nada
+            if(!buscarPalabra(p.getPalabraEsp())){
+                introducirPalabraBBDD(sqLiteDatabase, p);
+                cont++;
+            }
+
+        }
+
+        System.out.println("********** Se insertaron " + cont + " palabras desde el excel cargado");
+        sqLiteDatabase.close();
+    }
+
+    private Boolean buscarPalabra(String palabraEsp){
+
+        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
+        String[] projection = {
+                Estructura_BBDD.NOMBRE_COLUMNA2
+        };
+        String selection = Estructura_BBDD.NOMBRE_COLUMNA2 + " = ?";
+        String[] selectionArgs = { capitalizar(palabraEsp) };
+
+        Cursor c = sqLiteDatabase.query(
+                Estructura_BBDD.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+
+        );
+        int cantidad = c.getCount();
+        c.close();
+        // parece que no se puede cerrar el objeto sqlitedatabase ANTES de llamar al metodo del cursor getCount()
+
+        if (cantidad>0){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    private String capitalizar(String palabra){
+        String str = (palabra.substring(0, 1)).toUpperCase(Locale.ROOT) + (palabra.substring(1)).toLowerCase(Locale.ROOT);
+
+        return str;
+    }
+
+    public void introducirPalabraBBDD(SQLiteDatabase sqLiteDatabase, PalabraDiccionario palabraDiccionario) {
+        // tiene que añadir una palabra a la base de datos sino esta repetida, usar columna llamada Diccionario
+        ContentValues values = new ContentValues();
+        values.put(Estructura_BBDD.NOMBRE_COLUMNA2, palabraDiccionario.getPalabraEsp());
+        values.put(Estructura_BBDD.NOMBRE_COLUMNA3, palabraDiccionario.getPalabraEng());
+        values.put(Estructura_BBDD.NOMBRE_COLUMNA4, "Defecto");
+        long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME, null, values);
+
+
     }
 
 
@@ -279,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void cargarExcel(){
+        //ActivityAnadirPalabras activityAnadirPalabras = new ActivityAnadirPalabras();
 
     }
 
@@ -536,7 +576,7 @@ public class MainActivity extends AppCompatActivity {
             }
             listaCategorias.add(0,"Todas");
         }else{
-            listaCategorias.add("Crea una Categoria");
+            listaCategorias.add("Por Defecto");
         }
         c.close();
         return listaCategorias;

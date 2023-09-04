@@ -12,9 +12,12 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
+
+import org.apache.poi.hssf.record.formula.functions.T;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +36,9 @@ public class crearCategoria extends AppCompatActivity {
         setContentView(R.layout.activity_crear_categoria);
         textoCategoria = (EditText) findViewById(R.id.editTextCategoria);
         categorias = new ArrayList<>();
+        categoriaPorDefecto();
     }
+
 
     public void anadirCategoria(View view){
         SQLiteDatabase sqLiteDatabase = bbdd.getWritableDatabase();
@@ -78,6 +83,24 @@ public class crearCategoria extends AppCompatActivity {
             return false;
         }
 
+    }
+
+    // Crea una categoria por defecto para poder meter todas las palabras del Excel
+    private void categoriaPorDefecto(){
+        if(!categoriaRepetida("Defecto")){
+            anadirCategoriaPorDefecto("Defecto");
+        }
+    }
+    public void anadirCategoriaPorDefecto(String categoria){
+        SQLiteDatabase sqLiteDatabase = bbdd.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        categoria = capitalizar(categoria);
+        values.put(Estructura_BBDD.COLUMNA2_CATEGORIAS,categoria);
+        sqLiteDatabase.insert(Estructura_BBDD.TABLE2_NAME, null, values);
+
+        Toast toast = new Toast(this);
+        toast.setText("Se creo la categoria " + categoria);
+        toast.show();
     }
 
     public void volverAtras(View view){

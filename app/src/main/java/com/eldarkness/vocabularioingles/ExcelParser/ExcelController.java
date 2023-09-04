@@ -1,9 +1,9 @@
 package com.eldarkness.vocabularioingles.ExcelParser;
 
-
-
 import android.content.Context;
 import android.os.Environment;
+
+import com.eldarkness.vocabularioingles.PalabraDiccionario;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -19,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ExcelController {
 
@@ -63,7 +65,6 @@ public class ExcelController {
         Sheet sheet2 = workbook.getSheetAt(0);
 
 
-
         exportarExcel(context, name);
 
 
@@ -71,7 +72,6 @@ public class ExcelController {
     }
 
     private void exportarExcel(Context context, String name){
-
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
         FileOutputStream fileOutputStream = null;
@@ -101,7 +101,52 @@ public class ExcelController {
         }
     }
 
-    public void leerExcel(){
+
+    public ArrayList<PalabraDiccionario> cargarPalabrasExcel(Workbook excelACargar){
+        System.out.println("Metodo cargarPalabrasExcel");
+        ArrayList<PalabraDiccionario> palabrasExcelLeidas= new ArrayList<PalabraDiccionario>();
+
+        // sacamos la pagina, que solo tendra una en este caso
+        Sheet sheet = excelACargar.getSheetAt(0);
+        Row row = null;
+        Iterator<Row> rowIterator = sheet.iterator();
+
+        // Comprueba filas
+        while(rowIterator.hasNext()){
+            row = rowIterator.next();
+            Iterator<Cell> cellIterator = row.cellIterator();
+            Cell celda = null;
+            String palabraEsp = "";
+            String palabraIng = "";
+
+            if(cellIterator.hasNext()){
+                celda = cellIterator.next();
+                palabraEsp = celda.getStringCellValue();
+            }
+            if(cellIterator.hasNext()){
+                celda = cellIterator.next();
+                palabraIng = celda.getStringCellValue();
+            }
+
+            palabrasExcelLeidas.add(new PalabraDiccionario(palabraEsp, palabraIng));
+
+        }
+
+        leerArrayList(palabrasExcelLeidas);
+
+        return palabrasExcelLeidas;
+
+    }
+
+    private void leerArrayList(ArrayList<PalabraDiccionario> listaALeer){
+        for (PalabraDiccionario p:listaALeer) {
+            System.out.println("Palabra en español: " + p.getPalabraEsp() + "\n" +
+                                  "Palabra en Ingles: " + p.getPalabraEng() + "\n");
+        }
+    }
+
+    // prueba borrar mas adelante
+    public void leerExcel() {
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "excelprueba.xls");
 
         FileInputStream fileInputStream = null;
@@ -119,10 +164,8 @@ public class ExcelController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
 
 
-}
+    }
