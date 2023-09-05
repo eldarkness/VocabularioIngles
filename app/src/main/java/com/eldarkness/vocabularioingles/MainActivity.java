@@ -36,13 +36,9 @@ import com.eldarkness.vocabularioingles.ExcelParser.ExcelController;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -117,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         pruebaLista.add(new PalabraDiccionario("Saltar", "Jump"));
 
         excelController.crearExcel(pruebaLista);
-
 
         //miteclado.showSoftInput(textoPalabraIngles,InputMethodManager.SHOW_IMPLICIT);
         //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
@@ -648,7 +643,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void cargarActividadCrearCategoria(Object o) {
-        Intent i = new Intent(this, crearCategoria.class);
+        Intent i = new Intent(this, ActivityCrearCategoria.class);
         startActivity(i);
     }
 

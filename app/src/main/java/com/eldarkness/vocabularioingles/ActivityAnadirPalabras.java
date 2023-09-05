@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -87,77 +86,35 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     }
 
     public void IntroducirPalabrasDiccionario(View view){
+
         // tiene que añadir una palabra a la base de datos sino esta repetida, usar columna llamada Diccionario
-        SQLiteDatabase sqLiteDatabase = bbdd.getWritableDatabase();
         String palabraEsp = palabraEspanol.getText().toString();
         String palabraIng = palabraIngles.getText().toString();
+        String categoria = spinnerCategorias.getSelectedItem().toString();
 
-        if(!palabraEsp.equalsIgnoreCase("") && !palabraIng.equalsIgnoreCase("")){
-
-            if(!spinnerCategorias.getSelectedItem().toString().equalsIgnoreCase("Crea una categoria") ){
-                palabraEsp = capitalizar(palabraEsp);
-                palabraIng = capitalizar(palabraIng);
-
-                // seguir implementando lo de la categoria aqui
-                if(buscarPalabra(palabraEsp)){
-                    textoPalabraAnadida.setText("La palabra " + palabraEsp + " ya esta en la base de datos");
-                }else{
-                    ContentValues values = new ContentValues();
-                    values.put(Estructura_BBDD.NOMBRE_COLUMNA2,palabraEsp);
-                    values.put(Estructura_BBDD.NOMBRE_COLUMNA3,palabraIng);
-                    values.put(Estructura_BBDD.NOMBRE_COLUMNA4,spinnerCategorias.getSelectedItem().toString());
-                    long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME, null, values);
-                    if (newRowId > 0){
-                        textoPalabraAnadida.setText("La palabra " + palabraEsp + " se ha insertado en la base de datos");
-                    }
-                }
-            }else{
-                // si llega aqui significa que el usuario todavia no creo ninguna categoria, implementar algo para que se pida al usuario
-                // que cree al menos una y darle algun acceso directo a la actividad crearCategorias
-            }
-
-        } else {
-            textoPalabraAnadida.setText(R.string.error_anadir_palabras);
+        if(palabraEsp.equalsIgnoreCase("") || palabraIng.equalsIgnoreCase("")
+        || palabraEsp == null || palabraIng == null ){
+            textoPalabraAnadida.setText("Debes introducir una palabra tanto en Español como en Inglés");
+            return;
         }
 
-        sqLiteDatabase.close();
-        reiniciarCuadros();
+        if(spinnerCategorias.getSelectedItem().toString().equalsIgnoreCase("Crea una categoria")){
+            textoPalabraAnadida.setText("Primero debes crear una categoria");
+            cargarActividadCrearCategoria(null);
+        }
+
+        if(bbdd.IntroducirPalabrasDiccionario(palabraEsp,palabraIng, categoria)){
+            // decir que se han añadido las palabras al diccionario
+            reiniciarCuadros();
+        }
+
+
 
     }
 
-    public Boolean buscarPalabra(String palabraEsp){
-
-        SQLiteDatabase sqLiteDatabase = bbdd.getReadableDatabase();
-        String[] projection = {
-                Estructura_BBDD.NOMBRE_COLUMNA2
-        };
-        String selection = Estructura_BBDD.NOMBRE_COLUMNA2 + " = ?";
-        String[] selectionArgs = { capitalizar(palabraEsp) };
-
-        Cursor c = sqLiteDatabase.query(
-                Estructura_BBDD.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-
-        );
-        int cantidad = c.getCount();
-        c.close();
-        // parece que no se puede cerrar el objeto sqlitedatabase ANTES de llamar al metodo del cursor getCount()
-
-        if (cantidad>0){
-            return true;
-        }else{
-            return false;
-        }
-
-    }
 
     public void cargarActividadCrearCategoria(View view){
-        Intent i = new Intent(this, crearCategoria.class);
+        Intent i = new Intent(this, ActivityCrearCategoria.class);
         startActivity(i);
 
     }

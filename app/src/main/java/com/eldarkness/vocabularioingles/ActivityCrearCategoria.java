@@ -1,15 +1,11 @@
 package com.eldarkness.vocabularioingles;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,13 +13,10 @@ import android.widget.Toast;
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 
-import org.apache.poi.hssf.record.formula.functions.T;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
-public class crearCategoria extends AppCompatActivity {
+public class ActivityCrearCategoria extends AppCompatActivity {
 
     private BBDD_Controller bbdd;
     private String categoria;

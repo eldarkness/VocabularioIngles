@@ -17,7 +17,7 @@
         android:theme="@style/Theme.VocabularioIngles"
         tools:targetApi="31">
         <activity
-            android:name=".crearCategoria"
+            android:name=".ActivityCrearCategoria"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"
             android:exported="false" />
         <activity
