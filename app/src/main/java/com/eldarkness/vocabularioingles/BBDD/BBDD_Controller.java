@@ -96,4 +96,48 @@ public class BBDD_Controller extends SQLiteOpenHelper {
 
         return str;
     }
+
+    public void anadirCategoria(String categoria){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        categoria = capitalizar(categoria);
+        ContentValues values = new ContentValues();
+
+        if(!categoriaRepetida(categoria)){
+            values.put(Estructura_BBDD.COLUMNA2_CATEGORIAS,categoria);
+            sqLiteDatabase.insert(Estructura_BBDD.TABLE2_NAME, null, values);
+        }
+
+
+    }
+
+    public Boolean categoriaRepetida(String categoria){
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        String[] projection = {
+                Estructura_BBDD.COLUMNA2_CATEGORIAS
+        };
+        String selection = Estructura_BBDD.COLUMNA2_CATEGORIAS + " = ?";
+        String[] selectionArgs = { categoria };
+
+        Cursor c = sqLiteDatabase.query(
+                Estructura_BBDD.TABLE2_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+
+        );
+        int cantidad = c.getCount();
+        c.close();
+
+        if (cantidad>0){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
 }

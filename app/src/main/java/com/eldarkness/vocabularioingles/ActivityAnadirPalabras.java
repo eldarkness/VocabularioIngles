@@ -32,38 +32,17 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // hay que comprobar si esto servia para algo sino lo eliminaremos
-        if(savedInstanceState != null){
-            System.out.println("Tiene algooo");
-        }
-        Bundle extras = getIntent().getExtras();
         setContentView(R.layout.activity_anadir_palabras);
         bbdd = new BBDD_Controller(this);
         palabraEspanol = (EditText) findViewById(R.id.editTextEsp);
         palabraIngles = (EditText) findViewById(R.id.editTextIngles);
         palabraEspanol.requestFocus();
         textoPalabraAnadida = (TextView) findViewById(R.id.mensajePalabraAnadida);
-
         spinnerCategorias = (Spinner) findViewById(R.id.spinnerCategorias);
 
     }
 
-    public void volverAtras(View view){
-        // se termina con la actividad para que la que llamo a esta (mainactivity) no pierda los datos al llamar al onCreate
-        finish();
-    }
 
-
-    public void onResume() {
-        super.onResume();
-        listaCategorias = cargarCategorias();
-        CargarSpinnerCategorias();
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
 
     private ArrayList<String> cargarCategorias(){
         ArrayList<String> listaCategorias = new ArrayList<>();
@@ -92,14 +71,13 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
         String palabraIng = palabraIngles.getText().toString();
         String categoria = spinnerCategorias.getSelectedItem().toString();
 
-        if(palabraEsp.equalsIgnoreCase("") || palabraIng.equalsIgnoreCase("")
-        || palabraEsp == null || palabraIng == null ){
-            textoPalabraAnadida.setText("Debes introducir una palabra tanto en Español como en Inglés");
+        if(palabraEsp.equalsIgnoreCase("") || palabraIng.equalsIgnoreCase("")){
+            textoPalabraAnadida.setText(R.string.AnadirPalabras_PalabrasVacio);
             return;
         }
 
         if(spinnerCategorias.getSelectedItem().toString().equalsIgnoreCase("Crea una categoria")){
-            textoPalabraAnadida.setText("Primero debes crear una categoria");
+            textoPalabraAnadida.setText(R.string.AnadirPalabras_NoCategorias);
             cargarActividadCrearCategoria(null);
         }
 
@@ -107,16 +85,18 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
             // decir que se han añadido las palabras al diccionario
             reiniciarCuadros();
         }
-
-
-
     }
-
 
     public void cargarActividadCrearCategoria(View view){
         Intent i = new Intent(this, ActivityCrearCategoria.class);
         startActivity(i);
 
+    }
+
+    public void onResume() {
+        super.onResume();
+        listaCategorias = cargarCategorias();
+        CargarSpinnerCategorias();
     }
 
     private void CargarSpinnerCategorias(){
@@ -126,17 +106,22 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
 
     }
 
-    private String capitalizar(String palabra){
-        String str = (palabra.substring(0, 1)).toUpperCase(Locale.ROOT) + (palabra.substring(1)).toLowerCase(Locale.ROOT);
-
-        return str;
-    }
-
     private void reiniciarCuadros(){
         palabraEspanol.setText("");
         palabraIngles.setText("");
         palabraEspanol.requestFocus();
 
+    }
+
+    public void volverAtras(View view){
+        // se termina con la actividad para que la que llamo a esta (mainactivity) no pierda los datos al llamar al onCreate
+        finish();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
 

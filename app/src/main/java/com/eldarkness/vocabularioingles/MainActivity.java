@@ -171,71 +171,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /***
+     *
+     * @param palabrasExcelCargado
+     * Se le pasa una lista de palabras cargadas del excel y se meten en la base de datos sino estan ya en ella.
+     */
     private void introducirPalabrasExcelEnBBDD(ArrayList<PalabraDiccionario> palabrasExcelCargado){
-        SQLiteDatabase sqLiteDatabase = bbdd_controller.getWritableDatabase();
+
+        System.out.println("La lista tiene " + palabrasExcelCargado.size() + " palabras");
+
         int cont = 0;
         for (PalabraDiccionario p: palabrasExcelCargado) {
             // Sino esta la palabra en español entonces hay que añadirla a la BBDD en caso contrario no hacemos nada
-            if(!buscarPalabra(p.getPalabraEsp())){
-                introducirPalabraBBDD(sqLiteDatabase, p);
+            if(!bbdd_controller.buscarPalabra(p.getPalabraEsp())){
+                bbdd_controller.IntroducirPalabrasDiccionario(p.getPalabraEsp(),p.getPalabraEng(),"Defecto");
                 cont++;
             }
 
         }
 
         System.out.println("********** Se insertaron " + cont + " palabras desde el excel cargado");
-        sqLiteDatabase.close();
-    }
-
-    private Boolean buscarPalabra(String palabraEsp){
-
-        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
-        String[] projection = {
-                Estructura_BBDD.NOMBRE_COLUMNA2
-        };
-        String selection = Estructura_BBDD.NOMBRE_COLUMNA2 + " = ?";
-        String[] selectionArgs = { capitalizar(palabraEsp) };
-
-        Cursor c = sqLiteDatabase.query(
-                Estructura_BBDD.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-
-        );
-        int cantidad = c.getCount();
-        c.close();
-        // parece que no se puede cerrar el objeto sqlitedatabase ANTES de llamar al metodo del cursor getCount()
-
-        if (cantidad>0){
-            return true;
-        }else{
-            return false;
-        }
 
     }
-
-    private String capitalizar(String palabra){
-        String str = (palabra.substring(0, 1)).toUpperCase(Locale.ROOT) + (palabra.substring(1)).toLowerCase(Locale.ROOT);
-
-        return str;
-    }
-
-    public void introducirPalabraBBDD(SQLiteDatabase sqLiteDatabase, PalabraDiccionario palabraDiccionario) {
-        // tiene que añadir una palabra a la base de datos sino esta repetida, usar columna llamada Diccionario
-        ContentValues values = new ContentValues();
-        values.put(Estructura_BBDD.NOMBRE_COLUMNA2, palabraDiccionario.getPalabraEsp());
-        values.put(Estructura_BBDD.NOMBRE_COLUMNA3, palabraDiccionario.getPalabraEng());
-        values.put(Estructura_BBDD.NOMBRE_COLUMNA4, "Defecto");
-        long newRowId = sqLiteDatabase.insert(Estructura_BBDD.TABLE_NAME, null, values);
-
-
-    }
-
-
 
     private LinearLayout crearLayout(String palabraIngles, String palabraEspanol, int estado){
         LinearLayout linearLayout = new LinearLayout(this);
@@ -275,6 +232,8 @@ public class MainActivity extends AppCompatActivity {
         return linearLayout;
     }
 
+    // Ya no se usa porque ahora no se crean textview con un texto en color sino otro linear layout
+    //por cada acierto o fallo en le que hay 2 objetos y no solo uno
     private TextView crearVista(String palabraIngles, String palabraEspanol, int estado){
         // aciertos en verde esmeralda, fallos en rojo
         TextView textView = new TextView(this);
@@ -316,10 +275,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(menuItem);
     }
 
-    private void cargarExcel(){
-        //ActivityAnadirPalabras activityAnadirPalabras = new ActivityAnadirPalabras();
-
-    }
 
 
     public void onResume(){

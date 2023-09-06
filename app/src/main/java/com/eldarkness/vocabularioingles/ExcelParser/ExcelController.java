@@ -115,13 +115,19 @@ public class ExcelController {
             if(cellIterator.hasNext()){
                 celda = cellIterator.next();
                 palabraEsp = celda.getStringCellValue();
+
             }
             if(cellIterator.hasNext()){
                 celda = cellIterator.next();
                 palabraIng = celda.getStringCellValue();
+
+
             }
 
-            palabrasExcelLeidas.add(new PalabraDiccionario(palabraEsp, palabraIng));
+            if(palabraEsp != null && palabraEsp != "" && palabraIng != null && palabraIng != ""){
+                palabrasExcelLeidas.add(new PalabraDiccionario(palabraEsp, palabraIng));
+            }
+
 
         }
 

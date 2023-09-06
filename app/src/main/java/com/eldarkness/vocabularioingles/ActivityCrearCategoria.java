@@ -19,7 +19,7 @@ import java.util.Locale;
 public class ActivityCrearCategoria extends AppCompatActivity {
 
     private BBDD_Controller bbdd;
-    private String categoria;
+
     private EditText textoCategoria;
     private ArrayList<String> categorias;
     @Override
@@ -32,8 +32,25 @@ public class ActivityCrearCategoria extends AppCompatActivity {
         categoriaPorDefecto();
     }
 
-
     public void anadirCategoria(View view){
+
+        String categoria = capitalizar(textoCategoria.getText().toString());
+        if(categoria != ""){
+            return;
+        }
+
+        if(!bbdd.categoriaRepetida(categoria)){
+            bbdd.anadirCategoria(categoria);
+        }
+        textoCategoria.setText("");
+        textoCategoria.requestFocus();
+
+    }
+
+
+
+
+    /*public void anadirCategoria(View view){
         SQLiteDatabase sqLiteDatabase = bbdd.getWritableDatabase();
         ContentValues values = new ContentValues();
         String categoria = capitalizar(textoCategoria.getText().toString());
@@ -76,7 +93,7 @@ public class ActivityCrearCategoria extends AppCompatActivity {
             return false;
         }
 
-    }
+    }*/
 
     // Crea una categoria por defecto para poder meter todas las palabras del Excel
     private void categoriaPorDefecto(){
