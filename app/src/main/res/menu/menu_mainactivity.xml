@@ -22,9 +22,11 @@
 
     <item
         android:id="@+id/menu_cargar_excel"
-        android:icon="@android:drawable/ic_menu_directions"
+        android:icon="@drawable/icono_excel"
+
         android:orderInCategory="0"
         android:title="Crear Categoria"
+
         app:showAsAction="ifRoom" />
 
 

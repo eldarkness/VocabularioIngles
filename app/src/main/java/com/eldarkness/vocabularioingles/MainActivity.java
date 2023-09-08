@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.Region;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -107,30 +108,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // pruebas para ver si funciona la logica de crear el excel
-        ArrayList<PalabraDiccionario> pruebaLista = new ArrayList<>();
+        /*ArrayList<PalabraDiccionario> pruebaLista = new ArrayList<>();
         pruebaLista.add(new PalabraDiccionario("Hablar", "Speak"));
         pruebaLista.add(new PalabraDiccionario("Comer", "Eat"));
         pruebaLista.add(new PalabraDiccionario("Saltar", "Jump"));
 
-        excelController.crearExcel(pruebaLista);
+        excelController.crearExcel(pruebaLista);*/
 
         //miteclado.showSoftInput(textoPalabraIngles,InputMethodManager.SHOW_IMPLICIT);
         //miteclado.showSoftInput(textoPalabraIngles, InputMethodManager.SHOW_FORCED);
 
     }
 
-    private void permisoAcceso(){
-        Intent intent = new Intent(ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + BuildConfig.APPLICATION_ID));
-        startActivityForResult(intent, APP_STORAGE_ACCESS_REQUEST_CODE);
+    public void onResume(){
+        super.onResume();
+        // se llama a este metodo para que se cargen, en la lista ya iniciada, las palabas que se
+        // acaban de añadir en la actividad de la que se esta volviendo
+        anadirUltimasPalabras();
+        listaCategorias = cargarCategorias();
+        CargarSpinnerCategorias();
+        IMM.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(),InputMethodManager.SHOW_FORCED);
     }
-
-    public void openFileChooser(View view){
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("application/vnd.ms-excel");
-        startActivityForResult(intent, REQUEST_CODE_EXCEL);
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -139,125 +137,19 @@ public class MainActivity extends AppCompatActivity {
         // Comprobacion del permiso para poder acceder a las carpetas del dispositivo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && requestCode == APP_STORAGE_ACCESS_REQUEST_CODE) {
             if(Environment.isExternalStorageManager()){
+                // en un futuro en el que haya un menu de configuracion de la APP se podria poner aqui un check marcado
+                // como que se tiene acceso al almacenamiento externo en ese supuesto menu
                 System.out.println("El usuario ha autorizado el permiso");
             }
             System.out.println("El usuario no ha autorizado el permiso");
 
         }
 
-        // Comprobacion a la llamada de intent para seleccionar un libro excel en el dispositivo
-        if(requestCode == REQUEST_CODE_EXCEL && resultCode == Activity.RESULT_OK){
-            if(data == null){
-                return;
-            }
-            Uri uri = data.getData();
-            Workbook workbook;
-
-            try {
-                // El objeto uri conseguido de los datos del intent no se puede convertir a file directamente
-                // asi que he tenido que optar por usar ese metodo para conseguir un inputStream y ya pasarlo a workbook
-                InputStream inputStream = getContentResolver().openInputStream(uri);
-                //System.out.println(inputStream.toString());
-
-                workbook = new HSSFWorkbook(inputStream);
-                //System.out.println("Este es el excel del inputstream" + workbook.getSheetAt(0).getRow(0).getCell(0));
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            ArrayList<PalabraDiccionario> palabrasExcelCargado = excelController.cargarPalabrasExcel(workbook);
-            if(palabrasExcelCargado.size()>0){
-                introducirPalabrasExcelEnBBDD(palabrasExcelCargado);
-            }
-
-        }
-
     }
 
-    /***
-     *
-     * @param palabrasExcelCargado
-     * Se le pasa una lista de palabras cargadas del excel y se meten en la base de datos sino estan ya en ella.
-     */
-    private void introducirPalabrasExcelEnBBDD(ArrayList<PalabraDiccionario> palabrasExcelCargado){
-
-        System.out.println("La lista tiene " + palabrasExcelCargado.size() + " palabras");
-
-        int cont = 0;
-        for (PalabraDiccionario p: palabrasExcelCargado) {
-            // Sino esta la palabra en español entonces hay que añadirla a la BBDD en caso contrario no hacemos nada
-            if(!bbdd_controller.buscarPalabra(p.getPalabraEsp())){
-                bbdd_controller.IntroducirPalabrasDiccionario(p.getPalabraEsp(),p.getPalabraEng(),"Defecto");
-                cont++;
-            }
-
-        }
-
-        System.out.println("********** Se insertaron " + cont + " palabras desde el excel cargado");
-
-    }
-
-    private LinearLayout crearLayout(String palabraIngles, String palabraEspanol, int estado){
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView imageView = new ImageView(this);
-        TextView textView = new TextView(this);
-        textView.setTypeface(null, Typeface.BOLD);
-        textView.setTextSize(21);
-
-        if (estado == 0) {
-            textView.setTextColor(Color.BLACK);
-            textView.setTextColor(Color.parseColor("#229994" ));
-            textView.setText(palabraEspanol + "  |  " + palabraIngles);
-            imageView.setImageResource(R.drawable.check_ok);
-        }
-        else if (estado == 1) {
-            textView.setTextColor(Color.parseColor("#f62919" ));
-            textView.setText(R.string.primer_fallo);
-
-        }
-        else{
-            textView.setTextColor(Color.parseColor("#f62919" ));
-            textView.setText(palabraEspanol);
-            imageView.setImageResource(android.R.drawable.ic_delete);
-
-        }
-
-        linearLayout.addView(textView, 0);
-        linearLayout.addView(imageView,80, 80);
-
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        params.weight = 1.0f;
-        params.gravity = Gravity.CENTER;
-        linearLayout.setLayoutParams(params);
-
-        return linearLayout;
-    }
-
-    // Ya no se usa porque ahora no se crean textview con un texto en color sino otro linear layout
-    //por cada acierto o fallo en le que hay 2 objetos y no solo uno
-    private TextView crearVista(String palabraIngles, String palabraEspanol, int estado){
-        // aciertos en verde esmeralda, fallos en rojo
-        TextView textView = new TextView(this);
-        textView.setTypeface(null, Typeface.BOLD);
-        textView.setTextSize(21);
-
-        if (estado == 0) {
-            textView.setTextColor(Color.parseColor("#229994" ));
-            textView.setText(palabraEspanol + " -> " + palabraIngles);
-        }
-        else if (estado == 1) {
-            textView.setTextColor(Color.parseColor("#f62919" ));
-            textView.setText(R.string.primer_fallo);
-        }
-        else{
-            textView.setTextColor(Color.parseColor("#f62919" ));
-            textView.setText(R.string.segundo_fallo);
-        }
-
-        return textView;
+    private void permisoAcceso(){
+        Intent intent = new Intent(ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + BuildConfig.APPLICATION_ID));
+        startActivityForResult(intent, APP_STORAGE_ACCESS_REQUEST_CODE);
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -274,22 +166,11 @@ public class MainActivity extends AppCompatActivity {
         }else if(id == R.id.menu_CrearCategoria){
             cargarActividadCrearCategoria(null);
         }else if(id == R.id.menu_cargar_excel) {
-            openFileChooser(null);
+            cargarActividadExcel(null);
         }
         return super.onOptionsItemSelected(menuItem);
     }
 
-
-
-    public void onResume(){
-        super.onResume();
-        // se llama a este metodo para que se cargen, en la lista ya iniciada, las palabas que se
-        // acaban de añadir en la actividad de la que se esta volviendo
-        anadirUltimasPalabras();
-        listaCategorias = cargarCategorias();
-        CargarSpinnerCategorias();
-        IMM.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(),InputMethodManager.SHOW_FORCED);
-    }
 
     private void rellenarLista(){
         // Tiene que comprobar la categoria que tenga seleccionada el spinner y rellenar la lista solo con esas palabras
@@ -318,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
             c.moveToNext();
         }
         c.close();
-
 
     }
 
@@ -381,14 +261,12 @@ public class MainActivity extends AppCompatActivity {
             textoPalabraEspanol.setText(controladorPalabras.getPalabrasEquivocadas().get(0).getPalabraEsp());
             palabraIngles = controladorPalabras.getPalabrasEquivocadas().get(0).getPalabraEng();
             controladorPalabras.getPalabrasEquivocadas().remove(0);
-            //textoMensaje.setText("Oportunidad extra, se vuelve a cargar la palabra: " + textoPalabraEspanol.getText().toString());
             if(controladorPalabras.getPalabrasEquivocadas().size() > 0){
                 controladorPalabras.generarContador();
             }
             return;
         }
 
-        //numero aleatorio
         int indice = (int) (Math.random() * listaPalabras.size());
         System.out.println("Sacando numero aleatorio...");
         System.out.println("Palabras en la listaPalabras: " + listaPalabras.size());
@@ -478,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
      * Al volver desde la actividad añadirPalabras comprueba si hay alguna nueva ya las añade a la lista
      * Habra que comprobar en un futuro que solo se añadan las palabras nuevas introducidas en la categoria
      * que actualmente este cargada
-     */
+     **/
 
     private void anadirUltimasPalabras(){
         SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
@@ -505,11 +383,59 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private LinearLayout crearLayout(String palabraIngles, String palabraEspanol, int estado){
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        ImageView imageView = new ImageView(this);
+        TextView textView = new TextView(this);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextSize(21);
+
+        if (estado == 0) {
+            textView.setTextColor(Color.BLACK);
+            textView.setTextColor(Color.parseColor("#229994" ));
+            textView.setText(palabraEspanol + "  |  " + palabraIngles);
+            imageView.setImageResource(R.drawable.check_ok);
+        }
+        else if (estado == 1) {
+            textView.setTextColor(Color.parseColor("#f62919" ));
+            textView.setText(R.string.primer_fallo);
+
+        }
+        else{
+            textView.setTextColor(Color.parseColor("#f62919" ));
+            textView.setText(palabraEspanol);
+            imageView.setImageResource(android.R.drawable.ic_delete);
+
+        }
+
+        linearLayout.addView(textView, 0);
+        linearLayout.addView(imageView,80, 80);
+
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        params.weight = 1.0f;
+        params.gravity = Gravity.CENTER;
+        linearLayout.setLayoutParams(params);
+
+        return linearLayout;
+    }
+
 
     /******
      *
      * Utilidades, metodos pequeños pero muy usados, metodos poco complejos, generalmente privates o classes internas
      *                                                                                                          ******/
+
+    private void reiniciarCuadros(boolean reiniciarMensaje){
+        textoPalabraEspanol.setText("");
+        textoPalabraIngles.setText("");
+        textoPalabraIngles.requestFocus();
+        palabraIngles = "";
+        // 0 equivale a nulo
+
+
+    }
 
     private boolean estaEnLalista(String palabraEsp) {
         for (int i = 0; i < listaPalabrasBackUp.size(); i++){
@@ -549,21 +475,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    private void reiniciarCuadros(boolean reiniciarMensaje){
-        textoPalabraEspanol.setText("");
-        textoPalabraIngles.setText("");
-        if(reiniciarMensaje){
-
-        }
-        textoPalabraIngles.requestFocus();
-        palabraIngles = "";
-        // 0 equivale a nulo
-
-
-    }
-
-
     // clase interna, pone a la escucha el edittext que ingresa la palabra en ingles y llama al metodo comprobarPalabra
     class EventoTeclado implements TextView.OnEditorActionListener{
 
@@ -587,7 +498,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Carga de actividades
+
+    /*
+     **** Carga de actividades *****
+     */
     public void cargarActividadAnadirPalabras(View view){
         if (controladorPalabras.getPalabrasEquivocadas().size() > 0){
             System.out.println("La lista Palabras Equivocadas tiene: " + controladorPalabras.getPalabrasEquivocadas().size() + " palabras");
@@ -601,10 +515,41 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void cargarActividadExcel(View view){
+        Intent i = new Intent(this, ActivityExcel.class);
+        startActivity(i);
+    }
+
     private void cargarActividadCrearCategoria(Object o) {
         Intent i = new Intent(this, ActivityCrearCategoria.class);
         startActivity(i);
     }
+
+
+    // Ya no se usa porque ahora no se crean textview con un texto en color sino otro linear layout
+    //por cada acierto o fallo en le que hay 2 objetos y no solo uno
+    private TextView crearVista(String palabraIngles, String palabraEspanol, int estado){
+        // aciertos en verde esmeralda, fallos en rojo
+        TextView textView = new TextView(this);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextSize(21);
+
+        if (estado == 0) {
+            textView.setTextColor(Color.parseColor("#229994" ));
+            textView.setText(palabraEspanol + " -> " + palabraIngles);
+        }
+        else if (estado == 1) {
+            textView.setTextColor(Color.parseColor("#f62919" ));
+            textView.setText(R.string.primer_fallo);
+        }
+        else{
+            textView.setTextColor(Color.parseColor("#f62919" ));
+            textView.setText(R.string.segundo_fallo);
+        }
+
+        return textView;
+    }
+
 
 
 

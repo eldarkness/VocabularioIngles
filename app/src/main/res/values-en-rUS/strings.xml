@@ -18,8 +18,8 @@
     <string name="introduce_palabraIngles">You must first introduce a word in English to check it</string>
     <string name="error_anadir_palabras">You must enter a word in English and in Spanish aswell</string>
     <string name="no_palabras_categoria">\"There are no words in the cathegory: \"</string>
-    <string name="fast_input_label" />
-    <string name="fast_input_settings">Configuracion IME</string>
     <string name="AnadirPalabras_PalabrasVacio">Debes introducir una palabra tanto en Español como en Inglés</string>
-    <string name="AnadirPalabras_NoCategorias">Primero debes crear una categoria</string>
+    <string name="AnadirPalabras_NoCategorias">You must create a category first</string>
+    <string name="boton_importar_excel">Import Excel</string>
+    <string name="boton_exportar_excel">Export Excel</string>
 </resources>

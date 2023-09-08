@@ -146,7 +146,10 @@ public class ExcelController {
     }
 
 
-    // es solo una prueba, no se usa borrar mas adelante
+
+
+
+    // A partir de aqui son solo pruebas no se usan, asi que borrar mas adelante
     public void createExcel(Context context, String name){
         workbook = new HSSFWorkbook();
 

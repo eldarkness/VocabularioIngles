@@ -5,7 +5,6 @@
 
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,9 +16,12 @@
         android:theme="@style/Theme.VocabularioIngles"
         tools:targetApi="31">
         <activity
-            android:name=".ActivityCrearCategoria"
-            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"
+            android:name=".ActivityExcel"
             android:exported="false" />
+        <activity
+            android:name=".ActivityCrearCategoria"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
         <activity
             android:name=".ActivityAnadirPalabras"
             android:exported="false"
