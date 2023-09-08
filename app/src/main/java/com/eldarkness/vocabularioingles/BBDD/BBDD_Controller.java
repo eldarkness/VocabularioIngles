@@ -5,11 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.view.View;
-
-import androidx.annotation.Nullable;
-
-import com.eldarkness.vocabularioingles.R;
 
 import java.util.Locale;
 
@@ -91,32 +86,23 @@ public class BBDD_Controller extends SQLiteOpenHelper {
         return false;
     }
 
-    private String capitalizar(String palabra){
-        String str = (palabra.substring(0, 1)).toUpperCase(Locale.ROOT) + (palabra.substring(1)).toLowerCase(Locale.ROOT);
-
-        return str;
-    }
-
-    public void anadirCategoria(String categoria){
+    public void anadirCategoria(String categoria) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         categoria = capitalizar(categoria);
         ContentValues values = new ContentValues();
 
-        if(!categoriaRepetida(categoria)){
-            values.put(Estructura_BBDD.COLUMNA2_CATEGORIAS,categoria);
-            sqLiteDatabase.insert(Estructura_BBDD.TABLE2_NAME, null, values);
-        }
-
+        values.put(Estructura_BBDD.COLUMNA2_CATEGORIAS, categoria);
+        sqLiteDatabase.insert(Estructura_BBDD.TABLE2_NAME, null, values);
 
     }
 
-    public Boolean categoriaRepetida(String categoria){
+    public Boolean categoriaRepetida(String categoria) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         String[] projection = {
                 Estructura_BBDD.COLUMNA2_CATEGORIAS
         };
         String selection = Estructura_BBDD.COLUMNA2_CATEGORIAS + " = ?";
-        String[] selectionArgs = { categoria };
+        String[] selectionArgs = {categoria};
 
         Cursor c = sqLiteDatabase.query(
                 Estructura_BBDD.TABLE2_NAME,
@@ -131,13 +117,20 @@ public class BBDD_Controller extends SQLiteOpenHelper {
         int cantidad = c.getCount();
         c.close();
 
-        if (cantidad>0){
+        if (cantidad > 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
 
     }
+
+    private String capitalizar(String palabra){
+        String str = (palabra.substring(0, 1)).toUpperCase(Locale.ROOT) + (palabra.substring(1)).toLowerCase(Locale.ROOT);
+
+        return str;
+    }
+
 
 
 }

@@ -3,7 +3,7 @@ package com.eldarkness.vocabularioingles;
 import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
 
 import android.app.Activity;
-import android.content.ContentValues;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -154,18 +154,22 @@ public class MainActivity extends AppCompatActivity {
             Workbook workbook;
 
             try {
+                // El objeto uri conseguido de los datos del intent no se puede convertir a file directamente
+                // asi que he tenido que optar por usar ese metodo para conseguir un inputStream y ya pasarlo a workbook
                 InputStream inputStream = getContentResolver().openInputStream(uri);
-                System.out.println(inputStream.toString());
+                //System.out.println(inputStream.toString());
 
                 workbook = new HSSFWorkbook(inputStream);
-                System.out.println("Este es el excel del inputstream" + workbook.getSheetAt(0).getRow(0).getCell(0));
+                //System.out.println("Este es el excel del inputstream" + workbook.getSheetAt(0).getRow(0).getCell(0));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             ArrayList<PalabraDiccionario> palabrasExcelCargado = excelController.cargarPalabrasExcel(workbook);
-            introducirPalabrasExcelEnBBDD(palabrasExcelCargado);
+            if(palabrasExcelCargado.size()>0){
+                introducirPalabrasExcelEnBBDD(palabrasExcelCargado);
+            }
 
         }
 
