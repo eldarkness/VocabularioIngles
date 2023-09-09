@@ -20,7 +20,7 @@ public class ActivityCrearCategoria extends AppCompatActivity {
 
     private BBDD_Controller bbdd;
     private EditText textoCategoria;
-    private ArrayList<String> categorias;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,6 @@ public class ActivityCrearCategoria extends AppCompatActivity {
         bbdd = new BBDD_Controller(this);
         setContentView(R.layout.activity_crear_categoria);
         textoCategoria = (EditText) findViewById(R.id.editTextCategoria);
-        categorias = new ArrayList<>();
         categoriaPorDefecto();
     }
 

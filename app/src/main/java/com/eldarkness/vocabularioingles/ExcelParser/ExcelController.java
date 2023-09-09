@@ -32,7 +32,7 @@ public class ExcelController {
 
     private static String EXCEL_SHEET_NAME = "Palabras Diccionario";
 
-    // En teoria le deberian de llegar aqui las palabras desde la clase mainactivity en un arraylist
+    // En teoria le deberian de llegar aqui las palabras desde la clase activity excel en un arraylist
     public Boolean crearExcel(ArrayList<PalabraDiccionario> palabrasDiccionario){
         if(palabrasDiccionario.size() < 1){
             return false;

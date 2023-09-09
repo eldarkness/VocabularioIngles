@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerCategorias = (Spinner) findViewById(R.id.spinnerCategorias2);
         System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
         IMM = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        listaCategorias = cargarCategorias();
+        listaCategorias = bbdd_controller.cargarCategorias();
         excelController = new ExcelController();
         CargarSpinnerCategorias();
         rellenarLista();
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         // se llama a este metodo para que se cargen, en la lista ya iniciada, las palabas que se
         // acaban de añadir en la actividad de la que se esta volviendo
         anadirUltimasPalabras();
-        listaCategorias = cargarCategorias();
+        listaCategorias = bbdd_controller.cargarCategorias();
         CargarSpinnerCategorias();
         IMM.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(),InputMethodManager.SHOW_FORCED);
     }
@@ -446,27 +446,6 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private ArrayList<String> cargarCategorias(){
-        ArrayList<String> listaCategorias = new ArrayList<>();
-        SQLiteDatabase sqLiteDatabase = bbdd_controller.getReadableDatabase();
-
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE2_NAME, null);
-
-        if(c.getCount()>0){
-            c.moveToFirst();
-            while(!c.isAfterLast()){
-                listaCategorias.add(c.getString(1));
-                c.moveToNext();
-            }
-            listaCategorias.add(0,"Todas");
-        }else{
-            listaCategorias.add("Por Defecto");
-        }
-        c.close();
-        return listaCategorias;
-
-
-    }
 
     private void CargarSpinnerCategorias(){
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listaCategorias);
@@ -503,11 +482,6 @@ public class MainActivity extends AppCompatActivity {
      **** Carga de actividades *****
      */
     public void cargarActividadAnadirPalabras(View view){
-        if (controladorPalabras.getPalabrasEquivocadas().size() > 0){
-            System.out.println("La lista Palabras Equivocadas tiene: " + controladorPalabras.getPalabrasEquivocadas().size() + " palabras");
-        }else{
-            System.out.println("upps parece que la lista esta vacia, valor: " + controladorPalabras.getPalabrasEquivocadas().size());
-        }
 
         Intent i = new Intent(this, ActivityAnadirPalabras.class);
 

@@ -45,8 +45,23 @@ public class ActivityExcel extends AppCompatActivity {
     public void importarExcel(View view){
         openFileChooser();
     }
+
+
+    /***
+     *
+     * @param view
+     *
+     * Este metodo deberia de mandar las palabras de la base de datos al metodo crear excel de la clase excelcontroller
+     */
     public void exportarExcel(View view){
-        System.out.println("exportar");
+
+        // debemos recibir primero las palabras de la base de datos en un arraylist
+        // luego se lo mandamos a la clase excelcontroller y seguimos desde alli
+        ArrayList<PalabraDiccionario> listaPalabras;
+        listaPalabras = bbdd_controller.extraerPalabrasBBDD();
+        excelController.crearExcel(listaPalabras);
+
+
     }
 
     public void openFileChooser(){
@@ -85,8 +100,6 @@ public class ActivityExcel extends AppCompatActivity {
                 introducirPalabrasExcelEnBBDD(palabrasExcelCargado);
             }
 
-            System.out.println("holis");
-
         }
 
     }
@@ -113,5 +126,7 @@ public class ActivityExcel extends AppCompatActivity {
         System.out.println("********** Se insertaron " + cont + " palabras desde el excel cargado");
 
     }
+
+
 
 }

@@ -42,28 +42,6 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
 
     }
 
-
-
-    private ArrayList<String> cargarCategorias(){
-        ArrayList<String> listaCategorias = new ArrayList<>();
-        SQLiteDatabase sqLiteDatabase = bbdd.getReadableDatabase();
-
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE2_NAME, null);
-
-        if(c.getCount()>0){
-            c.moveToFirst();
-            while(!c.isAfterLast()){
-                listaCategorias.add(c.getString(1));
-                c.moveToNext();
-            }
-        }else{
-            listaCategorias.add("Crea una Categoria");
-        }
-        c.close();
-        return listaCategorias;
-
-    }
-
     public void IntroducirPalabrasDiccionario(View view){
 
         // tiene que añadir una palabra a la base de datos sino esta repetida, usar columna llamada Diccionario
@@ -95,7 +73,7 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
 
     public void onResume() {
         super.onResume();
-        listaCategorias = cargarCategorias();
+        listaCategorias = bbdd.cargarCategorias();
         CargarSpinnerCategorias();
     }
 

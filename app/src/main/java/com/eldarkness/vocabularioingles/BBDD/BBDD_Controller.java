@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.eldarkness.vocabularioingles.PalabraDiccionario;
+
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class BBDD_Controller extends SQLiteOpenHelper {
@@ -86,6 +89,41 @@ public class BBDD_Controller extends SQLiteOpenHelper {
         return false;
     }
 
+    public ArrayList<PalabraDiccionario> extraerPalabrasBBDD() {
+        ArrayList<PalabraDiccionario> listaPalabras = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.rawQuery("select * from " + Estructura_BBDD.TABLE_NAME, null);
+
+        int cantidad = c.getCount();
+        System.out.println("Hay " + cantidad + " palabras en la base de datos");
+        c.close();
+
+
+        return listaPalabras;
+    }
+
+    public ArrayList<String> cargarCategorias(){
+        ArrayList<String> listaCategorias = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM " + Estructura_BBDD.TABLE2_NAME, null);
+
+        if(c.getCount()>0){
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                listaCategorias.add(c.getString(1));
+                c.moveToNext();
+            }
+        }else{
+            listaCategorias.add("Crea una Categoria");
+        }
+        c.close();
+        return listaCategorias;
+
+    }
+
+
     public void anadirCategoria(String categoria) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         categoria = capitalizar(categoria);
@@ -95,6 +133,7 @@ public class BBDD_Controller extends SQLiteOpenHelper {
         sqLiteDatabase.insert(Estructura_BBDD.TABLE2_NAME, null, values);
 
     }
+
 
     public Boolean categoriaRepetida(String categoria) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
