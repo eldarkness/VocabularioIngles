@@ -27,9 +27,7 @@ public class ExcelController {
     private static Cell cellstatico;
     private static Sheet sheet;
     private static String nombreExcel = "Excel Vocabulario Ingles.xls";
-
     Workbook workbook;
-
     private static String EXCEL_SHEET_NAME = "Palabras Diccionario";
 
     // En teoria le deberian de llegar aqui las palabras desde la clase activity excel en un arraylist
@@ -40,19 +38,31 @@ public class ExcelController {
 
         workbook = new HSSFWorkbook();
         sheet = workbook.createSheet(EXCEL_SHEET_NAME);
+        Row row = sheet.createRow(0);
         Cell cell = null;
+        cell = row.createCell(0);
+        cell.setCellValue("Palabra Español");
+        cell = row.createCell(1);
+        cell.setCellValue("Palabra Ingles");
+        cell = row.createCell(2);
+        cell.setCellValue("Categoria");
 
-        for (int i = 0; i< palabrasDiccionario.size();i++){
-            Row row = sheet.createRow(i);
+        for (int i = 1; i< palabrasDiccionario.size()+1;i++){
+            row = sheet.createRow(i);
             cell = row.createCell(0);
             cell.setCellValue(palabrasDiccionario.get(i).getPalabraEsp());
             cell = row.createCell(1);
             cell.setCellValue(palabrasDiccionario.get(i).getPalabraEng());
         }
 
-        exportarExcel(workbook);
+        if(exportarExcel(workbook)){
+            return true;
+        }else{
+            return false;
+        }
 
-        return true;
+
+
     }
 
     private Boolean exportarExcel(Workbook workbook){
@@ -64,8 +74,6 @@ public class ExcelController {
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), nombreExcel);
         FileOutputStream fileOutputStream = null;
-        System.out.println();
-        System.out.println(file);
 
         try {
             fileOutputStream = new FileOutputStream(file);
@@ -131,7 +139,7 @@ public class ExcelController {
 
         }
 
-        leerArrayList(palabrasExcelLeidas);
+        //leerArrayList(palabrasExcelLeidas);
 
         return palabrasExcelLeidas;
 

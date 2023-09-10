@@ -95,10 +95,18 @@ public class BBDD_Controller extends SQLiteOpenHelper {
 
         Cursor c = sqLiteDatabase.rawQuery("select * from " + Estructura_BBDD.TABLE_NAME, null);
 
+        if(c.getCount() > 0){
+            c.moveToFirst();
+            while(!c.isAfterLast()){
+                listaPalabras.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+                c.moveToNext();
+            }
+        }
+
+
         int cantidad = c.getCount();
         System.out.println("Hay " + cantidad + " palabras en la base de datos");
         c.close();
-
 
         return listaPalabras;
     }

@@ -7,7 +7,6 @@ public class ControladorPalabras {
     private ArrayList<PalabraDiccionario> palabrasEquivocadas = new ArrayList();
     int contador = 0;
 
-
     public ControladorPalabras(){
         // en un futuro meteremos aqui las palabras que nos lleguen del bundle que hayamos guardado de la sesion anterior
     }
