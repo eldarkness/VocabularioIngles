@@ -46,24 +46,6 @@ public class ActivityExcel extends AppCompatActivity {
         openFileChooser();
     }
 
-
-    /***
-     *
-     * @param view
-     *
-     * Este metodo deberia de mandar las palabras de la base de datos al metodo crear excel de la clase excelcontroller
-     */
-    public void exportarExcel(View view){
-
-        // debemos recibir primero las palabras de la base de datos en un arraylist
-        // luego se lo mandamos a la clase excelcontroller y seguimos desde alli
-        ArrayList<PalabraDiccionario> listaPalabras;
-        listaPalabras = bbdd_controller.extraerPalabrasBBDD();
-        excelController.crearExcel(listaPalabras);
-
-
-    }
-
     public void openFileChooser(){
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -112,18 +94,50 @@ public class ActivityExcel extends AppCompatActivity {
     private void introducirPalabrasExcelEnBBDD(ArrayList<PalabraDiccionario> palabrasExcelCargado){
 
         System.out.println("La lista tiene " + palabrasExcelCargado.size() + " palabras");
+        // preguntar aqui al usuario si quiere asignar una categoria a las palabras cargadas a las que se le haya asignado
+        // la categoria defecto sino se introduce ninguna entonces se le dejara esa por defecto
+
+
+        String categoria = "";
+        if(!bbdd_controller.categoriaRepetida("Defecto")){
+            bbdd_controller.anadirCategoria("Defecto");
+
+        }
 
         int cont = 0;
         for (PalabraDiccionario p: palabrasExcelCargado) {
             // Sino esta la palabra en español entonces hay que añadirla a la BBDD en caso contrario no hacemos nada
             if(!bbdd_controller.buscarPalabra(p.getPalabraEsp())){
-                bbdd_controller.IntroducirPalabrasDiccionario(p.getPalabraEsp(),p.getPalabraEng(),"Defecto");
+                // si la categoria viene vacia significa que se introduciran las palabras con la categoria con la que fueron extraidas del excel
+                if(categoria.equals("")){
+                    bbdd_controller.IntroducirPalabrasDiccionario(p.getPalabraEsp(),p.getPalabraEng(),p.getCategoria());
+                }else{
+                    bbdd_controller.IntroducirPalabrasDiccionario(p.getPalabraEsp(),p.getPalabraEng(),categoria);
+                }
+
                 cont++;
             }
 
         }
 
         System.out.println("********** Se insertaron " + cont + " palabras desde el excel cargado");
+
+    }
+
+    /***
+     *
+     * @param view
+     *
+     * Este metodo deberia de mandar las palabras de la base de datos al metodo crear excel de la clase excelcontroller
+     */
+    public void exportarExcel(View view){
+
+        // debemos recibir primero las palabras de la base de datos en un arraylist
+        // luego se lo mandamos a la clase excelcontroller y seguimos desde alli
+        ArrayList<PalabraDiccionario> listaPalabras;
+        listaPalabras = bbdd_controller.extraerPalabrasBBDD();
+        excelController.crearExcel(listaPalabras);
+
 
     }
 

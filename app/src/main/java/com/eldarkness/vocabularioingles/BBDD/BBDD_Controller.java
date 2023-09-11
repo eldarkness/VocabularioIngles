@@ -89,6 +89,11 @@ public class BBDD_Controller extends SQLiteOpenHelper {
         return false;
     }
 
+    /**
+     * @return
+     * Este metodo extrae todas las palabras de la tabla diccionario, que son las palabras con su traduccion
+     * tanto en español como en ingles y su categoria, y devuelve estas en un arraylist de palabras diccionario
+     */
     public ArrayList<PalabraDiccionario> extraerPalabrasBBDD() {
         ArrayList<PalabraDiccionario> listaPalabras = new ArrayList<>();
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -98,14 +103,15 @@ public class BBDD_Controller extends SQLiteOpenHelper {
         if(c.getCount() > 0){
             c.moveToFirst();
             while(!c.isAfterLast()){
-                listaPalabras.add(new PalabraDiccionario(c.getString(1),c.getString(2)));
+                listaPalabras.add(new PalabraDiccionario(c.getString(1),c.getString(2),c.getString(3)));
                 c.moveToNext();
             }
         }
 
-
+        // depuracion
         int cantidad = c.getCount();
         System.out.println("Hay " + cantidad + " palabras en la base de datos");
+
         c.close();
 
         return listaPalabras;

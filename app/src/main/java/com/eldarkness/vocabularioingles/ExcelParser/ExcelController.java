@@ -47,12 +47,14 @@ public class ExcelController {
         cell = row.createCell(2);
         cell.setCellValue("Categoria");
 
-        for (int i = 1; i< palabrasDiccionario.size()+1;i++){
-            row = sheet.createRow(i);
+        for (int i = 0; i< palabrasDiccionario.size();i++){
+            row = sheet.createRow(i+1);
             cell = row.createCell(0);
             cell.setCellValue(palabrasDiccionario.get(i).getPalabraEsp());
             cell = row.createCell(1);
             cell.setCellValue(palabrasDiccionario.get(i).getPalabraEng());
+            cell = row.createCell(2);
+            cell.setCellValue(palabrasDiccionario.get(i).getCategoria());
         }
 
         if(exportarExcel(workbook)){
@@ -60,8 +62,6 @@ public class ExcelController {
         }else{
             return false;
         }
-
-
 
     }
 
@@ -103,25 +103,37 @@ public class ExcelController {
         return exito;
     }
 
+    /**
+     * @param excelACargar
+     * @return
+     *
+     * Este metodo recibe un objeto workbook (excel) y extrae todas las palabras del diccionario, incluida la categoria
+     * En el caso de que la celda categoria este vacia se le asignara a esa palabra la categoria Defecto.
+     * Finalmente devuelve un arraylist con palabras diccionario
+     */
     public ArrayList<PalabraDiccionario> cargarPalabrasExcel(Workbook excelACargar){
         System.out.println("Metodo cargarPalabrasExcel");
         ArrayList<PalabraDiccionario> palabrasExcelLeidas= new ArrayList<PalabraDiccionario>();
 
-        // sacamos la pagina, que solo tendra una en este caso
         Sheet sheet = excelACargar.getSheetAt(0);
         Row row = null;
         Iterator<Row> rowIterator = sheet.iterator();
 
-        // Comprueba filas
+        // Va recorriendo las filas del excel y en cada una de ellas saca una palabra y la añade a la lista
         while(rowIterator.hasNext()){
             row = rowIterator.next();
             Iterator<Cell> cellIterator = row.cellIterator();
             Cell celda = null;
             String palabraEsp = "";
             String palabraIng = "";
+            String categoria;
+
 
             if(cellIterator.hasNext()){
                 celda = cellIterator.next();
+                if(celda.getStringCellValue().equalsIgnoreCase("Palabra Español")){
+                    continue;
+                }
                 palabraEsp = celda.getStringCellValue();
 
             }
@@ -129,11 +141,17 @@ public class ExcelController {
                 celda = cellIterator.next();
                 palabraIng = celda.getStringCellValue();
 
+            }
 
+            if(cellIterator.hasNext()){
+                celda = cellIterator.next();
+                categoria = celda.getStringCellValue();
+            } else {
+                categoria = "Defecto";
             }
 
             if(palabraEsp != null && palabraEsp != "" && palabraIng != null && palabraIng != ""){
-                palabrasExcelLeidas.add(new PalabraDiccionario(palabraEsp, palabraIng));
+                palabrasExcelLeidas.add(new PalabraDiccionario(palabraEsp, palabraIng, categoria));
             }
 
 
@@ -152,10 +170,6 @@ public class ExcelController {
                     "Palabra en Ingles: " + p.getPalabraEng() + "\n");
         }
     }
-
-
-
-
 
     // A partir de aqui son solo pruebas no se usan, asi que borrar mas adelante
     public void createExcel(Context context, String name){
