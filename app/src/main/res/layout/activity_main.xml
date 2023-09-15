@@ -134,10 +134,20 @@
             android:text="@string/boton_mostrar_palabra"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintHorizontal_bias="0.583"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/PalabraIngles"
-            app:layout_constraintVertical_bias="0.692" />
+            app:layout_constraintVertical_bias="0.437" />
+
+        <Button
+            android:id="@+id/BotonPruebaDialog"
+            android:layout_width="105dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="16dp"
+            android:onClick="EventoDialog"
+            android:text="Button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

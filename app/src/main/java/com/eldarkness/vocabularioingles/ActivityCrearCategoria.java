@@ -33,7 +33,7 @@ public class ActivityCrearCategoria extends AppCompatActivity {
 
     public void anadirCategoria(View view){
         String categoria = textoCategoria.getText().toString();
-        if(categoria != ""){
+        if(categoria == ""){
             return;
         }
         categoria = capitalizar(categoria);

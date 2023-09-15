@@ -2,13 +2,12 @@ package com.eldarkness.vocabularioingles;
 
 import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
 
-import android.app.Activity;
-
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.Region;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -28,20 +27,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
 import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
 import com.eldarkness.vocabularioingles.ExcelParser.ExcelController;
 
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Workbook;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
     TextView textoPalabraEspanol;
     TextView textoMensaje;
     Boolean siguientePalabra;
-    ImageView checkAcierto;
-    Button botonComprobar;
+
+    Button botonPruebaDialog;
     Button botonCargarPalabrasCategoria;
     String palabraIngles;
     private ControladorPalabras controladorPalabras;
@@ -72,16 +68,18 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout layoutRegistro;
     final static int APP_STORAGE_ACCESS_REQUEST_CODE = 501;
 
+    String CategoriaElegida ="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         controladorPalabras = new ControladorPalabras();
         textoPalabraEspanol = (TextView) findViewById(R.id.PalabraEspanol);
         textoPalabraIngles = (EditText) findViewById(R.id.PalabraIngles);
         layoutRegistro = findViewById(R.id.layoutRegistro);
         siguientePalabra = false;
-        botonComprobar = (Button) findViewById(R.id.BotonComprobar);
         botonCargarPalabrasCategoria = (Button) findViewById(R.id.BotonCargarPalCat);
         eventoTeclado = new EventoTeclado();
         textoPalabraIngles.setOnEditorActionListener(eventoTeclado);
@@ -91,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerCategorias = (Spinner) findViewById(R.id.spinnerCategorias2);
         System.out.println("La lista tiene " + listaPalabras.size() + " palabras");
         IMM = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        botonPruebaDialog = findViewById(R.id.BotonPruebaDialog);
         listaCategorias = bbdd_controller.cargarCategorias();
         excelController = new ExcelController();
         CargarSpinnerCategorias();
@@ -107,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+
+
         // pruebas para ver si funciona la logica de crear el excel
         /*ArrayList<PalabraDiccionario> pruebaLista = new ArrayList<>();
         pruebaLista.add(new PalabraDiccionario("Hablar", "Speak"));
@@ -120,15 +121,56 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void EventoDialog(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        CharSequence[] cs = listaCategorias.toArray(new String[0]);
+        final int[] checkedItem = new int[]{-1};
+        builder.setSingleChoiceItems(cs, checkedItem[0], new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // al seleccionar se podria quizas meter en una variable el string que se desee y luego mandarlo con la interfaz
+                // En el which esta el indice del item que se ha seleccionado asi que debo trabajar aqui con el arraylist original
+                CategoriaElegida = listaCategorias.get(which);
+                Button botonDialogFragment = findViewById(R.id.BotonPruebaDialog);
+                botonDialogFragment.setText(CategoriaElegida);
+
+
+
+            }
+        });
+
+        builder.show();
+
+
+        /*DialogFragmentPrueba dialogFragmentPrueba = new DialogFragmentPrueba();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("ListaCategorias", listaCategorias);
+
+        dialogFragmentPrueba.setArguments(bundle);
+
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        dialogFragmentPrueba.show(fragmentTransaction,"dialog");*/
+    }
+
+
     public void onResume(){
         super.onResume();
+
+
         // se llama a este metodo para que se cargen, en la lista ya iniciada, las palabas que se
         // acaban de añadir en la actividad de la que se esta volviendo
         anadirUltimasPalabras();
         listaCategorias = bbdd_controller.cargarCategorias();
         CargarSpinnerCategorias();
         IMM.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(),InputMethodManager.SHOW_FORCED);
+
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -433,7 +475,6 @@ public class MainActivity extends AppCompatActivity {
         textoPalabraIngles.requestFocus();
         palabraIngles = "";
         // 0 equivale a nulo
-
 
     }
 
