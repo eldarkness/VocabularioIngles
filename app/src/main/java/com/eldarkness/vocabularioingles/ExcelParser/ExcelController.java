@@ -126,7 +126,7 @@ public class ExcelController {
             Cell celda = null;
             String palabraEsp = "";
             String palabraIng = "";
-            String categoria;
+            String categoria = "Defecto";
 
 
             if(cellIterator.hasNext()){
@@ -145,9 +145,10 @@ public class ExcelController {
 
             if(cellIterator.hasNext()){
                 celda = cellIterator.next();
-                categoria = celda.getStringCellValue();
-            } else {
-                categoria = "Defecto";
+                if(celda.getStringCellValue() != ""){
+                    categoria = celda.getStringCellValue();
+                }
+
             }
 
             if(palabraEsp != null && palabraEsp != "" && palabraIng != null && palabraIng != ""){

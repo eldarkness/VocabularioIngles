@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
+    <runningDeviceTargetSelectedWithDropDown>
+      <Target>
+        <type value="RUNNING_DEVICE_TARGET" />
+        <deviceKey>
+          <Key>
+            <type value="VIRTUAL_DEVICE_PATH" />
+            <value value="C:\Users\el_ar\.android\avd\Samsung_Galaxy_S22_API_31_3.0.avd" />
+          </Key>
+        </deviceKey>
+      </Target>
+    </runningDeviceTargetSelectedWithDropDown>
     <targetSelectedWithDropDown>
       <Target>
         <type value="QUICK_BOOT_TARGET" />
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\el_ar\.android\avd\Copy_of_Samsung_Galaxy_S22_copia.avd" />
+            <value value="C:\Users\el_ar\.android\avd\Samsung_Galaxy_S22_API_31_3.0.avd" />
           </Key>
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2023-09-11T12:48:13.316105600Z" />
+    <timeTargetWasSelectedWithDropDown value="2023-09-17T13:03:02.689710Z" />
   </component>
 </project>

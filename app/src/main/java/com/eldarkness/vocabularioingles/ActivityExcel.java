@@ -1,8 +1,10 @@
 package com.eldarkness.vocabularioingles;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -29,6 +31,8 @@ public class ActivityExcel extends AppCompatActivity {
 
     BBDD_Controller bbdd_controller;
     ExcelController excelController;
+
+    String CategoriaExcel = "";
 
     private final int REQUEST_CODE_EXCEL = 1;
 
@@ -71,16 +75,15 @@ public class ActivityExcel extends AppCompatActivity {
                 //System.out.println(inputStream.toString());
 
                 workbook = new HSSFWorkbook(inputStream);
+                EventoCategoriaDialog(workbook);
                 //System.out.println("Este es el excel del inputstream" + workbook.getSheetAt(0).getRow(0).getCell(0));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            ArrayList<PalabraDiccionario> palabrasExcelCargado = excelController.cargarPalabrasExcel(workbook);
-            if(palabrasExcelCargado.size()>0){
-                introducirPalabrasExcelEnBBDD(palabrasExcelCargado);
-            }
+
+
 
         }
 
@@ -89,7 +92,8 @@ public class ActivityExcel extends AppCompatActivity {
     /***
      *
      * @param palabrasExcelCargado
-     * Se le pasa una lista de palabras cargadas del excel y se meten en la base de datos sino estan ya en ella.
+     * Se le pasa una lista de palabras cargadas del excel con la categoria seleccionada en el Cuadro de dialogo
+     * y se meten en la base de datos sino estan ya en ella.
      */
     private void introducirPalabrasExcelEnBBDD(ArrayList<PalabraDiccionario> palabrasExcelCargado){
 
@@ -97,8 +101,6 @@ public class ActivityExcel extends AppCompatActivity {
         // preguntar aqui al usuario si quiere asignar una categoria a las palabras cargadas a las que se le haya asignado
         // la categoria defecto sino se introduce ninguna entonces se le dejara esa por defecto
 
-
-        String categoria = "";
         if(!bbdd_controller.categoriaRepetida("Defecto")){
             bbdd_controller.anadirCategoria("Defecto");
 
@@ -108,13 +110,13 @@ public class ActivityExcel extends AppCompatActivity {
         for (PalabraDiccionario p: palabrasExcelCargado) {
             // Sino esta la palabra en español entonces hay que añadirla a la BBDD en caso contrario no hacemos nada
             if(!bbdd_controller.buscarPalabra(p.getPalabraEsp())){
-                // si la categoria viene vacia significa que se introduciran las palabras con la categoria con la que fueron extraidas del excel
-                if(categoria.equals("")){
-                    bbdd_controller.IntroducirPalabrasDiccionario(p.getPalabraEsp(),p.getPalabraEng(),p.getCategoria());
+                // Si la categoria viene vacia o nula se cogera la categoria elegida en el dialog, ya sea una real o por defecto
+                // sino se introducen con la categoria que tenian en el excel del que se importaron
+                if(p.getCategoria() == null || p.getCategoria().equalsIgnoreCase("")) {
+                    bbdd_controller.IntroducirPalabrasDiccionario(p.getPalabraEsp(),p.getPalabraEng(),CategoriaExcel);
                 }else{
-                    bbdd_controller.IntroducirPalabrasDiccionario(p.getPalabraEsp(),p.getPalabraEng(),categoria);
+                    bbdd_controller.IntroducirPalabrasDiccionario(p.getPalabraEsp(),p.getPalabraEng(),p.getCategoria());
                 }
-
                 cont++;
             }
 
@@ -122,6 +124,35 @@ public class ActivityExcel extends AppCompatActivity {
 
         System.out.println("********** Se insertaron " + cont + " palabras desde el excel cargado");
 
+    }
+
+    public void EventoCategoriaDialog(Workbook workbook){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        ArrayList<String> ListaCategorias =  bbdd_controller.cargarCategorias();
+        CharSequence[] cs = ListaCategorias.toArray(new String[0]);
+        final int[] checkedItem = new int[]{-1};
+        builder.setSingleChoiceItems(cs, checkedItem[0], new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // al seleccionar se podria quizas meter en una variable el string que se desee y luego mandarlo con la interfaz
+                // En el which esta el indice del item que se ha seleccionado asi que debo trabajar aqui con el arraylist original
+                CategoriaExcel = ListaCategorias.get(which);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            CategoriaExcel = "Defecto";
+        });
+
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            ArrayList<PalabraDiccionario> palabrasExcelCargado = excelController.cargarPalabrasExcel(workbook);
+            if(palabrasExcelCargado.size()>0){
+                introducirPalabrasExcelEnBBDD(palabrasExcelCargado);
+            }
+        });
+
+        builder.show();
     }
 
     /***
