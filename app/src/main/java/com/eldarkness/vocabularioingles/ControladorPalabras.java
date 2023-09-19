@@ -1,5 +1,7 @@
 package com.eldarkness.vocabularioingles;
 
+import com.eldarkness.vocabularioingles.dto.PalabraDiccionario;
+
 import java.util.ArrayList;
 
 public class ControladorPalabras {

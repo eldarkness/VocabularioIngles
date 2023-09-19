@@ -1,4 +1,4 @@
-package com.eldarkness.vocabularioingles;
+package com.eldarkness.vocabularioingles.dto;
 
 public class PalabraDiccionario {
     private String palabraEsp;

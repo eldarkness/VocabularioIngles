@@ -2,18 +2,13 @@ package com.eldarkness.vocabularioingles;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
-import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
+import com.eldarkness.vocabularioingles.bbdd.BBDD_Controller;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 public class ActivityCrearCategoria extends AppCompatActivity {

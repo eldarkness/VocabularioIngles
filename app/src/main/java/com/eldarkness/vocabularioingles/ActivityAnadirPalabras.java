@@ -2,10 +2,7 @@ package com.eldarkness.vocabularioingles;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,11 +10,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
-import com.eldarkness.vocabularioingles.BBDD.Estructura_BBDD;
+import com.eldarkness.vocabularioingles.bbdd.BBDD_Controller;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class ActivityAnadirPalabras extends AppCompatActivity {
 
@@ -59,10 +54,14 @@ public class ActivityAnadirPalabras extends AppCompatActivity {
             cargarActividadCrearCategoria(null);
         }
 
-        if(bbdd.IntroducirPalabrasDiccionario(palabraEsp,palabraIng, categoria)){
-            // decir que se han añadido las palabras al diccionario
-            reiniciarCuadros();
+        if(!bbdd.buscarPalabra(palabraEsp)){
+            bbdd.IntroducirPalabrasDiccionario(palabraEsp,palabraIng, categoria);
+                // decir que se han añadido las palabras al diccionario
+        }else{
+            textoPalabraAnadida.setText("La palabra " + palabraEsp + " ya esta en la base de datos");
         }
+        reiniciarCuadros();
+
     }
 
     public void cargarActividadCrearCategoria(View view){

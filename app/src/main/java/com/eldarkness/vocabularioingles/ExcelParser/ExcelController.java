@@ -3,7 +3,7 @@ package com.eldarkness.vocabularioingles.ExcelParser;
 import android.content.Context;
 import android.os.Environment;
 
-import com.eldarkness.vocabularioingles.PalabraDiccionario;
+import com.eldarkness.vocabularioingles.dto.PalabraDiccionario;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;

@@ -1,4 +1,4 @@
-package com.eldarkness.vocabularioingles.BBDD;
+package com.eldarkness.vocabularioingles.bbdd;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.eldarkness.vocabularioingles.PalabraDiccionario;
+import com.eldarkness.vocabularioingles.dto.PalabraDiccionario;
 
 import java.util.ArrayList;
 import java.util.Locale;

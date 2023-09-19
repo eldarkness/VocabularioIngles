@@ -1,4 +1,4 @@
-package com.eldarkness.vocabularioingles.BBDD;
+package com.eldarkness.vocabularioingles.bbdd;
 
 public class Estructura_BBDD {
 

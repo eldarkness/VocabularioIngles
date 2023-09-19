@@ -7,14 +7,13 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 
-import com.eldarkness.vocabularioingles.BBDD.BBDD_Controller;
+import com.eldarkness.vocabularioingles.bbdd.BBDD_Controller;
 import com.eldarkness.vocabularioingles.ExcelParser.ExcelController;
+import com.eldarkness.vocabularioingles.dto.PalabraDiccionario;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
