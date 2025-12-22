@@ -2,57 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/wallpaper_app"
+    android:background="@drawable/fondo_app"
     android:orientation="vertical"
     tools:context=".ActivityMain">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="290dp"
-            android:layout_height="30dp"
-            android:text="Selecciona una categoria"
-            android:textColor="#44424C"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/BotonCargarPalCat"
-            android:layout_width="99dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/bordes_redondos"
-            android:onClick="CargarPalabrasPorCategoria"
-            android:text="Cargar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.222"
-            app:layout_constraintStart_toEndOf="@+id/spinnerCategorias2"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <Spinner
-
-            android:id="@+id/spinnerCategorias2"
-            android:layout_width="149dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.45"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -141,6 +96,53 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="290dp"
+            android:layout_height="30dp"
+            android:text="@string/selecciona_una_categoria"
+            android:textColor="#44424C"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/BotonCargarPalCat"
+            android:layout_width="99dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bordes_redondos"
+            android:onClick="CargarPalabrasPorCategoria"
+            android:text="Cargar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.222"
+            app:layout_constraintStart_toEndOf="@+id/spinnerCategorias2"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <Spinner
+
+            android:id="@+id/spinnerCategorias2"
+            android:layout_width="149dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.45"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"

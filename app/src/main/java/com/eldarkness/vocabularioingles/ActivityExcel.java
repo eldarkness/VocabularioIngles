@@ -6,10 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.eldarkness.vocabularioingles.bbdd.BBDD_Controller;
 import com.eldarkness.vocabularioingles.ExcelParser.ExcelController;
@@ -25,13 +32,10 @@ import java.util.ArrayList;
 
 public class ActivityExcel extends AppCompatActivity {
 
-    Button botonImportar;
-    Button botonExportar;
-
     BBDD_Controller bbdd_controller;
     ExcelController excelController;
-
     String CategoriaExcel = "";
+    LinearLayout contenedorPalabrasDic;
 
     private final int REQUEST_CODE_EXCEL = 1;
 
@@ -39,10 +43,12 @@ public class ActivityExcel extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_excel);
-        botonExportar = findViewById(R.id.BotonExportar);
-        botonImportar = findViewById(R.id.BotonImportar);
+        contenedorPalabrasDic = findViewById(R.id.LayoutPalabrasDic);
+
         bbdd_controller = new BBDD_Controller(this);
         excelController = new ExcelController();
+        mostrarPalabrasDiccionario();
+
     }
 
     public void importarExcel(View view){
@@ -169,6 +175,27 @@ public class ActivityExcel extends AppCompatActivity {
         excelController.crearExcel(listaPalabras);
 
 
+    }
+
+    private void mostrarPalabrasDiccionario(){
+        ArrayList<PalabraDiccionario> listaPalabras = bbdd_controller.extraerPalabrasBBDD();
+
+        int cont = 0;
+        for (PalabraDiccionario p: listaPalabras) {
+            contenedorPalabrasDic.addView(crearTextView(p));
+            cont++;
+        }
+
+    }
+
+    private TextView crearTextView(PalabraDiccionario palabraDiccionario){
+        TextView textView = new TextView(this);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextSize(21);
+        textView.setTextColor(Color.BLACK);
+        textView.setTextColor(Color.parseColor("#229994" ));
+        textView.setText(palabraDiccionario.getPalabraEsp() + "  |  " + palabraDiccionario.getPalabraEng());
+        return textView;
     }
 
 

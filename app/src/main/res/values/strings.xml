@@ -22,6 +22,8 @@
     <string name="AnadirPalabras_NoCategorias">Primero debes crear una categoria</string>
     <string name="boton_importar_excel">Importar Excel</string>
     <string name="boton_exportar_excel">Exportar Excel</string>
+    <string name="selecciona_una_categoria">Escoje una categoria</string>
+    <string name="boton_crearCategoria">CREAR CATEGORIA</string>
 
 
 </resources>

@@ -46,7 +46,6 @@ public class ActivityMain extends AppCompatActivity {
 
     Boolean siguientePalabra;
 
-
     Button botonCargarPalabrasCategoria;
     String palabraIngles;
     private ControladorPalabras controladorPalabras;
@@ -54,17 +53,13 @@ public class ActivityMain extends AppCompatActivity {
 
     InputMethodManager IMM;
 
-
     private ArrayList<PalabraDiccionario> listaPalabras;
     private ArrayList<PalabraDiccionario> listaPalabrasBackUp;
     private ArrayList<String> listaCategorias;
     Spinner spinnerCategorias;
-
     ExcelController excelController;
-
     private LinearLayout layoutRegistro;
     final static int APP_STORAGE_ACCESS_REQUEST_CODE = 501;
-
 
 
     @Override
@@ -103,11 +98,7 @@ public class ActivityMain extends AppCompatActivity {
             }
         }
 
-
-
     }
-
-
 
     public void onResume(){
         super.onResume();
@@ -121,7 +112,6 @@ public class ActivityMain extends AppCompatActivity {
         IMM.showSoftInputFromInputMethod(textoPalabraIngles.getWindowToken(),InputMethodManager.SHOW_FORCED);
 
     }
-
 
 
     @Override
